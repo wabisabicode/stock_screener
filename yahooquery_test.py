@@ -26,14 +26,14 @@ for stockname in ['mo', 'amt']:
 
 	# get TTM-relevant data
 
-	types = ['EBITDA', 'CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 'CommonStockEquity', 'TotalDebt']
+	types = ['EBITDA', 'CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 'TotalEquityGrossMinorityInterest', 'TotalDebt']
 
 	quartal_info = stock.get_financial_data(types, frequency='q', trailing=True)
 
 	ebitda = quartal_info.tail(1)['EBITDA'][0]
 	cash = quartal_info['CashAndCashEquivalents'].iloc[-2]
 	liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-2] 
-	equity = quartal_info['CommonStockEquity'].iloc[-2]
+	equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-2]
 	totalDebt = quartal_info['TotalDebt'].iloc[-2]
 	asOfDate = quartal_info['asOfDate'].iloc[-2]
 
