@@ -80,9 +80,11 @@ for stockname in ['abbv', 'alv.de', 'mo', 'amt']:#, 'googl']:
     totalDebt = quartal_info['TotalDebt'].iloc[-1]
     asOfDate = quartal_info['asOfDate'].iloc[-1]
 
-    print (tot_rev/norm, ebitda/norm, cash/norm, 
-            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
-            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
+    print ("{:7.2f}% \t {:5.2f} \t {:7.2f}% \t {:7.2f}%".format(equity / (equity + liability) * 100, (totalDebt-cash) / ebitda,
+            av_inv_to_rev * 100, inv_to_rev_mrq * 100), asOfDate.strftime('%m/%y'), sep=' \t ')
+#    print (tot_rev/norm, ebitda/norm, cash/norm, 
+#            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
+#            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
 
 #    interest = quartal_info['InterestExpense']
 #    d_and_a = quartal_info['DepreciationAndAmortization']
