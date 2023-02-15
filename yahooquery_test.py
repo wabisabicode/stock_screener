@@ -1,9 +1,11 @@
 #import yahooquery as yq
 from yahooquery import Ticker
+import numpy as np
+import math
 
 norm = 1000000
 
-for stockname in ['mo', 'amt', 'googl']:
+for stockname in ['abbv', 'alv.de', 'mo', 'amt']:#, 'googl']:
     stock = Ticker(stockname)
 
 #    print(stock.summary_detail)
@@ -11,9 +13,9 @@ for stockname in ['mo', 'amt', 'googl']:
     # get yearly-relevant data: Inventory and TotalRevenue
     types_yearly = ['Inventory', 'TotalRevenue']
 
-    yearly_info = stock.get_financial_data(types_yearly, trailing = False).tail(2)
-
+    yearly_info = stock.get_financial_data(types_yearly, trailing = True).tail(2)
     rev_last_y, rev_now = yearly_info['TotalRevenue']
+#    print(yearly_info)
 
     while True: 
         try:
@@ -27,23 +29,62 @@ for stockname in ['mo', 'amt', 'googl']:
     # get asset profile
     ebitda = stock.financial_data[stockname]['ebitda']
 
+    # revenue has to be summed up
+    types_tosum = ['TotalRevenue','Inventory']
+    tosum_info = stock.get_financial_data(types_tosum, frequency='q', trailing=False)
+    
+    rev = tosum_info.tail(4)['TotalRevenue']
+    tot_rev = np.sum(rev)
+
+    av_inv = 0.
+    av_InvToRev = 0.
+    invToRev_now = 0.
+    while True:
+        try:
+            inv = tosum_info.tail(4)['Inventory'].copy()
+            if math.isnan(inv[-1]): inv[-1] = inv[-2]
+            inv_now = inv[-1]
+       
+            for i in [0, 1, 2, 3]: av_inv += inv[i]/rev[i]
+            av_InvToRev = av_inv / 4
+            print(inv[-1], rev[-1])
+            invToRev_now = inv[-1]/rev[-1]
+            break
+        except KeyError:
+            break
+    
     # get TTM-relevant data
 
     types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 'TotalEquityGrossMinorityInterest', 'TotalDebt', 'OperatingCashFlow', 'FreeCashFlow']
 
-    quartal_info = stock.get_financial_data(types, frequency='q', trailing=True)
+    quartal_info = stock.get_financial_data(types, frequency='q', trailing=False)
 
 #    print (quartal_info)
 
-    cash = quartal_info['CashAndCashEquivalents'].iloc[-2]
-    liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-2] 
-    equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-2]
-    totalDebt = quartal_info['TotalDebt'].iloc[-2]
-    asOfDate = quartal_info['asOfDate'].iloc[-2]
+    #check if period type has ttm
+    
+#    inv = []
+#    while True:
+#        try:
+#            inv = quartal_info['Inventory']
+#            break
+#        except KeyError:
+#            inv = 0
+#            break    
+#
+#    print (inv)
 
-    print (rev_last_y/norm, rev_now/norm, ebitda/norm, cash/norm, inv_last_y/norm, inv_now/norm, liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
+    cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
+    liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1] 
+    equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
+    totalDebt = quartal_info['TotalDebt'].iloc[-1]
+    asOfDate = quartal_info['asOfDate'].iloc[-1]
+
+    print (rev_last_y/norm, tot_rev/norm, ebitda/norm, cash/norm, 
+            "{:,.2f}%".format(av_InvToRev*100), "{:,.2f}%".format(invToRev_now*100), 
+            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
 
 #    interest = quartal_info['InterestExpense']
 #    d_and_a = quartal_info['DepreciationAndAmortization']
-    ocf = quartal_info['OperatingCashFlow']
-    fcf = quartal_info['FreeCashFlow']
+#    ocf = quartal_info['OperatingCashFlow']
+#    fcf = quartal_info['FreeCashFlow']
