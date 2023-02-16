@@ -80,7 +80,7 @@ def calc_revenue_inventory_stats(_stock):
             break
         except KeyError:
             no_rev_data = True
-            print ("Empty array")
+#            print ("Empty array")
             break
 
     # calculate inventory as % of last quarter revenue and ttm average thereof
