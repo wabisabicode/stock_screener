@@ -5,7 +5,7 @@ import math
 
 norm = 1000000
 
-for stockname in ['abbv', 'alv.de', 'mo', 'amt']:#, 'googl']:
+for stockname in ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ncv.de', 'hei.de', 'ibe.mc']:#, 'googl']:
     stock = Ticker(stockname)
 
 #    print(stock.summary_detail)
@@ -32,7 +32,9 @@ for stockname in ['abbv', 'alv.de', 'mo', 'amt']:#, 'googl']:
     # revenue has to be summed up
     types_tosum = ['TotalRevenue','Inventory']
     tosum_info = stock.get_financial_data(types_tosum, frequency='q', trailing=False)
-    
+
+    print (tosum_info)
+
     rev = tosum_info.tail(4)['TotalRevenue']
     tot_rev = np.sum(rev)
     rev_mrq = rev[-1]
@@ -80,7 +82,7 @@ for stockname in ['abbv', 'alv.de', 'mo', 'amt']:#, 'googl']:
     totalDebt = quartal_info['TotalDebt'].iloc[-1]
     asOfDate = quartal_info['asOfDate'].iloc[-1]
 
-    print ("{:7.2f}% \t {:5.2f} \t {:7.2f}% \t {:7.2f}%".format(equity / (equity + liability) * 100, (totalDebt-cash) / ebitda,
+    print ("{:5.0f}% \t {:4.1f} \t {:6.1f}% \t {:6.1f}%".format(equity / (equity + liability) * 100, (totalDebt-cash) / ebitda,
             av_inv_to_rev * 100, inv_to_rev_mrq * 100), asOfDate.strftime('%m/%y'), sep=' \t ')
 #    print (tot_rev/norm, ebitda/norm, cash/norm, 
 #            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
