@@ -66,7 +66,7 @@ def calc_revenue_inventory_stats(_stock):
     types_tosum = ['TotalRevenue','Inventory']
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
 
-    print (tosum_info)
+#    print (tosum_info)
 
     tot_rev = 0
     rev_mrq = 0
