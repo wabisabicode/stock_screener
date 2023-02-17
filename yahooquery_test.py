@@ -1,13 +1,37 @@
-#import yahooquery as yq
 from yahooquery import Ticker
 import numpy as np
 import math
+import sys
+import argparse
 
 def main():
-    for stockname in ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
-    'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 
-    'adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev',
-    'eqnr', 'rio', 'arcc', 'ocsl']:#, 'googl']:
+
+    # Initialize parser
+    parser = argparse.ArgumentParser()
+
+    # Passing a shortname of a stockslist (or stock symbols)
+    listarg = []
+    parser.add_argument("-l", nargs="*", help = "Stocks list name: div, growth, rest, watchlist or stock symbol")
+    args = parser.parse_args()
+    listarg = args.l
+   
+    # Fill in a list of stocks based on the input option 
+    stocks_list = []
+
+    if listarg[0] == "div":
+        stocks_list = ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
+        'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul']
+    elif listarg[0] == "growth":
+        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
+    elif listarg[0] == "rest":
+        stocks_list = ['eqnr', 'rio', 'arcc', 'ocsl']
+    elif listarg[0] == "watchlist":
+        stocks_list = ['mmm']
+    else:
+        stocks_list = listarg
+
+    # Get stats for the stocks in the list
+    for stockname in stocks_list:
 
         stock = Ticker(stockname)
 
