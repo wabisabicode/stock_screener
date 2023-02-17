@@ -4,7 +4,10 @@ import numpy as np
 import math
 
 def main():
-    for stockname in ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 'hei.de', 'ibe.mc']:#, 'googl']:
+    for stockname in ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
+    'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 
+    'adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev',
+    'eqnr', 'rio', 'arcc', 'ocsl']:#, 'googl']:
 
         stock = Ticker(stockname)
 
@@ -31,7 +34,16 @@ def main():
 #***********************************************
 def get_ttm_ebitda(_stock, _stockname):
 
-    _ebitda = _stock.financial_data[_stockname]['ebitda']
+    while True:
+        try:
+            _ebitda = _stock.financial_data[_stockname]['ebitda']
+            break
+        except KeyError:
+            _ebitda = 0.
+            break
+        except KeyValue:
+            _ebitda = 0.
+            break
 
     return _ebitda
 
