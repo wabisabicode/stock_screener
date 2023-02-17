@@ -26,31 +26,35 @@ def main():
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', 'rio', 'arcc', 'ocsl']
     elif listarg[0] == "watchlist":
-        stocks_list = ['mmm']
+        stocks_list = ['tte', 'shel', '', '', 'apd', 'lin', 'bas.de', '', '', 'mmm', 'dpw.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de']
     else:
         stocks_list = listarg
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
+        if stockname != '':
 
-        stock = Ticker(stockname)
+            stock = Ticker(stockname)
 
-        av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
+            av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
 
-        ebitda = get_ttm_ebitda(stock, stockname)
-       
-        equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
+            ebitda = get_ttm_ebitda(stock, stockname)
+           
+            equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
-        print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-                stockname, 
-                equity_ratio * 100, net_debt / ebitda,
-                av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
-                asOfDate.strftime('%m/%y'), sep=' \t ')
+            print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
+                    stockname, 
+                    equity_ratio * 100, net_debt / ebitda,
+                    av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
+                    asOfDate.strftime('%m/%y'), sep=' \t ')
 
-    #    norm = 1000000
-    #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
-    #            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
-    #            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
+        #    norm = 1000000
+        #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
+        #            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
+        #            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
+
+        else:
+            print(' ')
 
 
 #***********************************************
