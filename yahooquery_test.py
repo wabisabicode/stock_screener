@@ -17,7 +17,7 @@ def main():
        
         equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
-        print ("{} \t {:5.0f}% \t {:4.1f} \t {:6.1f}% \t {:6.1f}%".format(
+        print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
                 stockname, 
                 equity_ratio * 100, net_debt / ebitda,
                 av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
