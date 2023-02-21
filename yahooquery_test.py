@@ -11,7 +11,7 @@ def main():
 
     # Passing a shortname of a stockslist (or stock symbols)
     listarg = []
-    parser.add_argument("-l", nargs="*", help = "Stocks list name: div, growth, rest, watchlist or stock symbol")
+    parser.add_argument("-l", nargs="*", help = "Stocks list name: div, growth, rest, watch, watchgrow, watchcomm or stock symbol")
     args = parser.parse_args()
     listarg = args.l
    
@@ -25,8 +25,17 @@ def main():
         stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', 'rio', 'arcc', 'ocsl']
-    elif listarg[0] == "watchlist":
-        stocks_list = ['tte', 'shel', '', '', 'apd', 'lin', 'bas.de', '', '', 'mmm', 'dpw.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de']
+    elif listarg[0] == "watch":
+        stocks_list = ['tte', 'shel', '', '', 'apd', 'lin', 'bas.de', '', '', 'mmm', 'dpw.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
+                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
+                'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
+                '4901.t', 'ibm', 'msft', 'txn', '', '', 't', 'dte.de', 'dis', 'vz', '', '', 'bipc', 'ibe.mc', 'red.mc', '', '',
+                'amt', 'avb', 'dkg.de', 'dea', 'krc', 'nnn', 'stag', 'skt', 'vici', 'vna.de', 'wpc']
+    elif listarg[0] == "watchgrow":
+        stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'splk', 'baba', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
+                'isrg', '6060.hk', 'aapl', 'nem.de', 'nvda', 'var1.de', 'estc', 'hfg.de', 'qlys', 'pypl', 'zal.de', 'zm']
+    elif listarg[0] == "watchcomm":
+        stocks_list = ['eog']
     else:
         stocks_list = listarg
 
