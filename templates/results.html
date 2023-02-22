@@ -35,12 +35,12 @@
       </tr>
       {% for item in data %}
       <tr>
-        <td>{{ item.stockname }}</td>
-        <td>{{ item.equity_ratio|floatformat:2 }}</td>
-        <td>{{ item.net_debt_ebitda|floatformat:2 }}</td>
-        <td>{{ item.avg_inv_to_rev|floatformat:2 }}</td>
-        <td>{{ item.inv_to_rev_mrq|floatformat:2 }}</td>
-        <td>{{ item.as_of_date|date:"m/y" }}</td>
+        <td>{{ item.symbol }}</td>
+        <td>{{ '%5.0f%%' % item.equity_ratio|float }}</td>
+        <td>{{ '%4.1f' % item.net_debt_ebitda|float }}</td>
+        <td>{{ '%5.0f%%' % item.avg_inv_to_rev|float }}</td>
+        <td>{{ '%5.0f%%' % item.inv_to_rev_mrq|float }}</td>
+        <td>{{ item.as_of_date }}</td>
       </tr>
       {% endfor %}
     </table>

@@ -3,6 +3,8 @@ import numpy as np
 import math
 import sys
 import argparse
+import datetime
+#import babel
 from flask import Flask, request, render_template
 from yahooquery import Ticker
 
@@ -22,20 +24,28 @@ def results():
 
             stock = Ticker(stockname)
 
-            av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
+            avg_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
 
             ebitda = get_ttm_ebitda(stock, stockname)
 
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
             data.append({
-                'name': stockname,
-                'equity_ratio': "{:.0f}%".format(equity_ratio * 100),
-                'net_debt': "{:.1f}".format(net_debt / ebitda),
-                'av_inv_to_rev': "{:.0f}%".format(av_inv_to_rev * 100),
-                'inv_to_rev_mrq': "{:.0f}%".format(inv_to_rev_mrq * 100),
-                'asOfDate': asOfDate.strftime('%m/%y')
+                'symbol': stockname,
+                'equity_ratio': equity_ratio * 100,
+                'net_debt_ebitda': net_debt / ebitda,
+                'avg_inv_to_rev': avg_inv_to_rev * 100,
+                'inv_to_rev_mrq': inv_to_rev_mrq * 100,
+                'as_of_date': asOfDate.strftime('%m/%y')
             })
+#            data.append({
+#                'name': stockname,
+#                'equity_ratio': "{:.0f}%".format(equity_ratio * 100),
+#                'net_debt_ebitda': "{:.1f}".format(net_debt / ebitda),
+#                'avg_inv_to_rev': "{:.0f}%".format(avg_inv_to_rev * 100),
+#                'inv_to_rev_mrq': "{:.0f}%".format(inv_to_rev_mrq * 100),
+#                'as_of_date': asOfDate.strftime('%m/%y')
+#            })
 
     return render_template('results.html', data=data)
 
@@ -81,7 +91,7 @@ def results():
 #
 #            stock = Ticker(stockname)
 #
-#            av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
+#            avg_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
 #
 #            ebitda = get_ttm_ebitda(stock, stockname)
 #           
@@ -90,12 +100,12 @@ def results():
 #            print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
 #                    stockname, 
 #                    equity_ratio * 100, net_debt / ebitda,
-#                    av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
+#                    avg_inv_to_rev * 100, inv_to_rev_mrq * 100), 
 #                    asOfDate.strftime('%m/%y'), sep=' \t ')
 #
 #        #    norm = 1000000
 #        #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
-#        #            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
+#        #            "{:,.2f}%".format(avg_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
 #        #            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
 #
 #        else:
@@ -170,8 +180,8 @@ def calc_revenue_inventory_stats(_stock):
 #            print ("Empty array")
             break
 
-    # calculate inventory as % of last quarter revenue and ttm average thereof
-    _av_inv_to_rev = 0.
+    # calculate inventory as % of last quarter revenue and ttm erage thereof
+    _avg_inv_to_rev = 0.
     _inv_to_rev_mrq = 0.
 
     while True and no_rev_data == False:
@@ -180,14 +190,14 @@ def calc_revenue_inventory_stats(_stock):
             inv_mrq = inv[-1]
             if math.isnan(inv_mrq): inv_mrq = inv[-1] = inv[-2]
        
-            for i in [0, 1, 2, 3]: _av_inv_to_rev += inv[i] / rev[i]
-            _av_inv_to_rev = _av_inv_to_rev / 4
+            for i in [0, 1, 2, 3]: _avg_inv_to_rev += inv[i] / rev[i]
+            _avg_inv_to_rev = _avg_inv_to_rev / 4
             _inv_to_rev_mrq = inv_mrq / rev_mrq
             break
         except KeyError:
             break
 
-    return _av_inv_to_rev, _inv_to_rev_mrq
+    return _avg_inv_to_rev, _inv_to_rev_mrq
     pass
 
 if __name__ == '__main__':
