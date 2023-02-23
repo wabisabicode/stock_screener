@@ -78,7 +78,7 @@ def get_ttm_ebitda(_stock, _stockname):
         except KeyError:
             _ebitda = 0.
             break
-        except KeyValue:
+        except ValueError:
             _ebitda = 0.
             break
 
@@ -129,7 +129,6 @@ def calc_revenue_inventory_stats(_stock):
             break
         except KeyError:
             no_rev_data = True
-#            print ("Empty array")
             break
 
     # calculate inventory as % of last quarter revenue and ttm average thereof
