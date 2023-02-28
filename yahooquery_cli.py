@@ -45,14 +45,19 @@ def main():
 
             stock = Ticker(stockname)
 
+            fin_data = stock.financial_data[stockname]
+
+            ebitda = get_ttm_ebitda(fin_data)
+            q_rev_growth = get_q_rev_growth(fin_data)
+           
+            get_yearly_revenue(stock)
+
             av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
 
-            ebitda = get_ttm_ebitda(stock, stockname)
-           
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
-            print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-                    stockname, 
+            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
+                    stockname, q_rev_growth * 100,
                     equity_ratio * 100, net_debt / ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), sep=' \t ')
@@ -69,11 +74,11 @@ def main():
 #***********************************************
 #****   get ttm ebitda from asset profile   ****
 #***********************************************
-def get_ttm_ebitda(_stock, _stockname):
+def get_ttm_ebitda(_fin_data):
 
     while True:
         try:
-            _ebitda = _stock.financial_data[_stockname]['ebitda']
+            _ebitda = _fin_data['ebitda']
             break
         except KeyError:
             _ebitda = 0.
@@ -83,6 +88,24 @@ def get_ttm_ebitda(_stock, _stockname):
             break
 
     return _ebitda
+
+#***********************************************
+#****            get q rev growth           ****
+#***********************************************
+def get_q_rev_growth(_fin_data):
+
+    while True:
+        try:
+            _q_rev_growth = _fin_data['revenueGrowth']
+            break
+        except KeyError:
+            _q_rev_growth = 0.
+            break
+        except ValueError:
+            _q_rev_growth = 0.
+            break
+
+    return _q_rev_growth
 
 
 #***********************************************
@@ -109,6 +132,10 @@ def get_mrq_financial_strength(_stock):
 
     return _equity_ratio, _net_debt, _asOfDate
 
+def get_yearly_revenue(_stock):
+    types = ['TotalRevenue']
+    yearly_info = _stock.get_financial_data(types, frequency='a', trailing=False)
+    print(yearly_info)
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
@@ -116,6 +143,9 @@ def calc_revenue_inventory_stats(_stock):
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
 
 #    print (tosum_info)
+
+    num_quarters = tosum_info.shape[0]
+#    print (num_quarters)
 
     tot_rev = 0
     rev_mrq = 0
