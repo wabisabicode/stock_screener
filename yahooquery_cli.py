@@ -160,9 +160,11 @@ def calc_revenue_inventory_stats(_stock):
 
 #    print (tosum_info)
 
-    num_quarters = tosum_info.shape[0]
+    if type(tosum_info) is not str:
+        num_quarters = tosum_info.shape[0]
 #    print (num_quarters)
 
+    # calculate ttm revenue and mrq revenue
     tot_rev = 0
     rev_mrq = 0
     no_rev_data = False
@@ -176,10 +178,16 @@ def calc_revenue_inventory_stats(_stock):
         except KeyError:
             no_rev_data = True
             break
+        except AttributeError:
+            no_rev_data = True
+            break
 
-    # calculate inventory as % of last quarter revenue and ttm average thereof
+    # calculate inventory as % of mrq revenue and ttm average thereof
     _av_inv_to_rev = 0.
     _inv_to_rev_mrq = 0.
+
+    if no_rev_data == True:
+        _av_inv_to_rev = _inv_to_rev_mrq = float('nan')
 
     while True and no_rev_data == False:
         try:
