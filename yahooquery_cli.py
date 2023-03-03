@@ -130,7 +130,15 @@ def get_mrq_financial_strength(_stock):
     cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
     liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1] 
     equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
-    totalDebt = quartal_info['TotalDebt'].iloc[-1]
+
+    while True:
+        try:
+            totalDebt = quartal_info['TotalDebt'].iloc[-1]
+            break
+        except KeyError:
+            totalDebt = float('nan')
+            break
+
 #    ocf = quartal_info['OperatingCashFlow']
 #    fcf = quartal_info['FreeCashFlow']
 
