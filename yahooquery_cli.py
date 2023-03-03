@@ -24,7 +24,7 @@ def main():
     elif listarg[0] == "growth":
         stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
     elif listarg[0] == "rest":
-        stocks_list = ['eqnr', 'rio', 'arcc', 'ocsl']
+        stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif listarg[0] == "watch":
         stocks_list = ['tte', 'shel', '', '', 'apd', 'lin', 'bas.de', '', '', 'mmm', 'dpw.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
