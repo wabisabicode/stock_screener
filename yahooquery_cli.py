@@ -29,10 +29,10 @@ def main():
         stocks_list = ['tte', 'shel', '', '', 'apd', 'lin', 'bas.de', '', '', 'mmm', 'dpw.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
                 'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
-                '4901.t', 'ibm', 'msft', 'txn', '', '', 't', 'dte.de', 'dis', 'vz', '', '', 'bipc', 'ibe.mc', 'red.mc', '', '',
+                'dell', '4901.t', 'ibm', 'msft', 'txn', '', '', 't', 'dte.de', 'dis', 'vz', '', '', 'bipc', 'ibe.mc', 'red.mc', '', '',
                 'amt', 'avb', 'dkg.de', 'dea', 'krc', 'nnn', 'stag', 'skt', 'vici', 'vna.de', 'wpc']
     elif listarg[0] == "watchgrow":
-        stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'splk', 'baba', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
+        stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'hcp', 'splk', 'baba', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
                 'isrg', '6060.hk', 'aapl', 'nem.de', 'nvda', 'var1.de', 'estc', 'hfg.de', 'qlys', 'pypl', 'zal.de', 'zm']
     elif listarg[0] == "watchcomm":
         stocks_list = ['eog']
@@ -56,9 +56,17 @@ def main():
 
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
-            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-                    stockname, q_rev_growth * 100,
-                    equity_ratio * 100, net_debt / ebitda,
+            # check if ebitda is zero
+            if ebitda:
+                net_debt_to_ebitda = net_debt / ebitda
+            else:
+                net_debt_to_ebitda = float('inf')
+
+#            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
+            print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
+                    stockname,
+#                    stockname, q_rev_growth * 100,
+                    equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), sep=' \t ')
 
@@ -135,7 +143,7 @@ def get_mrq_financial_strength(_stock):
 def get_yearly_revenue(_stock):
     types = ['TotalRevenue']
     yearly_info = _stock.get_financial_data(types, frequency='a', trailing=False)
-    print(yearly_info)
+#    print(yearly_info)
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
