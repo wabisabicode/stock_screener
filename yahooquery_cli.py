@@ -39,6 +39,9 @@ def main():
     else:
         stocks_list = listarg
 
+    # print header
+    print ("stock \t qrGr-yoy\t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
+
     # Get stats for the stocks in the list
     for stockname in stocks_list:
         if stockname != '':
@@ -47,13 +50,13 @@ def main():
 
             fin_data = stock.financial_data[stockname]
 
+            # get info from the financial data
             ebitda = get_ttm_ebitda(fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
-           
+          
+            # get info from income, balance and cashflow 
             get_yearly_revenue(stock)
-
-            av_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
-
+            av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
             # check if ebitda is zero
@@ -62,13 +65,16 @@ def main():
             else:
                 net_debt_to_ebitda = float('inf')
 
+            # join remarks
+            remarks = remark_inv
+
 #            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-            print ("{} \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-                    stockname,
-#                    stockname, q_rev_growth * 100,
+            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
+#                    stockname,
+                    stockname, q_rev_growth * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
-                    asOfDate.strftime('%m/%y'), sep=' \t ')
+                    asOfDate.strftime('%m/%y'), "\t {}".format(remarks), sep=' \t ')
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
@@ -97,10 +103,9 @@ def get_ttm_ebitda(_fin_data):
 
     return _ebitda
 
-#***********************************************
-#****            get q rev growth           ****
-#***********************************************
 def get_q_rev_growth(_fin_data):
+    """ get yoy revenue growth for the most recent quarter 
+    """
 
     while True:
         try:
@@ -122,22 +127,16 @@ def get_q_rev_growth(_fin_data):
 def get_mrq_financial_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt 
-    types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 'TotalEquityGrossMinorityInterest', 'TotalDebt', 'OperatingCashFlow', 'FreeCashFlow']
-    quartal_info = _stock.get_financial_data(types, frequency='q', trailing=False)
+    types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 
+            'TotalEquityGrossMinorityInterest', 'TotalDebt', 'OperatingCashFlow', 'FreeCashFlow']
 
-#    print (quartal_info)
+    quartal_info = _stock.get_financial_data(types, frequency='q', trailing=False)
 
     cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
     liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1] 
     equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
 
-    while True:
-        try:
-            totalDebt = quartal_info['TotalDebt'].iloc[-1]
-            break
-        except KeyError:
-            totalDebt = float('nan')
-            break
+    totalDebt = calc_total_debt(quartal_info)
 
 #    ocf = quartal_info['OperatingCashFlow']
 #    fcf = quartal_info['FreeCashFlow']
@@ -148,21 +147,50 @@ def get_mrq_financial_strength(_stock):
 
     return _equity_ratio, _net_debt, _asOfDate
 
+def calc_total_debt(_quartal_info):
+
+    while True:
+        try:
+            _totalDebt = _quartal_info['TotalDebt'].iloc[-1]
+            break
+        except KeyError:
+            _totalDebt = float('nan')
+            break
+
+    return _totalDebt
+
 def get_yearly_revenue(_stock):
     types = ['TotalRevenue']
     yearly_info = _stock.get_financial_data(types, frequency='a', trailing=False)
-#    print(yearly_info)
+
+    if type(yearly_info) is not str:
+        num_years = yearly_info.shape[0]
+    else:
+        num_years = 0
+
+    revs = yearly_info['TotalRevenue'].iloc[:] 
+
+    print (yearly_info)
+
+    r_growth = []
+
+    for i in range(len(revs) - 1, 0, -1):
+        r_growth.append(revs[i]/revs[i-1])
+
+    print(r_growth)
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
     types_tosum = ['TotalRevenue','Inventory']
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
 
-#    print (tosum_info)
-
+    # check how many quarterly data is there
     if type(tosum_info) is not str:
         num_quarters = tosum_info.shape[0]
-#    print (num_quarters)
+    else:
+        num_quarters = 0
+
+    _remark = 'inv'+ str(num_quarters) + 'Q'
 
     # calculate ttm revenue and mrq revenue
     tot_rev = 0
@@ -202,7 +230,7 @@ def calc_revenue_inventory_stats(_stock):
         except KeyError:
             break
 
-    return _av_inv_to_rev, _inv_to_rev_mrq
+    return _av_inv_to_rev, _inv_to_rev_mrq, _remark
 
 if __name__ == "__main__":
     main()
