@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock \t qrGr-yoy\t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
+    print ("stock \t qrGr-yoy \t rGrYav \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -55,7 +55,7 @@ def main():
             q_rev_growth = get_q_rev_growth(fin_data)
           
             # get info from income, balance and cashflow 
-            get_yearly_revenue(stock)
+            av_rev_growth = get_yearly_revenue(stock)
             av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
@@ -69,9 +69,9 @@ def main():
             remarks = remark_inv
 
 #            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
+            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
 #                    stockname,
-                    stockname, q_rev_growth * 100,
+                    stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), "\t {}".format(remarks), sep=' \t ')
@@ -180,9 +180,9 @@ def get_yearly_revenue(_stock):
     for i in range(len(revs) - 1, 0, -1):
         r_growth.append(revs[i]/revs[i-1])
 
-    av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
+    _av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
 
-    return av_rev_growth
+    return _av_rev_growth
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
