@@ -160,6 +160,10 @@ def calc_total_debt(_quartal_info):
     return _totalDebt
 
 def get_yearly_revenue(_stock):
+    """ get annual revenues, calculate growth rates 
+    and pass average rev growth of passed years"""
+
+    # get annual revenues
     types = ['TotalRevenue']
     yearly_info = _stock.get_financial_data(types, frequency='a', trailing=False)
 
@@ -170,14 +174,15 @@ def get_yearly_revenue(_stock):
 
     revs = yearly_info['TotalRevenue'].iloc[:] 
 
-    print (yearly_info)
-
+    # calculate rev growth rates via annual revenues
     r_growth = []
 
     for i in range(len(revs) - 1, 0, -1):
         r_growth.append(revs[i]/revs[i-1])
 
-    print(r_growth)
+    av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
+
+    return av_rev_growth
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
