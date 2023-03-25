@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock \t qrGr-yoy \t rGrYav \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
+    print ("stock \t qrGr-yoy \t rGrYav \t qGrMarg \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -54,8 +54,11 @@ def main():
             ebitda = get_ttm_ebitda(fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
           
+            # get margins from income statement
+            mrq_gp_margin = get_mrq_gp_margin(stock)
+
             # get info from income, balance and cashflow 
-            av_rev_growth = get_yearly_revenue(stock)
+            av_rev_growth, remark_rev = get_yearly_revenue(stock)
             av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
@@ -66,12 +69,13 @@ def main():
                 net_debt_to_ebitda = float('inf')
 
             # join remarks
-            remarks = remark_inv
+            remarks = remark_rev + ' ' + remark_inv
 
 #            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
-            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
+            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
 #                    stockname,
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
+                    mrq_gp_margin * 100, 
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), "\t {}".format(remarks), sep=' \t ')
@@ -120,6 +124,42 @@ def get_q_rev_growth(_fin_data):
 
     return _q_rev_growth
 
+def get_mrq_gp_margin(_stock):
+
+    quartal_info = _stock.income_statement(frequency='q', trailing=False)
+
+    print(quartal_info)
+    # get Gross Profit
+    while True:
+        try:
+            _mrq_gp  = quartal_info['GrossProfit'].iloc[-1] 
+            break
+        except KeyError:
+            _mrq_gp = 0.
+            break
+        except ValueError:
+            _mrq_gp = 0.
+            break
+
+    # get Total Revenue
+    while True:
+        try:
+            _mrq_rev = quartal_info['TotalRevenue'].iloc[-1]
+            break
+        except KeyError:
+            _mrq_rev = 0.
+            break
+        except ValueError:
+            _mrq_rev = 0.
+            break
+    
+    # calculate mrq gross profit margin
+    if (_mrq_gp > 0.):
+        _mrq_gp_margin = _mrq_gp / _mrq_rev
+    else:
+        _mrq_gp_margin = float('nan')
+
+    return _mrq_gp_margin
 
 #***********************************************
 #****   get ttm ebitda from asset profile   ****
@@ -182,7 +222,9 @@ def get_yearly_revenue(_stock):
 
     _av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
 
-    return _av_rev_growth
+    _remark_rev = str(num_years) + 'Yrev'
+
+    return _av_rev_growth, _remark_rev
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
