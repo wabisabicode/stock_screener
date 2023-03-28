@@ -128,7 +128,11 @@ def get_mrq_gp_margin(_stock):
 
     quartal_info = _stock.income_statement(frequency='q', trailing=False)
 
-    print(quartal_info)
+    # if quartal_info is a string (Income Statement data unavailable for _stock)
+    # use trailing info instead of the mrq
+    if isinstance(quartal_info,str): 
+        quartal_info = _stock.income_statement(frequency='q', trailing=True)
+
     # get Gross Profit
     while True:
         try:
