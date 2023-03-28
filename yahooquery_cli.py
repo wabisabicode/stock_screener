@@ -178,6 +178,7 @@ def get_yearly_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
+    print(yearly_info)
     # get Gross Profit table
     while True:
         try:
@@ -202,8 +203,16 @@ def get_yearly_gp_margin(_stock):
             _totrev_table = 0.
             break
 
+    # calculate rev growth rates via annual revenues
+    gp_margin = []
+
+    for i in range(len(_totrev_table)-1, 0, -1):
+        gp_margin.append(_gp_table[i]/_totrev_table[i])
+
+    _gp_margin_av = np.average(gp_margin)
     print(_gp_table)
     print(_totrev_table)
+    print(_gp_margin_av)
 
 # ----------------------------------------------
 # get ttm ebitda from asset profile
