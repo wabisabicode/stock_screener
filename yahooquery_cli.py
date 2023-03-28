@@ -56,6 +56,7 @@ def main():
           
             # get margins from income statement
             mrq_gp_margin = get_mrq_gp_margin(stock)
+            get_yearly_gp_margin(stock)
 
             # get info from income, balance and cashflow 
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
@@ -167,6 +168,42 @@ def get_mrq_gp_margin(_stock):
         _mrq_gp_margin = float('nan')
 
     return _mrq_gp_margin
+
+
+# ----------------------------------------------
+# get gross profit margin of the mrq (or ttm)
+# ----------------------------------------------
+
+def get_yearly_gp_margin(_stock):
+
+    yearly_info = _stock.income_statement(frequency='a', trailing=False)
+
+    # get Gross Profit table
+    while True:
+        try:
+            _gp_table = yearly_info['GrossProfit']
+            break
+        except KeyError:
+            _gp_table = 0.
+            break
+        except ValueError:
+            _gp_table = 0.
+            break
+
+    # get Total Revenue table
+    while True:
+        try:
+            _totrev_table = yearly_info['TotalRevenue']
+            break
+        except KeyError:
+            _totrev_table = 0.
+            break
+        except ValueError:
+            _totrev_table = 0.
+            break
+
+    print(_gp_table)
+    print(_totrev_table)
 
 # ----------------------------------------------
 # get ttm ebitda from asset profile
