@@ -71,9 +71,7 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-#            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.1f} \t {:5.0f}% \t {:5.0f}%".format(
             print ("{} \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
-#                    stockname,
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     mrq_gp_margin * 100, 
                     equity_ratio * 100, net_debt_to_ebitda,
@@ -89,9 +87,10 @@ def main():
             print(' ')
 
 
-#***********************************************
-#****   get ttm ebitda from asset profile   ****
-#***********************************************
+# ----------------------------------------------
+# get ttm ebitda from asset profile
+# ----------------------------------------------
+
 def get_ttm_ebitda(_fin_data):
 
     while True:
@@ -123,6 +122,10 @@ def get_q_rev_growth(_fin_data):
             break
 
     return _q_rev_growth
+
+# ----------------------------------------------
+# get gross profit margin of the mrq (or ttm)
+# ----------------------------------------------
 
 def get_mrq_gp_margin(_stock):
 
@@ -165,9 +168,10 @@ def get_mrq_gp_margin(_stock):
 
     return _mrq_gp_margin
 
-#***********************************************
-#****   get ttm ebitda from asset profile   ****
-#***********************************************
+# ----------------------------------------------
+# get ttm ebitda from asset profile
+# ----------------------------------------------
+
 def get_mrq_financial_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt 
