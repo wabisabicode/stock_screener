@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock \t qrGr-yoy \t rGrYav \t qGrMarg \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
+    print ("stock \t qrGr-yoy \t rGrYav \t mrqGM \t avGMy \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -56,7 +56,7 @@ def main():
           
             # get margins from income statement
             mrq_gp_margin = get_mrq_gp_margin(stock)
-            get_yearly_gp_margin(stock)
+            av_gp_margin = get_yearly_gp_margin(stock)
 
             # get info from income, balance and cashflow 
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
@@ -72,9 +72,9 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
+            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
-                    mrq_gp_margin * 100, 
+                    mrq_gp_margin * 100, av_gp_margin * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), "\t {}".format(remarks), sep=' \t ')
@@ -229,7 +229,8 @@ def get_yearly_gp_margin(_stock):
 #        _gp_margin_av = float('nan')
 #    print(_gp_table)
 #    print(_totrev_table)
-    print(_gp_margin_av)
+#    print(_gp_margin_av)
+    return _gp_margin_av
 
 # ----------------------------------------------
 # get ttm ebitda from asset profile
