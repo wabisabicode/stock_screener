@@ -206,7 +206,7 @@ def get_yearly_gp_margin(_stock):
     # calculate rev growth rates via annual revenues
     gp_margin = []
 
-    for i in range(len(_totrev_table)-1, 0, -1):
+    for i in range(len(_totrev_table)-1, -1, -1):
         gp_margin.append(_gp_table[i]/_totrev_table[i])
 
     _gp_margin_av = np.average(gp_margin)
