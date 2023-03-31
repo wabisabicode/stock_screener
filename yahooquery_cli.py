@@ -178,17 +178,20 @@ def get_yearly_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
-    print(yearly_info)
+#    print(yearly_info)
     # get Gross Profit table
+    no_gp = False
     while True:
         try:
             _gp_table = yearly_info['GrossProfit']
             break
         except KeyError:
-            _gp_table = 0.
+            no_gp = True
+            print("KeyError")
             break
         except ValueError:
-            _gp_table = 0.
+            no_gp = True
+            print("ValueError")
             break
 
     # get Total Revenue table
@@ -197,21 +200,35 @@ def get_yearly_gp_margin(_stock):
             _totrev_table = yearly_info['TotalRevenue']
             break
         except KeyError:
-            _totrev_table = 0.
+            _totrev_table = 0
             break
         except ValueError:
-            _totrev_table = 0.
+            _totrev_table = 0
             break
 
-    # calculate rev growth rates via annual revenues
-    gp_margin = []
+    if (no_gp == False):
+        # calculate rev growth rates via annual revenues
+        gp_margin = []
 
-    for i in range(len(_totrev_table)-1, -1, -1):
-        gp_margin.append(_gp_table[i]/_totrev_table[i])
+        for i in range(len(_totrev_table)-1, -1, -1):
+            gp_margin.append(_gp_table[i]/_totrev_table[i])
 
-    _gp_margin_av = np.average(gp_margin)
-    print(_gp_table)
-    print(_totrev_table)
+        _gp_margin_av = np.average(gp_margin)
+    else:
+        while True:
+            try:
+                _totexp_table = yearly_info['TotalExpenses']
+                break
+            except KeyError:
+                break
+
+        gp_margin = []
+        for i in range(len(_totrev_table)-1, -1, -1):
+            gp_margin.append((_totrev_table[i]-_totexp_table[i])/_totrev_table[i])
+        _gp_margin_av = np.average(gp_margin)
+#        _gp_margin_av = float('nan')
+#    print(_gp_table)
+#    print(_totrev_table)
     print(_gp_margin_av)
 
 # ----------------------------------------------
@@ -300,7 +317,8 @@ def calc_revenue_inventory_stats(_stock):
 
     while True:
         try: 
-            rev = tosum_info.tail(4)['TotalRevenue']
+#            rev = tosum_info.tail(4)['TotalRevenue']
+            rev = tosum_info['TotalRevenue']
             tot_rev = np.sum(rev)
             rev_mrq = rev[-1]
             break
@@ -320,12 +338,16 @@ def calc_revenue_inventory_stats(_stock):
 
     while True and no_rev_data == False:
         try:
-            inv = tosum_info.tail(4)['Inventory'].copy() # unpack inventory for 4 last quarters
+#            inv = tosum_info.tail(4)['Inventory'].copy() # unpack inventory for 4 last quarters
+            inv = tosum_info['Inventory'].copy() # unpack inventory for 4 last quarters
             inv_mrq = inv[-1]
             if math.isnan(inv_mrq): inv_mrq = inv[-1] = inv[-2]
-       
-            for i in [0, 1, 2, 3]: _av_inv_to_rev += inv[i] / rev[i]
-            _av_inv_to_rev = _av_inv_to_rev / 4
+
+            _inv_to_rev = []
+            for i in range(len(inv)-1, -1, -1):
+                _inv_to_rev.append(inv[i] / rev[i])
+            _av_inv_to_rev = np.average(_inv_to_rev)
+
             _inv_to_rev_mrq = inv_mrq / rev_mrq
             break
         except KeyError:
