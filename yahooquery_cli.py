@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock \t qrGr-yoy \t rGrYav \t mrqGM \t avGMy \t eq/totAs \t n/ebitda \t aInv/Rev \t inv/RevMRQ")
+    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t eq/toA\tnebitda\t aIn/R\tin/Rmrq\t  mrq\tRemark")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -72,12 +72,12 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{} \t {:5.0f}% \t {:5.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.0f}% \t {:6.1f} \t {:5.0f}% \t {:5.0f}% ".format(
+            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% ".format(
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     mrq_gp_margin * 100, av_gp_margin * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
-                    asOfDate.strftime('%m/%y'), "\t {}".format(remarks), sep=' \t ')
+                    asOfDate.strftime('%m/%y'), "\t{}".format(remarks))
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
