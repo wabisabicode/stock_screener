@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t eq/toA\tnebitda\t aIn/R\tin/Rmrq\t  mrq\tRemark")
+    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\t aIn/R\tin/Rmrq\t  mrq\tRemark")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -55,8 +55,8 @@ def main():
             q_rev_growth = get_q_rev_growth(fin_data)
           
             # get margins from income statement
-            mrq_gp_margin = get_mrq_gp_margin(stock)
-            av_gp_margin = get_yearly_gp_margin(stock)
+            mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
+            av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
 
             # get info from income, balance and cashflow 
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
@@ -72,9 +72,11 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% ".format(
+            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% ".format(
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     mrq_gp_margin * 100, av_gp_margin * 100,
+                    mrq_ocf_margin * 100, av_ocf_margin * 100,
+                    mrq_fcf_margin * 100, av_fcf_margin * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
                     av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
                     asOfDate.strftime('%m/%y'), "\t{}".format(remarks))
@@ -131,11 +133,13 @@ def get_q_rev_growth(_fin_data):
 def get_mrq_gp_margin(_stock):
 
     quartal_info = _stock.income_statement(frequency='q', trailing=False)
+    quartal_cf = _stock.cash_flow(frequency='q', trailing=False)
 
     # if quartal_info is a string (Income Statement data unavailable for _stock)
     # use trailing info instead of the mrq
     if isinstance(quartal_info,str): 
         quartal_info = _stock.income_statement(frequency='q', trailing=True)
+        quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
 
     # get Gross Profit
     while True:
@@ -147,6 +151,30 @@ def get_mrq_gp_margin(_stock):
             break
         except ValueError:
             _mrq_gp = 0.
+            break
+
+    # get Operating CashFlow
+    while True:
+        try:
+            _mrq_ocf  = quartal_cf['OperatingCashFlow'].iloc[-1] 
+            break
+        except KeyError:
+            _mrq_ocf = 0.
+            break
+        except ValueError:
+            _mrq_ocf = 0.
+            break
+
+    # get Operating CashFlow
+    while True:
+        try:
+            _mrq_fcf  = quartal_cf['FreeCashFlow'].iloc[-1] 
+            break
+        except KeyError:
+            _mrq_fcf = 0.
+            break
+        except ValueError:
+            _mrq_fcf = 0.
             break
 
     # get Total Revenue
@@ -167,7 +195,19 @@ def get_mrq_gp_margin(_stock):
     else:
         _mrq_gp_margin = float('nan')
 
-    return _mrq_gp_margin
+    # calculate mrq operating cf margin
+#    if (_mrq_ocf > 0.):
+    _mrq_ocf_margin = _mrq_ocf / _mrq_rev
+#    else:
+#        _mrq_ocf_margin = float('nan')
+
+    # calculate mrq operating cf margin
+#    if (_mrq_fcf > 0.):
+    _mrq_fcf_margin = _mrq_fcf / _mrq_rev
+#    else:
+#        _mrq_fcf_margin = float('nan')
+
+    return _mrq_gp_margin, _mrq_ocf_margin, _mrq_fcf_margin
 
 
 # ----------------------------------------------
@@ -194,6 +234,35 @@ def get_yearly_gp_margin(_stock):
 #            print("ValueError")
             break
 
+    # get Operating Cashflow
+    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
+
+    no_ocf = False
+    while True:
+        try:
+            _ocf_table = yearly_cf['OperatingCashFlow']
+            break
+        except KeyError:
+            no_ocf = True
+            break
+        except ValueError:
+            no_ocf = True
+            break
+
+    # get Free Cashflow
+    no_fcf = False
+    while True:
+        try:
+            _fcf_table = yearly_cf['FreeCashFlow']
+            break
+        except KeyError:
+            no_fcf = True
+            break
+        except ValueError:
+            no_fcf = True
+            break
+
+
     # get Total Revenue table
     while True:
         try:
@@ -206,8 +275,8 @@ def get_yearly_gp_margin(_stock):
             _totrev_table = 0
             break
 
+    # calculate rev growth rates via annual revenues
     if (no_gp == False):
-        # calculate rev growth rates via annual revenues
         gp_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
@@ -231,11 +300,29 @@ def get_yearly_gp_margin(_stock):
         _gp_margin_av = np.average(gp_margin)
         if _no_totexp: _gp_margin_av = float('nan')
 
-#        _gp_margin_av = float('nan')
-#    print(_gp_table)
-#    print(_totrev_table)
-#    print(_gp_margin_av)
-    return _gp_margin_av
+    # calculate operating cashflow margin for latest years
+    if (no_ocf == False):
+        ocf_margin = []
+
+        for i in range(len(_totrev_table)-1, -1, -1):
+            ocf_margin.append(_ocf_table[i]/_totrev_table[i])
+    
+        _ocf_margin_av = np.average(ocf_margin)
+    else:
+        _ocf_margin_av = float('nan')
+
+    # calculate free cashflow margin for latest years
+    if (no_fcf == False):
+        fcf_margin = []
+
+        for i in range(len(_totrev_table)-1, -1, -1):
+            fcf_margin.append(_fcf_table[i]/_totrev_table[i])
+    
+        _fcf_margin_av = np.average(fcf_margin)
+    else:
+        _fcf_margin_av = float('nan')
+
+    return _gp_margin_av, _ocf_margin_av, _fcf_margin_av
 
 # ----------------------------------------------
 # get ttm ebitda from asset profile
