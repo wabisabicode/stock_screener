@@ -215,20 +215,21 @@ def get_yearly_gp_margin(_stock):
 
         _gp_margin_av = np.average(gp_margin)
     else:
+        _no_totexp = False
         while True:
             try:
                 _totexp_table = yearly_info['TotalExpenses']
                 break
             except KeyError:
                 _totexp_table = _totrev_table   # if no gp margin and no total expenses, make gp margin be 0
-                _no_gp = True
+                _no_totexp = True
                 break
 
         gp_margin = []
         for i in range(len(_totrev_table)-1, -1, -1):
             gp_margin.append((_totrev_table[i]-_totexp_table[i])/_totrev_table[i])
         _gp_margin_av = np.average(gp_margin)
-        if _no_gp: _gp_margin_av = float('nan')
+        if _no_totexp: _gp_margin_av = float('nan')
 
 #        _gp_margin_av = float('nan')
 #    print(_gp_table)
@@ -296,7 +297,12 @@ def get_yearly_revenue(_stock):
     for i in range(len(revs) - 1, 0, -1):
         r_growth.append(revs[i]/revs[i-1])
 
-    _av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
+    _r_growth_tot = np.prod(r_growth)
+
+    if (_r_growth_tot > 0.):
+        _av_rev_growth = np.prod(r_growth) ** (1./(num_years - 1))
+    else:
+        _av_rev_growth = float('nan')
 
     _remark_rev = str(num_years) + 'Yrev'
 
