@@ -187,11 +187,11 @@ def get_yearly_gp_margin(_stock):
             break
         except KeyError:
             no_gp = True
-            print("KeyError")
+#            print("KeyError")
             break
         except ValueError:
             no_gp = True
-            print("ValueError")
+#            print("ValueError")
             break
 
     # get Total Revenue table
@@ -220,12 +220,16 @@ def get_yearly_gp_margin(_stock):
                 _totexp_table = yearly_info['TotalExpenses']
                 break
             except KeyError:
+                _totexp_table = _totrev_table   # if no gp margin and no total expenses, make gp margin be 0
+                _no_gp = True
                 break
 
         gp_margin = []
         for i in range(len(_totrev_table)-1, -1, -1):
             gp_margin.append((_totrev_table[i]-_totexp_table[i])/_totrev_table[i])
         _gp_margin_av = np.average(gp_margin)
+        if _no_gp: _gp_margin_av = float('nan')
+
 #        _gp_margin_av = float('nan')
 #    print(_gp_table)
 #    print(_totrev_table)
