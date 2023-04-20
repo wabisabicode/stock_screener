@@ -50,6 +50,8 @@ def main():
 
             fin_data = stock.financial_data[stockname]
 
+            #print(stock.valuation_measures)
+
             # get info from the financial data
             ebitda = get_ttm_ebitda(fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
@@ -62,6 +64,9 @@ def main():
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
             av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
+
+            # get valuations
+#            getValuations(asOfDate)
 
             # check if ebitda is zero
             if ebitda:
@@ -335,7 +340,7 @@ def get_mrq_financial_strength(_stock):
             'TotalEquityGrossMinorityInterest', 'TotalDebt', 'OperatingCashFlow', 'FreeCashFlow']
 
     quartal_info = _stock.get_financial_data(types, frequency='q', trailing=False)
-
+    
     cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
     liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1] 
     equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
