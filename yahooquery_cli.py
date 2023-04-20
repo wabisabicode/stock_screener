@@ -40,7 +40,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\t aIn/R\tin/Rmrq\t  mrq\tRemark")
+    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\t aIn/R\tin/Rmrq\tEV/Sale\t P/OCF\t  mrq\tRemark")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -50,15 +50,16 @@ def main():
 
             fin_data = stock.financial_data[stockname]
 
-#            print(stock.valuation_measures)
-
             # get info from the financial data
-            ebitda = get_ttm_ebitda(fin_data)
+            ebitda, ocf = get_ttm_ebitda_ocf(fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
-          
+         
+            # get current valuations for EV-to-Rev and Price/OCF
             key_stats = stock.key_stats[stockname]
-            ev_to_rev = get_valuations(key_stats)
-#            p_to_ocf = get_valuations(key_stats)
+            ev_to_rev = get_ev_to_rev(key_stats)            
+
+            summary_detail = stock.summary_detail[stockname]
+            p_to_ocf = get_p_to_ocf(summary_detail, ocf)
 
             # get margins from income statement
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
@@ -81,13 +82,14 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% ".format(
+            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t {:5.2f} \t {:5.2f} ".format(
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     mrq_gp_margin * 100, av_gp_margin * 100,
                     mrq_ocf_margin * 100, av_ocf_margin * 100,
                     mrq_fcf_margin * 100, av_fcf_margin * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
-                    av_inv_to_rev * 100, inv_to_rev_mrq * 100), 
+                    av_inv_to_rev * 100, inv_to_rev_mrq * 100, 
+                    ev_to_rev, p_to_ocf), 
                     asOfDate.strftime('%m/%y'), "\t{}".format(remarks))
 
         #    norm = 1000000
@@ -100,10 +102,10 @@ def main():
 
 
 # ----------------------------------------------
-# get ttm ebitda from asset profile
+# get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
 
-def get_ttm_ebitda(_fin_data):
+def get_ttm_ebitda_ocf(_fin_data):
 
     while True:
         try:
@@ -116,7 +118,18 @@ def get_ttm_ebitda(_fin_data):
             _ebitda = 0.
             break
 
-    return _ebitda
+    while True:
+        try:
+            _ocf = _fin_data['operatingCashflow']
+            break
+        except KeyError:
+            _ocf = 0.
+            break
+        except ValueError:
+            _ocf = 0.
+            break
+
+    return _ebitda, _ocf
 
 def get_q_rev_growth(_fin_data):
     """ get yoy revenue growth for the most recent quarter 
@@ -135,7 +148,7 @@ def get_q_rev_growth(_fin_data):
 
     return _q_rev_growth
 
-def get_valuations(_key_stats):
+def get_ev_to_rev(_key_stats):
 
     while True:
         try:
@@ -149,6 +162,27 @@ def get_valuations(_key_stats):
             break
 
     return _ev_to_rev 
+
+def get_p_to_ocf(_summary_detail, _ocf):
+
+    while True:
+        try:
+            _m_cap = _summary_detail['marketCap']
+            break
+        except KeyError:
+            _m_cap = 0.
+            break
+        except ValueError:
+            _m_cap = 0.
+            break
+
+    try: 
+        _p_to_ocf = _m_cap / _ocf
+    except ZeroDivisionError:
+        _p_to_ocf = float('nan')
+
+
+    return _p_to_ocf
 
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
