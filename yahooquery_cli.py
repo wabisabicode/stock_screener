@@ -46,7 +46,7 @@ def main():
     for stockname in stocks_list:
         if stockname != '':
 
-            stock = Ticker(stockname)
+            stock = Ticker(stockname, asynchronous=True)
 
             fin_data = stock.financial_data[stockname]
 
