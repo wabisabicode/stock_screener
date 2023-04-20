@@ -50,12 +50,16 @@ def main():
 
             fin_data = stock.financial_data[stockname]
 
-            #print(stock.valuation_measures)
+#            print(stock.valuation_measures)
 
             # get info from the financial data
             ebitda = get_ttm_ebitda(fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
           
+            key_stats = stock.key_stats[stockname]
+            ev_to_rev = get_valuations(key_stats)
+#            p_to_ocf = get_valuations(key_stats)
+
             # get margins from income statement
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
             av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
@@ -130,6 +134,21 @@ def get_q_rev_growth(_fin_data):
             break
 
     return _q_rev_growth
+
+def get_valuations(_key_stats):
+
+    while True:
+        try:
+            _ev_to_rev = _key_stats['enterpriseToRevenue']
+            break
+        except KeyError:
+            _ev_to_rev = 0.
+            break
+        except ValueError:
+            _ev_to_rev = 0.
+            break
+
+    return _ev_to_rev 
 
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
