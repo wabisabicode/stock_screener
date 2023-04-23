@@ -92,7 +92,7 @@ def main():
                     inv_to_rev_mrq * 100, av_inv_to_rev * 100),
                      
                     asOfDate.strftime('%m/%y'), "\t{}".format(remarks),
-                    "\t{:6.3f}\t{:6.3f}".format(ev_to_rev, p_to_ocf))
+                    "\t{:5.2f}\t{:5.2f}".format(ev_to_rev, p_to_ocf))
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
@@ -127,7 +127,10 @@ def get_ttm_ebitda_ocf(_stock,_fin_data):
         except KeyError:
             quartal_cf = _stock.cash_flow(frequency ='q', trailing=True)
             quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
-            _ocf  = quartal_cf['OperatingCashFlow'].iloc[-1]
+            try:
+                _ocf  = quartal_cf['OperatingCashFlow'].iloc[-1]
+            except:
+                _ocf = 0.
             if np.isnan(_ocf):
                 try:
                     _ocf  = quartal_cf['OperatingCashFlow'].iloc[-2]
@@ -527,6 +530,8 @@ def calc_revenue_inventory_stats(_stock):
     types_tosum = ['TotalRevenue','Inventory']
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
 
+#        tosum_info = np.array([('TotalRevenue', 0.)])
+
     # check how many quarterly data is there
     if type(tosum_info) is not str:
         num_quarters = tosum_info.shape[0]
@@ -540,19 +545,21 @@ def calc_revenue_inventory_stats(_stock):
     rev_mrq = 0
     no_rev_data = False
 
-    while True:
-        try: 
-#            rev = tosum_info.tail(4)['TotalRevenue']
-            rev = tosum_info['TotalRevenue']
-            tot_rev = np.sum(rev)
-            rev_mrq = rev[-1]
-            break
-        except KeyError:
-            no_rev_data = True
-            break
-        except AttributeError:
-            no_rev_data = True
-            break
+    if isinstance(tosum_info,str): 
+        no_rev_data = True
+    else:
+        while True:
+            try: 
+                rev = tosum_info['TotalRevenue']
+                tot_rev = np.sum(rev)
+                rev_mrq = rev[-1]
+                break
+            except KeyError:
+                no_rev_data = True
+                break
+            except AttributeError:
+                no_rev_data = True
+                break
 
     # calculate inventory as % of mrq revenue and ttm average thereof
     _av_inv_to_rev = 0.
