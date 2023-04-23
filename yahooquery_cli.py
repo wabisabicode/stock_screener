@@ -3,6 +3,7 @@ import numpy as np
 import math
 import sys
 import argparse
+#import pandas as pd
 
 def main():
 
@@ -40,7 +41,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\t aIn/R\tin/Rmrq\tEV/Sale\t P/OCF\t  mrq\tRemark")
+    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t mrq\tRemark\t\tEV/Sale\t P/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -51,12 +52,15 @@ def main():
             fin_data = stock.financial_data[stockname]
 
             # get info from the financial data
-            ebitda, ocf = get_ttm_ebitda_ocf(fin_data)
+            ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock,fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
          
             # get current valuations for EV-to-Rev and Price/OCF
             key_stats = stock.key_stats[stockname]
-            ev_to_rev = get_ev_to_rev(key_stats)            
+
+            #tot_rev_backup = get_ttm_rev(stock)    # not needed yet; use direct EV-to-Rev
+            #ev_to_rev = get_ev_to_rev(stock, key_stats, tot_rev_backup)
+            ev_to_rev = get_ev_to_rev(stock, key_stats)
 
             summary_detail = stock.summary_detail[stockname]
             p_to_ocf = get_p_to_ocf(summary_detail, ocf)
@@ -70,9 +74,6 @@ def main():
             av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
-            # get valuations
-#            getValuations(asOfDate)
-
             # check if ebitda is zero
             if ebitda:
                 net_debt_to_ebitda = net_debt / ebitda
@@ -82,15 +83,16 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t {:5.2f} \t {:5.2f} ".format(
+            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t".format(
                     stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
                     mrq_gp_margin * 100, av_gp_margin * 100,
                     mrq_ocf_margin * 100, av_ocf_margin * 100,
                     mrq_fcf_margin * 100, av_fcf_margin * 100,
                     equity_ratio * 100, net_debt_to_ebitda,
-                    av_inv_to_rev * 100, inv_to_rev_mrq * 100, 
-                    ev_to_rev, p_to_ocf), 
-                    asOfDate.strftime('%m/%y'), "\t{}".format(remarks))
+                    inv_to_rev_mrq * 100, av_inv_to_rev * 100),
+                     
+                    asOfDate.strftime('%m/%y'), "\t{}".format(remarks),
+                    "\t{:6.3f}\t{:6.3f}".format(ev_to_rev, p_to_ocf))
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
@@ -105,7 +107,7 @@ def main():
 # get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
 
-def get_ttm_ebitda_ocf(_fin_data):
+def get_ttm_ebitda_ocf(_stock,_fin_data):
 
     while True:
         try:
@@ -123,13 +125,49 @@ def get_ttm_ebitda_ocf(_fin_data):
             _ocf = _fin_data['operatingCashflow']
             break
         except KeyError:
-            _ocf = 0.
+            quartal_cf = _stock.cash_flow(frequency ='q', trailing=True)
+            quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
+            _ocf  = quartal_cf['OperatingCashFlow'].iloc[-1]
+            if np.isnan(_ocf):
+                try:
+                    _ocf  = quartal_cf['OperatingCashFlow'].iloc[-2]
+                except:
+                    _ocf = 0.
             break
         except ValueError:
             _ocf = 0.
             break
 
-    return _ebitda, _ocf
+    while True:
+        try:
+            _tot_rev = _fin_data['totalRevenue']
+            break
+        except KeyError:
+            _tot_rev = 0.
+            break
+        except ValueError:
+            _tot_rev = 0.
+            break
+
+
+    return _ebitda, _ocf, _tot_rev
+
+def get_ttm_rev(_stock):
+
+    income_stat = _stock.income_statement(frequency='q', trailing=True)
+
+    while True:
+        try:
+            _tot_rev = income_stat['TotalRevenue'].iloc[-1]
+            break
+        except KeyError:
+            _tot_rev = 0.
+            break
+        except ValueError:
+            _tot_rev = 0.
+            break
+
+    return _tot_rev
 
 def get_q_rev_growth(_fin_data):
     """ get yoy revenue growth for the most recent quarter 
@@ -148,18 +186,43 @@ def get_q_rev_growth(_fin_data):
 
     return _q_rev_growth
 
-def get_ev_to_rev(_key_stats):
+#def get_ev_to_rev(_stock, _key_stats, _tot_rev_backup):
+def get_ev_to_rev(_stock, _key_stats):
+    """ get EV to Rev. If it is absent in key_stats,
+    we get it from table valuation_measures
+    an alternative way would be to get EV and TotRev separately.
+    This way is commented out. Maybe useful for later development
+    """ 
 
-    while True:
+    no_evrev = False
+    try:
+        _ev_to_rev = _key_stats['enterpriseToRevenue']
+    except KeyError:
+        _ev_to_rev = 0.
+        no_evrev = True
+    except ValueError:
+        _ev_to_rev = 0.
+        no_evrev = True
+
+#    print(_stock.valuation_measures)
+
+    if no_evrev:
         try:
-            _ev_to_rev = _key_stats['enterpriseToRevenue']
-            break
-        except KeyError:
-            _ev_to_rev = 0.
-            break
-        except ValueError:
-            _ev_to_rev = 0.
-            break
+            _ev_to_rev = _stock.valuation_measures['EnterprisesValueRevenueRatio'].iloc[-1]
+        except:
+            _ev_to_rev = float('nan')
+            
+#    _ev = _stock.valuation_measures['EnterpriseValue'].iloc[-2]
+#    _ev_to_rev2 = 0.
+#    if no_rev:
+#        try:
+#            _ev_to_rev2 = _ev / _tot_rev_backup
+#        except ZeroDivisionError:
+#            _ev_to_rev2 = float('nan')
+#    print (_ev_to_rev, _ev_to_rev2)
+
+#    print (' ')
+#    print (_ev_to_rev)
 
     return _ev_to_rev 
 
@@ -180,7 +243,6 @@ def get_p_to_ocf(_summary_detail, _ocf):
         _p_to_ocf = _m_cap / _ocf
     except ZeroDivisionError:
         _p_to_ocf = float('nan')
-
 
     return _p_to_ocf
 
@@ -211,10 +273,14 @@ def get_mrq_gp_margin(_stock):
             _mrq_gp = 0.
             break
 
+#    print (quartal_cf)
     # get Operating CashFlow
     while True:
         try:
             _mrq_ocf  = quartal_cf['OperatingCashFlow'].iloc[-1] 
+            # remedy an absence of data if Earnings are super-recent: get data of previous q
+            if np.isnan(_mrq_ocf):
+                _mrq_ocf  = quartal_cf['OperatingCashFlow'].iloc[-2]
             break
         except KeyError:
             _mrq_ocf = 0.
@@ -227,6 +293,9 @@ def get_mrq_gp_margin(_stock):
     while True:
         try:
             _mrq_fcf  = quartal_cf['FreeCashFlow'].iloc[-1] 
+            # remedy an absence of data if Earnings are super-recent: get data of previous q
+            if np.isnan(_mrq_fcf):
+                _mrq_fcf  = quartal_cf['FreeCashFlow'].iloc[-2]
             break
         except KeyError:
             _mrq_fcf = 0.
