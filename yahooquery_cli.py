@@ -21,7 +21,7 @@ def main():
 
     if listarg[0] == "div":
         stocks_list = ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
-        'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul']
+        'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
         stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
     elif listarg[0] == "rest":
@@ -31,7 +31,7 @@ def main():
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
                 'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
                 'dell', '4901.t', 'ibm', 'msft', 'txn', '', '', 't', 'dte.de', 'dis', 'vz', '', '', 'bipc', 'ibe.mc', 'red.mc', '', '',
-                'amt', 'avb', 'dea', 'krc', 'nnn', 'stag', 'skt', 'vici', 'vna.de', 'wpc']
+                'amt', 'avb', 'dea', 'krc', 'nnn', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
         stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'hcp', 'splk', 'baba', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
                 'isrg', '6060.hk', 'aapl', 'nem.de', 'nvda', 'var1.de', 'estc', 'hfg.de', 'qlys', 'pypl', 'zal.de', 'zm']
@@ -41,7 +41,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t mrq\tRemark\t\tEV/Sale\t P/OCF")
+    print ("stock\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t\tP/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -83,16 +83,17 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print ("{}\t {:3.0f}% \t {:3.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t".format(
-                    stockname, q_rev_growth * 100, av_rev_growth * 100 - 100,
-                    mrq_gp_margin * 100, av_gp_margin * 100,
-                    mrq_ocf_margin * 100, av_ocf_margin * 100,
-                    mrq_fcf_margin * 100, av_fcf_margin * 100,
-                    equity_ratio * 100, net_debt_to_ebitda,
-                    inv_to_rev_mrq * 100, av_inv_to_rev * 100),
-                     
-                    asOfDate.strftime('%m/%y'), "\t{}".format(remarks),
-                    "\t{:5.2f}\t{:5.2f}".format(ev_to_rev, p_to_ocf))
+            print (
+                    "{}\t ".format(stockname), 
+                    "{:4.0f}%\t {:4.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                        equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
+                    "{:3.0f}% \t {:3.0f}% \t".format(
+                        q_rev_growth * 100, av_rev_growth * 100 - 100),
+                    "{:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t".format(
+                        mrq_gp_margin * 100, av_gp_margin * 100, 
+                        mrq_ocf_margin * 100, av_ocf_margin * 100, mrq_fcf_margin * 100, av_fcf_margin * 100),
+                    asOfDate.strftime('%m/%y'), "\t{}\t\t".format(remarks),
+                    "{:5.2f}\t\t{:5.2f}".format(ev_to_rev, p_to_ocf))
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
