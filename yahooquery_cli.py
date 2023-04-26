@@ -23,7 +23,7 @@ def main():
         stocks_list = ['abbv', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
         'hei.de', 'ibe.mc', 'intc', 'irm', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
-        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'c0m.de', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
+        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'coin', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif listarg[0] == "watch":
@@ -41,7 +41,7 @@ def main():
         stocks_list = listarg
 
     # print header
-    print ("stock\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t\tP/OCF")
+    print ("stock\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\tP/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -93,7 +93,7 @@ def main():
                         mrq_gp_margin * 100, av_gp_margin * 100, 
                         mrq_ocf_margin * 100, av_ocf_margin * 100, mrq_fcf_margin * 100, av_fcf_margin * 100),
                     asOfDate.strftime('%m/%y'), "\t{}\t\t".format(remarks),
-                    "{:5.2f}\t\t{:5.2f}".format(ev_to_rev, p_to_ocf))
+                    "{:5.2f}\t{:5.2f}".format(ev_to_rev, p_to_ocf))
 
         #    norm = 1000000
         #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
