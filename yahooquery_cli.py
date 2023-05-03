@@ -207,6 +207,9 @@ def get_ev_to_rev(_stock, _key_stats):
     except ValueError:
         _ev_to_rev = 0.
         no_evrev = True
+    except TypeError:
+        _ev_to_rev = 0.
+        no_evrev = True
 
 #    print(_stock.valuation_measures)
 
