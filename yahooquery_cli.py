@@ -56,7 +56,10 @@ def main():
             q_rev_growth = get_q_rev_growth(fin_data)
          
             # get current valuations for EV-to-Rev and Price/OCF
-            key_stats = stock.key_stats[stockname]
+            if (stockname != 'bion.sw'): 
+                key_stats = stock.key_stats[stockname]
+            else:
+                key_stats = 0
 
             #tot_rev_backup = get_ttm_rev(stock)    # not needed yet; use direct EV-to-Rev
             #ev_to_rev = get_ev_to_rev(stock, key_stats, tot_rev_backup)
@@ -187,6 +190,10 @@ def get_q_rev_growth(_fin_data):
         except ValueError:
             _q_rev_growth = 0.
             break
+
+    # check if _q_rev_growth is an (empty) dict
+    if type(_q_rev_growth) is dict:
+            _q_rev_growth = 0.
 
     return _q_rev_growth
 
