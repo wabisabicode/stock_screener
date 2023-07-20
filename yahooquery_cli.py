@@ -220,7 +220,8 @@ def get_ev_to_rev(_stock, _key_stats):
 
 #    print(_stock.valuation_measures)
 
-    if no_evrev:
+    # check if no ev-to-rev exist or if it is an empty dict
+    if no_evrev or not bool(_ev_to_rev):
         try:
             _ev_to_rev = _stock.valuation_measures['EnterprisesValueRevenueRatio'].iloc[-1]
         except:
