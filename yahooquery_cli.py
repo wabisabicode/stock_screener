@@ -40,8 +40,9 @@ def main():
     else:
         stocks_list = listarg
 
-    # print header
-    print ("stock\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t P/OCF")
+    # print header lines
+    print ("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     | Gross Margin  |  Op CashFlow  | Free CashFlow |\t    \t     \t  |       Valuation\t")
+    print ("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t P/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -88,7 +89,7 @@ def main():
 
             print (
                     "{}\t ".format(stockname), 
-                    "{:4.0f}%\t {:4.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                    "{:4.0f}%\t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
                         equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
                     "{:3.0f}% \t {:3.0f}% \t".format(
                         q_rev_growth * 100, av_rev_growth * 100 - 100),
