@@ -3,7 +3,7 @@ from yahooquery import Ticker
 import numpy as np
 import math
 import datetime
-from yahooquery_cli import get_ttm_ebitda, get_mrq_financial_strength, calc_revenue_inventory_stats 
+from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_revenue_inventory_stats 
 
 app = Flask(__name__)
 
@@ -20,10 +20,11 @@ def results():
         if stockname != '':
 
             stock = Ticker(stockname)
+            fin_data = stock.financial_data[stockname]
 
-            avg_inv_to_rev, inv_to_rev_mrq = calc_revenue_inventory_stats(stock)
+            avg_inv_to_rev, inv_to_rev_mrq, remark = calc_revenue_inventory_stats(stock)
 
-            ebitda = get_ttm_ebitda(stock, stockname)
+            ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data)
 
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 

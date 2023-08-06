@@ -20,17 +20,17 @@ def main():
     stocks_list = []
 
     if listarg[0] == "div":
-        stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'dlr', 'enb', 'ecv.de', 
+        stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'dlr', 'enb', 'ecv.de', 
         'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
-        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'hyq.de', 'ma', 'meta', 'pltr', 'veev']
+        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'pltr', 'veev']
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif listarg[0] == "watch":
         stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
-                'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
-                'dell', '4901.t', 'ibm', 'msft', 'txn', '', '', 't', 'dte.de', 'dis', 'vz', '', '', 'bipc', 'red.mc', '', '',
+                'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
+                'dell', '4901.t', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'vz', '', '', 'bipc', 'red.mc', '', '',
                 'avb', 'irm', 'dea', 'krc', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
         stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'hcp', 'splk', 'baba', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
@@ -40,8 +40,9 @@ def main():
     else:
         stocks_list = listarg
 
-    # print header
-    print ("stock\t eq/toA\tnebitda\tin/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t P/OCF")
+    # print header lines
+    print ("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     | Gross Margin  |  Op CashFlow  | Free CashFlow |\t    \t     \t  |       Valuation\t")
+    print ("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t P/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -88,7 +89,7 @@ def main():
 
             print (
                     "{}\t ".format(stockname), 
-                    "{:4.0f}%\t {:4.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                    "{:4.0f}%\t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
                         equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
                     "{:3.0f}% \t {:3.0f}% \t".format(
                         q_rev_growth * 100, av_rev_growth * 100 - 100),
