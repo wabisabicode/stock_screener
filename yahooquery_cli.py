@@ -33,8 +33,8 @@ def main():
                 'dell', '4901.t', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'vz', '', '', 'bipc', 'red.mc', '', '',
                 'avb', 'irm', 'dea', 'krc', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
-        stocks_list = ['bkng', 'bidu', 'cdr.wa', 'crwd', 'hcp', 'splk', 'baba', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'pton', 'upst', 'vmeo',
-                'isrg', '6060.hk', 'aapl', 'nem.de', 'nvda', 'var1.de', 'estc', 'hfg.de', 'qlys', 'pypl', 'uber', 'zal.de', 'zm']
+        stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pypl', 'pton',
+                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'vmeo', 'zal.de', '6060.hk', 'zm']
     elif listarg[0] == "watchcomm":
         stocks_list = ['eog']
     else:
