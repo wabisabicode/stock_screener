@@ -89,7 +89,8 @@ def main():
 
             print (
                     "{}\t ".format(stockname), 
-                    "{:4.0f}%\t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                    "{:4.0f}%\t{:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                    #"{:4.0f}%\t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
                         equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
                     "{:3.0f}% \t {:3.0f}% \t".format(
                         q_rev_growth * 100, av_rev_growth * 100 - 100),
