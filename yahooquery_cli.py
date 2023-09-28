@@ -23,7 +23,7 @@ def main():
         stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'dlr', 'enb', 'ecv.de', 
         'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
-        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'pltr', 'veev']
+        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif listarg[0] == "watch":
@@ -33,8 +33,8 @@ def main():
                 'dell', '4901.t', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'vz', '', '', 'bipc', 'red.mc', '', '',
                 'avb', 'irm', 'dea', 'krc', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
-        stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pypl', 'pton',
-                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'vmeo', 'zal.de', '6060.hk', 'zm']
+        stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
+                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'zal.de', '6060.hk', 'zm']
     elif listarg[0] == "watchcomm":
         stocks_list = ['eog']
     else:
