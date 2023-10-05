@@ -20,7 +20,7 @@ def main():
     stocks_list = []
 
     if listarg[0] == "div":
-        stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'dlr', 'enb', 'ecv.de', 
+        stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
         'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
         stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
@@ -31,7 +31,7 @@ def main():
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
                 'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
                 'dell', '4901.t', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'vz', '', '', 'bipc', 'red.mc', '', '',
-                'avb', 'irm', 'dea', 'krc', 'stag', 'skt', 'vici', 'wpc']
+                'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
         stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
                 'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'zal.de', '6060.hk', 'zm']
