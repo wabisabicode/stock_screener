@@ -30,7 +30,7 @@ def main():
         stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
                 '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
                 'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
-                'dell', '4901.t', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'vz', '', '', 'bipc', 'red.mc', '', '',
+                'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'vz', 'wbd', '', '', 'bipc', 'red.mc', '', '',
                 'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
     elif listarg[0] == "watchgrow":
         stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
