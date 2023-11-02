@@ -442,7 +442,7 @@ def get_yearly_gp_margin(_stock):
 
         gp_margin = []
         for i in range(len(_totrev_table)-1, -1, -1):
-            gp_margin.append((_totrev_table[i]-_totexp_table[i])/_totrev_table[i])
+            gp_margin.append((_totrev_table.iloc[i]-_totexp_table.iloc[i])/_totrev_table.iloc[i])
         _gp_margin_av = np.average(gp_margin)
         if _no_totexp: _gp_margin_av = float('nan')
 
