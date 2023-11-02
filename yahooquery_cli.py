@@ -426,7 +426,7 @@ def get_yearly_gp_margin(_stock):
         gp_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
-            gp_margin.append(_gp_table[i]/_totrev_table[i])
+            gp_margin.append(_gp_table.iloc[i]/_totrev_table.iloc[i])
 
         _gp_margin_av = np.average(gp_margin)
     else:
@@ -451,7 +451,7 @@ def get_yearly_gp_margin(_stock):
         ocf_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
-            ocf_margin.append(_ocf_table[i]/_totrev_table[i])
+            ocf_margin.append(_ocf_table.iloc[i]/_totrev_table.iloc[i])
     
         _ocf_margin_av = np.average(ocf_margin)
     else:
@@ -462,7 +462,7 @@ def get_yearly_gp_margin(_stock):
         fcf_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
-            fcf_margin.append(_fcf_table[i]/_totrev_table[i])
+            fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
     
         _fcf_margin_av = np.average(fcf_margin)
     else:
@@ -528,7 +528,7 @@ def get_yearly_revenue(_stock):
     r_growth = []
 
     for i in range(len(revs) - 1, 0, -1):
-        r_growth.append(revs[i]/revs[i-1])
+        r_growth.append(revs.iloc[i]/revs.iloc[i-1])
 
     _r_growth_tot = np.prod(r_growth)
 
@@ -568,7 +568,7 @@ def calc_revenue_inventory_stats(_stock):
             try: 
                 rev = tosum_info['TotalRevenue']
                 tot_rev = np.sum(rev)
-                rev_mrq = rev[-1]
+                rev_mrq = rev.iloc[-1]
                 break
             except KeyError:
                 no_rev_data = True
@@ -588,12 +588,12 @@ def calc_revenue_inventory_stats(_stock):
         try:
 #            inv = tosum_info.tail(4)['Inventory'].copy() # unpack inventory for 4 last quarters
             inv = tosum_info['Inventory'].copy() # unpack inventory for 4 last quarters
-            inv_mrq = inv[-1]
-            if math.isnan(inv_mrq): inv_mrq = inv[-1] = inv[-2]
+            inv_mrq = inv.iloc[-1]
+            if math.isnan(inv_mrq): inv_mrq = inv.iloc[-1] = inv.iloc[-2]
 
             _inv_to_rev = []
             for i in range(len(inv)-1, -1, -1):
-                _inv_to_rev.append(inv[i] / rev[i])
+                _inv_to_rev.append(inv.iloc[i] / rev.iloc[i])
             _av_inv_to_rev = np.average(_inv_to_rev)
 
             _inv_to_rev_mrq = inv_mrq / rev_mrq
