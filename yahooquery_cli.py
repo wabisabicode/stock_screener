@@ -21,14 +21,14 @@ def main():
 
     if listarg[0] == "div":
         stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
-        'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swa.de', 'swk', 'ul', 'vna.de']
+        'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
     elif listarg[0] == "growth":
         stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
     elif listarg[0] == "rest":
         stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif listarg[0] == "watch":
         stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
-                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', '', '',
+                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
                 'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
                 'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'vz', 'wbd', '', '', 'bipc', 'red.mc', '', '',
                 'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
@@ -48,7 +48,8 @@ def main():
     for stockname in stocks_list:
         if stockname != '':
 
-            stock = Ticker(stockname, asynchronous=True)
+#            stock = Ticker(stockname, asynchronous=True)
+            stock = Ticker(stockname, asynchronous=False)
 
             fin_data = stock.financial_data[stockname]
 
