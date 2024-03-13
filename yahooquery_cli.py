@@ -452,7 +452,10 @@ def get_yearly_gp_margin(_stock):
         ocf_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
-            ocf_margin.append(_ocf_table.iloc[i]/_totrev_table.iloc[i])
+            try: 
+                ocf_margin.append(_ocf_table.iloc[i]/_totrev_table.iloc[i])
+            except IndexError:
+                pass
     
         _ocf_margin_av = np.average(ocf_margin)
     else:
@@ -463,7 +466,10 @@ def get_yearly_gp_margin(_stock):
         fcf_margin = []
 
         for i in range(len(_totrev_table)-1, -1, -1):
-            fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
+            try:
+                fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
+            except IndexError:
+                pass
     
         _fcf_margin_av = np.average(fcf_margin)
     else:
