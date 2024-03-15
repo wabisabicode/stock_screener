@@ -422,11 +422,13 @@ def get_yearly_gp_margin(_stock):
             _totrev_table = 0
             break
 
+    _totrev_table_len = len(_totrev_table)
+
     # calculate rev growth rates via annual revenues
     if (no_gp == False):
         gp_margin = []
 
-        for i in range(len(_totrev_table)-1, -1, -1):
+        for i in range(_totrev_table_len - 1, -1, -1):
             gp_margin.append(_gp_table.iloc[i]/_totrev_table.iloc[i])
 
         _gp_margin_av = np.average(gp_margin)
@@ -442,7 +444,7 @@ def get_yearly_gp_margin(_stock):
                 break
 
         gp_margin = []
-        for i in range(len(_totrev_table)-1, -1, -1):
+        for i in range(_totrev_table_len - 1, -1, -1):
             gp_margin.append((_totrev_table.iloc[i]-_totexp_table.iloc[i])/_totrev_table.iloc[i])
         _gp_margin_av = np.average(gp_margin)
         if _no_totexp: _gp_margin_av = float('nan')
@@ -451,7 +453,7 @@ def get_yearly_gp_margin(_stock):
     if (no_ocf == False):
         ocf_margin = []
 
-        for i in range(len(_totrev_table)-1, -1, -1):
+        for i in range(_totrev_table_len - 1, -1, -1):
             try: 
                 ocf_margin.append(_ocf_table.iloc[i]/_totrev_table.iloc[i])
             except IndexError:
@@ -465,7 +467,7 @@ def get_yearly_gp_margin(_stock):
     if (no_fcf == False):
         fcf_margin = []
 
-        for i in range(len(_totrev_table)-1, -1, -1):
+        for i in range(_totrev_table_len - 1, -1, -1):
             try:
                 fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
             except IndexError:
