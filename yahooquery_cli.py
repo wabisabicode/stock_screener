@@ -422,7 +422,7 @@ def get_yearly_gp_margin(_stock):
             _totrev_table = 0
             break
 
-    _totrev_table_len = len(_totrev_table)
+    _totrev_table_len = _totrev_table.size
 
     # calculate rev growth rates via annual revenues
     if (no_gp == False):
