@@ -5,6 +5,8 @@ import math
 import datetime
 from yahooquery_cli import form_stock_list
 from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_revenue_inventory_stats 
+from yahooquery_cli import get_q_rev_growth, get_yearly_revenue
+from yahooquery_cli import get_mrq_gp_margin, get_yearly_gp_margin
 
 app = Flask(__name__)
 
@@ -32,11 +34,17 @@ def results():
             stock = Ticker(stockname)
             fin_data = stock.financial_data[stockname]
 
-            avg_inv_to_rev, inv_to_rev_mrq, remark = calc_revenue_inventory_stats(stock)
+            avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
 
             ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data)
 
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
+
+            q_rev_growth = get_q_rev_growth(fin_data)
+            av_rev_growth, remark_rev = get_yearly_revenue(stock)
+
+            mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
+            av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
 
             data.append({
                 'symbol': stockname,
@@ -45,6 +53,14 @@ def results():
                 'net_debt_ebitda': net_debt / ebitda,
                 'inv_to_rev_mrq': inv_to_rev_mrq * 100,
                 'avg_inv_to_rev': avg_inv_to_rev * 100,
+                'q_rev_growth_ui': q_rev_growth * 100,
+                'av_rev_growth_ui': av_rev_growth * 100 - 100,
+                'mrq_gp_margin_ui': mrq_gp_margin * 100, 
+                'av_gp_margin_ui': av_gp_margin * 100,
+                'mrq_ocf_margin_ui': mrq_ocf_margin * 100, 
+                'av_ocf_margin_ui': av_ocf_margin * 100,
+                'mrq_fcf_margin_ui': mrq_fcf_margin * 100, 
+                'av_fcf_margin_ui': av_fcf_margin * 100,
                 'as_of_date': asOfDate.strftime('%m/%y')
             })
 
