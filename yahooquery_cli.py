@@ -96,7 +96,6 @@ def form_stock_list(_listarg):
     _stocks_list = []
 
     if _listarg == "div":
-        print('YAHOO!')
         _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
         'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
     elif _listarg == "growth":

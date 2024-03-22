@@ -15,9 +15,14 @@ def home():
 @app.route('/results', methods=['POST'])
 def results():
 
-    # get stock from the form and pass it to form_stock_list as a string
-    stock_string = ''.join(form_stock_list(request.form.getlist('stock'))) 
-    stocks_list = form_stock_list(stock_string)
+    # get the input from the UI form
+    stock_from_UI = ''.join(request.form.getlist('stock'))
+
+    stocks_list = form_stock_list(stock_from_UI)
+
+    # check if stocks_list is a string (only a selected stock is desired)
+    if type(stocks_list) is str:
+        stocks_list = stocks_list.split() # splits the stockname by ' ' instead of letters
 
     data = []
 
