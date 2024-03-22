@@ -3,6 +3,7 @@ import numpy as np
 import math
 import sys
 import argparse
+from flask import request
 #import pandas as pd
 
 def main():
@@ -16,29 +17,10 @@ def main():
     args = parser.parse_args()
     listarg = args.l
    
-    # Fill in a list of stocks based on the input option 
-    stocks_list = []
-
-    if listarg[0] == "div":
-        stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
-        'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
-    elif listarg[0] == "growth":
-        stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
-    elif listarg[0] == "rest":
-        stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
-    elif listarg[0] == "watch":
-        stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
-                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
-                'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
-                'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '', 'bipc', 'red.mc', '', '',
-                'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
-    elif listarg[0] == "watchgrow":
-        stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
-                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'zal.de', '6060.hk', 'zm']
-    elif listarg[0] == "watchcomm":
-        stocks_list = ['eog']
-    else:
-        stocks_list = listarg
+#     if request.form.getlist('stock'):
+#        stocks_list = form_stock_list(request.form.getlist('stock'))
+#    else:
+    stocks_list = form_stock_list(listarg[0])
 
     # print header lines
     print ("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     | Gross Margin  |  Op CashFlow  | Free CashFlow |\t    \t     \t  |       Valuation\t")
@@ -47,7 +29,6 @@ def main():
     # Get stats for the stocks in the list
     for stockname in stocks_list:
         if stockname != '':
-
 #            stock = Ticker(stockname, asynchronous=True)
             stock = Ticker(stockname, asynchronous=False)
 
@@ -108,6 +89,35 @@ def main():
 
         else:
             print(' ')
+
+
+def form_stock_list(_listarg):
+    # Fill in a list of stocks based on the input option 
+    _stocks_list = []
+
+    if _listarg == "div":
+        print('YAHOO!')
+        _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
+        'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
+    elif _listarg == "growth":
+        _stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
+    elif _listarg == "rest":
+        _stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
+    elif _listarg == "watch":
+        _stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
+                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
+                'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
+                'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '', 'bipc', 'red.mc', '', '',
+                'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
+    elif _listarg == "watchgrow":
+        _stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
+                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'zal.de', '6060.hk', 'zm']
+    elif _listarg == "watchcomm":
+        _stocks_list = ['eog']
+    else:
+        _stocks_list = _listarg
+
+    return _stocks_list
 
 
 # ----------------------------------------------

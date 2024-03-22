@@ -29,8 +29,8 @@
         <th>Stock</th>
         <th>Equity Ratio (%)</th>
         <th>Net Debt/EBITDA</th>
-        <th>Avg. Inventory/Revenue (%)</th>
         <th>Inventory/Revenue MRQ (%)</th>
+        <th>Avg. Inventory/Revenue (%)</th>
         <th>As of Date</th>
       </tr>
       {% for item in data %}
@@ -38,8 +38,8 @@
         <td>{{ item.symbol }}</td>
         <td>{{ '%5.0f%%' % item.equity_ratio|float }}</td>
         <td>{{ '%4.1f' % item.net_debt_ebitda|float }}</td>
-        <td>{{ '%5.0f%%' % item.avg_inv_to_rev|float }}</td>
         <td>{{ '%5.0f%%' % item.inv_to_rev_mrq|float }}</td>
+        <td>{{ '%5.0f%%' % item.avg_inv_to_rev|float }}</td>
         <td>{{ item.as_of_date }}</td>
       </tr>
       {% endfor %}

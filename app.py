@@ -3,6 +3,7 @@ from yahooquery import Ticker
 import numpy as np
 import math
 import datetime
+from yahooquery_cli import form_stock_list
 from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_revenue_inventory_stats 
 
 app = Flask(__name__)
@@ -13,7 +14,10 @@ def home():
 
 @app.route('/results', methods=['POST'])
 def results():
-    stocks_list = request.form.getlist('stock')
+    stock_string = ''.join(form_stock_list(request.form.getlist('stock'))) 
+    print(stock_string)
+    stocks_list = form_stock_list(stock_string)
+    print(stocks_list)
     data = []
 
     for stockname in stocks_list:
@@ -31,9 +35,10 @@ def results():
             data.append({
                 'symbol': stockname,
                 'equity_ratio': equity_ratio * 100,
+                'ndebt_to_ebitda': equity_ratio * 100,
                 'net_debt_ebitda': net_debt / ebitda,
-                'avg_inv_to_rev': avg_inv_to_rev * 100,
                 'inv_to_rev_mrq': inv_to_rev_mrq * 100,
+                'avg_inv_to_rev': avg_inv_to_rev * 100,
                 'as_of_date': asOfDate.strftime('%m/%y')
             })
 
