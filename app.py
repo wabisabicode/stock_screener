@@ -14,10 +14,11 @@ def home():
 
 @app.route('/results', methods=['POST'])
 def results():
+
+    # get stock from the form and pass it to form_stock_list as a string
     stock_string = ''.join(form_stock_list(request.form.getlist('stock'))) 
-    print(stock_string)
     stocks_list = form_stock_list(stock_string)
-    print(stocks_list)
+
     data = []
 
     for stockname in stocks_list:
