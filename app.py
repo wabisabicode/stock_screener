@@ -81,7 +81,7 @@ def results():
             })
             print(data)
         else:
-            pass
+            data.append({})
 
     return render_template('results.html', data=data)
 

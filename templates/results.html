@@ -46,8 +46,8 @@
         <th>EV/Sale</th>
         <th>P/OCF</th>
       </tr>
-      {% if data %}
-        {% for item in data %}
+      {% for item in data %}
+        {% if item %}
           <tr>
             <td>{{ item.symbol }}</td>
             <td>{{ '%5.0f%%' % item.equity_ratio|float }}</td>
@@ -69,13 +69,12 @@
             <td>{{ '%5.2f' % item.ev_to_rev_ui|float }}</td>
             <td>{{ '%6.2f' % item.p_to_ocf_ui|float }}</td>
           </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td>&nbsp;</td>
-          <td>{{ '\t' }}</td>
-        </tr>
-      {% endif %}
+        {% else %}
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
     </table>
   </body>
 </html>
