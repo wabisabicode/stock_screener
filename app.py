@@ -79,7 +79,6 @@ def results():
                 'ev_to_rev_ui': ev_to_rev,
                 'p_to_ocf_ui': p_to_ocf
             })
-            print(data)
         else:
             data.append({})
 
