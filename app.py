@@ -79,6 +79,27 @@ def results():
                 'ev_to_rev_ui': ev_to_rev,
                 'p_to_ocf_ui': p_to_ocf
             })
+        else:
+            data.append({
+                'symbol': '',
+                'equity_ratio': '',
+                'ndebt_to_ebitda': '',
+                'net_debt_ebitda': '',
+                'inv_to_rev_mrq': '',
+                'avg_inv_to_rev': '',
+                'q_rev_growth_ui': '',
+                'av_rev_growth_ui': '',
+                'mrq_gp_margin_ui': '', 
+                'av_gp_margin_ui': '',
+                'mrq_ocf_margin_ui': '', 
+                'av_ocf_margin_ui': '',
+                'mrq_fcf_margin_ui': '', 
+                'av_fcf_margin_ui': '',
+                'as_of_date': '',
+                'remarks_ui': '',
+                'ev_to_rev_ui': '',
+                'p_to_ocf_ui': ''
+            })
 
     return render_template('results.html', data=data)
 
