@@ -7,6 +7,7 @@ from yahooquery_cli import form_stock_list
 from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_revenue_inventory_stats 
 from yahooquery_cli import get_q_rev_growth, get_yearly_revenue
 from yahooquery_cli import get_mrq_gp_margin, get_yearly_gp_margin
+from yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
 app = Flask(__name__)
 
@@ -46,6 +47,18 @@ def results():
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
             av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
 
+            remarks = remark_rev + ' ' + remark_inv
+
+            # get current valuations for EV-to-Rev and Price/OCF
+            if (stockname != 'bion.sw'): 
+                key_stats = stock.key_stats[stockname]
+            else:
+                key_stats = 0
+            ev_to_rev = get_ev_to_rev(stock, key_stats)
+
+            summary_detail = stock.summary_detail[stockname]
+            p_to_ocf = get_p_to_ocf(summary_detail, ocf)
+
             data.append({
                 'symbol': stockname,
                 'equity_ratio': equity_ratio * 100,
@@ -61,7 +74,10 @@ def results():
                 'av_ocf_margin_ui': av_ocf_margin * 100,
                 'mrq_fcf_margin_ui': mrq_fcf_margin * 100, 
                 'av_fcf_margin_ui': av_fcf_margin * 100,
-                'as_of_date': asOfDate.strftime('%m/%y')
+                'as_of_date': asOfDate.strftime('%m/%y'),
+                'remarks_ui': remarks,
+                'ev_to_rev_ui': ev_to_rev,
+                'p_to_ocf_ui': p_to_ocf
             })
 
     return render_template('results.html', data=data)

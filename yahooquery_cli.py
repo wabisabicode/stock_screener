@@ -1,8 +1,8 @@
+import math
+import argparse
+import sys
 from yahooquery import Ticker
 import numpy as np
-import math
-import sys
-import argparse
 from flask import request
 #import pandas as pd
 
@@ -13,10 +13,11 @@ def main():
 
     # Passing a shortname of a stockslist (or stock symbols)
     listarg = []
-    parser.add_argument("-l", nargs="*", help = "Stocks list name: div, growth, rest, watch, watchgrow, watchcomm or stock symbol")
+    parser.add_argument("-l", nargs="*", 
+        help="Stocks list name: div, growth, rest, watch, watchgrow, watchcomm or stock symbol")
     args = parser.parse_args()
     listarg = args.l
-   
+
 #     if request.form.getlist('stock'):
 #        stocks_list = form_stock_list(request.form.getlist('stock'))
 #    else:

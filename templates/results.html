@@ -31,6 +31,7 @@
         <th>Net Debt/EBITDA</th>
         <th>Inventory/Revenue MRQ (%)</th>
         <th>Avg. Inventory/Revenue (%)</th>
+        <th></th>
         <th>qRev Growth YoY (%)</th>
         <th>avRev Growth Y (%)</th>
         <th>MRQ Gross Mar (%)</th>
@@ -41,6 +42,7 @@
         <th>Avg. FCF Y (%)</th>
         <th>MRQ</th>
         <th>Remark</th>
+        <th></th>
         <th>EV/Sale</th>
         <th>P/OCF</th>
       </tr>
@@ -51,6 +53,7 @@
         <td>{{ '%4.1f' % item.net_debt_ebitda|float }}</td>
         <td>{{ '%5.0f%%' % item.inv_to_rev_mrq|float }}</td>
         <td>{{ '%5.0f%%' % item.avg_inv_to_rev|float }}</td>
+        <td>{{ '\t' }}</td>
         <td>{{ '%5.0f%%' % item.q_rev_growth_ui|float }}</td>
         <td>{{ '%5.0f%%' % item.av_rev_growth_ui|float }}</td>
         <td>{{ '%5.0f%%' % item.mrq_gp_margin_ui|float }}</td>
@@ -60,6 +63,10 @@
         <td>{{ '%5.0f%%' % item.mrq_fcf_margin_ui|float }}</td>
         <td>{{ '%5.0f%%' % item.av_fcf_margin_ui|float }}</td>
         <td>{{ item.as_of_date }}</td>
+        <td>{{ item.remarks_ui }}</td>
+        <td>{{ '\t' }}</td>
+        <td>{{ '%5.2f' % item.ev_to_rev_ui|float }}</td>
+        <td>{{ '%6.2f' % item.p_to_ocf_ui|float }}</td>
       </tr>
       {% endfor %}
     </table>
