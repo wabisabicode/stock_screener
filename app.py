@@ -80,9 +80,7 @@ def results():
                 'p_to_ocf_ui': p_to_ocf
             })
         else:
-            data.append({
-                'symbol': ' '
-            })
+            pass
 
     return render_template('results.html', data=data)
 

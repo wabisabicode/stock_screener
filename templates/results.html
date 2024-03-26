@@ -46,11 +46,11 @@
         <th>EV/Sale</th>
         <th>P/OCF</th>
       </tr>
+      {% if data == null %}
+      <td>{{ '\t' }}</td>
+      {% else %}
       {% for item in data %}
       <tr>
-        {% if item == null or item == "" %}
-        <td>{{ item.symbol }}</td>
-        {% else %}
         <td>{{ item.symbol }}</td>
         <td>{{ '%5.0f%%' % item.equity_ratio|float }}</td>
         <td>{{ '%4.1f' % item.net_debt_ebitda|float }}</td>
@@ -70,9 +70,9 @@
         <td>{{ '\t' }}</td>
         <td>{{ '%5.2f' % item.ev_to_rev_ui|float }}</td>
         <td>{{ '%6.2f' % item.p_to_ocf_ui|float }}</td>
-        {% endif %}
       </tr>
       {% endfor %}
+      {% endif %}
     </table>
   </body>
 </html>
