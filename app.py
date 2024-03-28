@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+from flask_socketio import SocketIO
 from yahooquery import Ticker
 import numpy as np
 import math
@@ -10,6 +11,9 @@ from yahooquery_cli import get_mrq_gp_margin, get_yearly_gp_margin
 from yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
 app = Flask(__name__)
+socketio = SocketIO(app)
+
+data = []
 
 @app.route('/')
 def home():
@@ -27,7 +31,7 @@ def results():
     if type(stocks_list) is str:
         stocks_list = stocks_list.split() # splits the stockname by ' ' instead of letters
 
-    data = []
+    global data
 
     for stockname in stocks_list:
         if stockname != '':
@@ -50,7 +54,7 @@ def results():
             remarks = remark_rev + ' ' + remark_inv
 
             # get current valuations for EV-to-Rev and Price/OCF
-            if (stockname != 'bion.sw'): 
+            if stockname != 'bion.sw':
                 key_stats = stock.key_stats[stockname]
             else:
                 key_stats = 0
@@ -82,7 +86,9 @@ def results():
         else:
             data.append({})
 
+        print(data) # debugging
+        socketio.emit('update_data', data)
     return render_template('results.html', data=data)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5008)
+    socketio.run(app, debug=True, port=5008)

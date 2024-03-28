@@ -24,7 +24,7 @@
   </head>
   <body>
     <h1>Stock Data</h1>
-    <table>
+    <table id="stock-table">
       <tr>
         <th>Stock</th>
         <th>Equity Ratio (%)</th>
@@ -94,6 +94,38 @@
         {% endif %}
       {% endfor %}
     </table>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js" integrity="sha384-wcXqvoBsDlnHQ3+BaHclhPmRnQ1FbTbJgsGj1vUZcECqgRbkMp4JUHPcHYL+6Hva" crossorigin="anonymous"></script> -->
+    <script src="/static/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://127.0.0.1:5008');
+        // var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('update_data', function(new_data) {
+            var stockTable = document.getElementById('stock-table');
+            // Clear existing rows except for the header row
+            while (stockTable.rows.length > 1) {
+                stockTable.deleteRow(1);
+            }
+            // Add new rows for each item in new_data
+            new_data.forEach(function(item) {
+                var newRow = stockTable.insertRow(-1);
+                var cellIndex = 0;
+                // Loop through each property of the item object
+                for (var key in item) {
+                    var newCell = newRow.insertCell(cellIndex++);
+                    // Format cell content according to data type
+                    if (key === 'symbol') {
+                        newCell.textContent = item[key];
+                    } else if (key === 'remarks_ui') {
+                        newCell.textContent = item[key];
+                    } else {
+                        newCell.textContent = (typeof item[key] === 'number') ? item[key].toFixed(2) : item[key];
+                    }
+                }
+            });
+        });
+    </script>
   </body>
 </html>
 
