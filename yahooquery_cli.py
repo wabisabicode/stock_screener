@@ -373,9 +373,9 @@ def get_mrq_gp_margin(_stock):
 
 def get_yearly_gp_margin(_stock):
 
-    yearly_info = _stock.income_statement(frequency='a', trailing=False)
+    yearly_info = _stock.income_statement(frequency='a', trailing=False)[1:]
 
-    print(yearly_info)
+#    print(yearly_info)
     # get Gross Profit table
     no_gp = False
     while True:
@@ -392,7 +392,7 @@ def get_yearly_gp_margin(_stock):
             break
 
     # get Operating Cashflow
-    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
+    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)[1:]
 
     no_ocf = False
     while True:
