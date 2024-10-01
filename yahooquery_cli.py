@@ -97,7 +97,7 @@ def form_stock_list(_listarg):
     _stocks_list = []
 
     if _listarg == "div":
-        _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 'ecv.de', 
+        _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 
         'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
     elif _listarg == "growth":
         _stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
@@ -115,7 +115,7 @@ def form_stock_list(_listarg):
     elif _listarg == "watchcomm":
         _stocks_list = ['eog']
     else:
-        _stocks_list = _listarg
+        _stocks_list = [_listarg]
 
     return _stocks_list
 
@@ -375,7 +375,7 @@ def get_yearly_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
-#    print(yearly_info)
+    print(yearly_info)
     # get Gross Profit table
     no_gp = False
     while True:
