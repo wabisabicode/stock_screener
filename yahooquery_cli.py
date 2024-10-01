@@ -4,7 +4,7 @@ import sys
 from yahooquery import Ticker
 import numpy as np
 from flask import request
-#import pandas as pd
+import pandas as pd
 
 def main():
 
@@ -374,13 +374,16 @@ def get_mrq_gp_margin(_stock):
 def get_yearly_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)[1:]
+    #yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
-#    print(yearly_info)
+    print(yearly_info)
     # get Gross Profit table
     no_gp = False
     while True:
         try:
             _gp_table = yearly_info['GrossProfit']
+            _gp_table = _gp_table.dropna()
+            print(_gp_table)
             break
         except KeyError:
             no_gp = True
@@ -391,13 +394,16 @@ def get_yearly_gp_margin(_stock):
 #            print("ValueError")
             break
 
+
     # get Operating Cashflow
-    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)[1:]
+    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
+    #yearly_cf = _stock.cash_flow(frequency='a', trailing=False)[1:]
 
     no_ocf = False
     while True:
         try:
             _ocf_table = yearly_cf['OperatingCashFlow']
+            _ocf_table = _ocf_table.dropna()
             break
         except KeyError:
             no_ocf = True
@@ -411,6 +417,7 @@ def get_yearly_gp_margin(_stock):
     while True:
         try:
             _fcf_table = yearly_cf['FreeCashFlow']
+            _fcf_table = _fcf_table.dropna()
             break
         except KeyError:
             no_fcf = True
@@ -424,6 +431,7 @@ def get_yearly_gp_margin(_stock):
     while True:
         try:
             _totrev_table = yearly_info['TotalRevenue']
+            _totrev_table = _totrev_table.dropna()
             break
         except KeyError:
             _totrev_table = 0
