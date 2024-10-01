@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
     listarg = args.l
 
-#     if request.form.getlist('stock'):
+##     if request.form.getlist('stock'):
 #        stocks_list = form_stock_list(request.form.getlist('stock'))
 #    else:
     stocks_list = form_stock_list(listarg[0])
