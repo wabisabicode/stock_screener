@@ -142,7 +142,7 @@ def get_ttm_ebitda_ocf(_stock,_fin_data):
             _ocf = _fin_data['operatingCashflow']
             break
         except KeyError:
-            quartal_cf = _stock.cash_flow(frequency ='q', trailing=True)
+            quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
             quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
             try:
                 _ocf  = quartal_cf['OperatingCashFlow'].iloc[-1]
@@ -285,16 +285,16 @@ def get_mrq_gp_margin(_stock):
     quartal_info = _stock.income_statement(frequency='q', trailing=False)
     quartal_cf = _stock.cash_flow(frequency='q', trailing=False)
 
-    # if quartal_info is a string (Income Statement data unavailable for _stock)
+    # if quartal_info is str (Income Statement data unavailable for _stock)
     # use trailing info instead of the mrq
-    if isinstance(quartal_info,str): 
+    if isinstance(quartal_info, str):
         quartal_info = _stock.income_statement(frequency='q', trailing=True)
         quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
 
     # get Gross Profit
     while True:
         try:
-            _mrq_gp  = quartal_info['GrossProfit'].iloc[-1] 
+            _mrq_gp = quartal_info['GrossProfit'].dropna().iloc[-1]
             break
         except KeyError:
             _mrq_gp = 0.
@@ -307,10 +307,8 @@ def get_mrq_gp_margin(_stock):
     # get Operating CashFlow
     while True:
         try:
-            _mrq_ocf  = quartal_cf['OperatingCashFlow'].iloc[-1] 
-            # remedy an absence of data if Earnings are super-recent: get data of previous q
-            if np.isnan(_mrq_ocf):
-                _mrq_ocf  = quartal_cf['OperatingCashFlow'].iloc[-2]
+            ocf_cleaned = quartal_cf['OperatingCashFlow'].dropna()
+            _mrq_ocf = ocf_cleaned.iloc[-1]
             break
         except KeyError:
             _mrq_ocf = 0.
@@ -322,10 +320,7 @@ def get_mrq_gp_margin(_stock):
     # get Operating CashFlow
     while True:
         try:
-            _mrq_fcf  = quartal_cf['FreeCashFlow'].iloc[-1] 
-            # remedy an absence of data if Earnings are super-recent: get data of previous q
-            if np.isnan(_mrq_fcf):
-                _mrq_fcf  = quartal_cf['FreeCashFlow'].iloc[-2]
+            _mrq_fcf = quartal_cf['FreeCashFlow'].dropna().iloc[-1] 
             break
         except KeyError:
             _mrq_fcf = 0.
@@ -337,7 +332,7 @@ def get_mrq_gp_margin(_stock):
     # get Total Revenue
     while True:
         try:
-            _mrq_rev = quartal_info['TotalRevenue'].iloc[-1]
+            _mrq_rev = quartal_info['TotalRevenue'].dropna().iloc[-1]
             break
         except KeyError:
             _mrq_rev = 0.
@@ -373,37 +368,29 @@ def get_mrq_gp_margin(_stock):
 
 def get_yearly_gp_margin(_stock):
 
-    yearly_info = _stock.income_statement(frequency='a', trailing=False)[1:]
-    #yearly_info = _stock.income_statement(frequency='a', trailing=False)
+    yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
-    print(yearly_info)
     # get Gross Profit table
     no_gp = False
     while True:
         try:
-            _gp_table = yearly_info['GrossProfit']
-            _gp_table = _gp_table.dropna()
-            print(_gp_table)
+            _gp_table = yearly_info['GrossProfit'].dropna()
             break
         except KeyError:
             no_gp = True
-#            print("KeyError")
             break
         except ValueError:
             no_gp = True
-#            print("ValueError")
             break
 
 
     # get Operating Cashflow
     yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
-    #yearly_cf = _stock.cash_flow(frequency='a', trailing=False)[1:]
 
     no_ocf = False
     while True:
         try:
-            _ocf_table = yearly_cf['OperatingCashFlow']
-            _ocf_table = _ocf_table.dropna()
+            _ocf_table = yearly_cf['OperatingCashFlow'].dropna()
             break
         except KeyError:
             no_ocf = True
@@ -416,8 +403,7 @@ def get_yearly_gp_margin(_stock):
     no_fcf = False
     while True:
         try:
-            _fcf_table = yearly_cf['FreeCashFlow']
-            _fcf_table = _fcf_table.dropna()
+            _fcf_table = yearly_cf['FreeCashFlow'].dropna()
             break
         except KeyError:
             no_fcf = True
@@ -430,8 +416,7 @@ def get_yearly_gp_margin(_stock):
     # get Total Revenue table
     while True:
         try:
-            _totrev_table = yearly_info['TotalRevenue']
-            _totrev_table = _totrev_table.dropna()
+            _totrev_table = yearly_info['TotalRevenue'].dropna()
             break
         except KeyError:
             _totrev_table = 0
