@@ -91,4 +91,4 @@ def results():
     return render_template('results.html', data=data)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5008)
+    socketio.run(app, debug=True, port=8000)
