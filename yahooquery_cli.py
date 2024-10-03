@@ -6,6 +6,8 @@ import numpy as np
 from flask import request
 import pandas as pd
 
+# quartal_rev = 0.
+
 def main():
 
     # Initialize parser
@@ -333,6 +335,9 @@ def get_mrq_gp_margin(_stock):
     while True:
         try:
             _mrq_rev = quartal_info['TotalRevenue'].dropna().iloc[-1]
+            # global quartal_rev
+            # quartal_rev = _mrq_rev
+            # print(_mrq_rev)
             break
         except KeyError:
             _mrq_rev = 0.
@@ -382,7 +387,6 @@ def get_yearly_gp_margin(_stock):
         except ValueError:
             no_gp = True
             break
-
 
     # get Operating Cashflow
     yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
@@ -534,8 +538,8 @@ def get_yearly_revenue(_stock):
     else:
         num_years = 0
 
-    revs = yearly_info['TotalRevenue'].iloc[:] 
-
+    revs = yearly_info['TotalRevenue'].iloc[:]
+    # print(yearly_info['TotalRevenue'])
     # calculate rev growth rates via annual revenues
     r_growth = []
 
@@ -555,10 +559,8 @@ def get_yearly_revenue(_stock):
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
-    types_tosum = ['TotalRevenue','Inventory']
+    types_tosum = ['TotalRevenue', 'Inventory']
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
-
-#        tosum_info = np.array([('TotalRevenue', 0.)])
 
     # check how many quarterly data is there
     if type(tosum_info) is not str:
@@ -566,42 +568,33 @@ def calc_revenue_inventory_stats(_stock):
     else:
         num_quarters = 0
 
-    _remark = 'inv'+ str(num_quarters) + 'Q'
+    _remark = 'inv' + str(num_quarters) + 'Q'
 
     # calculate ttm revenue and mrq revenue
-    tot_rev = 0
     rev_mrq = 0
     no_rev_data = False
 
-    if isinstance(tosum_info,str): 
+    if isinstance(tosum_info, str):
         no_rev_data = True
     else:
-        while True:
-            try: 
-                rev = tosum_info['TotalRevenue']
-                tot_rev = np.sum(rev)
-                rev_mrq = rev.iloc[-1]
-                break
-            except KeyError:
-                no_rev_data = True
-                break
-            except AttributeError:
-                no_rev_data = True
-                break
+        try:
+            rev = tosum_info['TotalRevenue']
+            rev_mrq = rev.iloc[-1]
+        except KeyError:
+            no_rev_data = True
+        except AttributeError:
+            no_rev_data = True
 
     # calculate inventory as % of mrq revenue and ttm average thereof
     _av_inv_to_rev = 0.
     _inv_to_rev_mrq = 0.
 
-    if no_rev_data == True:
-        _av_inv_to_rev = _inv_to_rev_mrq = float('nan')
-
-    while True and no_rev_data == False:
+    if no_rev_data is False:
         try:
-#            inv = tosum_info.tail(4)['Inventory'].copy() # unpack inventory for 4 last quarters
             inv = tosum_info['Inventory'].copy() # unpack inventory for 4 last quarters
             inv_mrq = inv.iloc[-1]
-            if math.isnan(inv_mrq): inv_mrq = inv.iloc[-1] = inv.iloc[-2]
+            if math.isnan(inv_mrq):
+                inv_mrq = inv.iloc[-1] = inv.iloc[-2]
 
             _inv_to_rev = []
             for i in range(len(inv)-1, -1, -1):
@@ -609,9 +602,10 @@ def calc_revenue_inventory_stats(_stock):
             _av_inv_to_rev = np.average(_inv_to_rev)
 
             _inv_to_rev_mrq = inv_mrq / rev_mrq
-            break
         except KeyError:
-            break
+            ...
+    else:
+        _av_inv_to_rev = _inv_to_rev_mrq = float('nan')
 
     return _av_inv_to_rev, _inv_to_rev_mrq, _remark
 
