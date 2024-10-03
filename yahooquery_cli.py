@@ -1,12 +1,9 @@
 import math
 import argparse
-import sys
 from yahooquery import Ticker
 import numpy as np
 from flask import request
-import pandas as pd
 
-# quartal_rev = 0.
 
 def main():
 
@@ -125,8 +122,7 @@ def form_stock_list(_listarg):
 # ----------------------------------------------
 # get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
-
-def get_ttm_ebitda_ocf(_stock,_fin_data):
+def get_ttm_ebitda_ocf(_stock, _fin_data):
 
     while True:
         try:
@@ -171,8 +167,8 @@ def get_ttm_ebitda_ocf(_stock,_fin_data):
             _tot_rev = 0.
             break
 
-
     return _ebitda, _ocf, _tot_rev
+
 
 def get_ttm_rev(_stock):
 
@@ -190,6 +186,7 @@ def get_ttm_rev(_stock):
             break
 
     return _tot_rev
+
 
 def get_q_rev_growth(_fin_data):
     """ get yoy revenue growth for the most recent quarter 
@@ -212,7 +209,7 @@ def get_q_rev_growth(_fin_data):
 
     return _q_rev_growth
 
-#def get_ev_to_rev(_stock, _key_stats, _tot_rev_backup):
+
 def get_ev_to_rev(_stock, _key_stats):
     """ get EV to Rev. If it is absent in key_stats,
     we get it from table valuation_measures
@@ -254,7 +251,8 @@ def get_ev_to_rev(_stock, _key_stats):
 #    print (' ')
 #    print (_ev_to_rev)
 
-    return _ev_to_rev 
+    return _ev_to_rev
+
 
 def get_p_to_ocf(_summary_detail, _ocf):
 
@@ -278,10 +276,10 @@ def get_p_to_ocf(_summary_detail, _ocf):
 
     return _p_to_ocf
 
+
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
-
 def get_mrq_gp_margin(_stock):
 
     quartal_info = _stock.income_statement(frequency='q', trailing=False)
@@ -370,7 +368,6 @@ def get_mrq_gp_margin(_stock):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
-
 def get_yearly_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
@@ -486,10 +483,10 @@ def get_yearly_gp_margin(_stock):
 
     return _gp_margin_av, _ocf_margin_av, _fcf_margin_av
 
+
 # ----------------------------------------------
 # get ttm ebitda from asset profile
 # ----------------------------------------------
-
 def get_mrq_financial_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt 
@@ -513,6 +510,7 @@ def get_mrq_financial_strength(_stock):
 
     return _equity_ratio, _net_debt, _asOfDate
 
+
 def calc_total_debt(_quartal_info):
 
     while True:
@@ -524,6 +522,7 @@ def calc_total_debt(_quartal_info):
             break
 
     return _totalDebt
+
 
 def get_yearly_revenue(_stock):
     """ get annual revenues, calculate growth rates 
@@ -556,6 +555,7 @@ def get_yearly_revenue(_stock):
     _remark_rev = str(num_years) + 'Yrev'
 
     return _av_rev_growth, _remark_rev
+
 
 def calc_revenue_inventory_stats(_stock):
     # revenue has to be summed up
@@ -608,6 +608,7 @@ def calc_revenue_inventory_stats(_stock):
         _av_inv_to_rev = _inv_to_rev_mrq = float('nan')
 
     return _av_inv_to_rev, _inv_to_rev_mrq, _remark
+
 
 if __name__ == "__main__":
     main()
