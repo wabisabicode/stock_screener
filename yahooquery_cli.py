@@ -96,21 +96,34 @@ def form_stock_list(_listarg):
     _stocks_list = []
 
     if _listarg == "div":
-        _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'ay', 'bti', 'blk', 'bepc', 'csco', 'cvs', 'enb', 
-        'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn', 'ohi', 'spg', 'swk', 'ul', 'vna.de']
+        _stocks_list = ['abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'bti',
+                        'blk', 'bepc', 'csco', 'cvs', 'enb', 'ibe.mc', 'intc',
+                        'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t', 'nnn',
+                        'ohi', 'pfe', 'spg', 'swk', 'ul', 'vna.de']
     elif _listarg == "growth":
-        _stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
+        _stocks_list = ['adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq',
+                        'net', 'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo']
     elif _listarg == "rest":
         _stocks_list = ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl']
     elif _listarg == "watch":
-        _stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', 
-                '', '', 'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
-                'bayn.de', 'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'pfe', 'rog.sw', 'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
-                'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '', 
-                'bipc', 'nee', 'red.mc', '', '', 'avb', 'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc']
+        _stocks_list = ['tte', 'shel', '', '', 'apd', 'hei.de', 'lin',
+                        'bas.de', '', '', 'mmm', 'dhl.de', 'fra.de', 'ge',
+                        'hot.de', 'lmt', 'raa.de', '', '', 'mcd', 'ads.de',
+                        'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko', 'k',
+                        'nesn.sw', 'pep', 'pm', 'swa.de', '', '', 'bayn.de',
+                        'bion.sw', 'bmy', 'gild', 'jnj', 'nvs', 'rog.sw',
+                        'soon.sw', '', '', 'brk-b', 'ms', 'muv2.de', '', '',
+                        'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn',
+                        '', '', 't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd',
+                        '', '', 'bipc', 'nee', 'red.mc', 'ay', '', '', 'avb',
+                        'dlr', 'irm', 'dea', 'hr', 'krc', 'stag', 'skt',
+                        'vici', 'wpc']
     elif _listarg == "watchgrow":
-        _stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton',
-                'qlys', 'splk', 'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst', 'var1.de', 'zal.de', '6060.hk', 'zm']
+        _stocks_list = ['baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd',
+                        'estc', 'hcp', 'hfg.de', 'isrg', 'nem.de', 'nvda',
+                        'pltr', 'pypl', 'pton', 'qlys', 'splk', 'tmv.de',
+                        'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst',
+                        'var1.de', 'zal.de', '6060.hk', 'zm']
     elif _listarg == "watchcomm":
         _stocks_list = ['eog']
     else:
