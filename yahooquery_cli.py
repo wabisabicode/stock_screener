@@ -50,7 +50,7 @@ def main():
             # get info from income, balance and cashflow
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
             av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock)
-            equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
+            equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock)
 
             # check if ebitda is zero
             if ebitda:
@@ -495,7 +495,7 @@ def get_ann_gp_margin(_stock):
 # ----------------------------------------------
 # get ttm ebitda from asset profile
 # ----------------------------------------------
-def get_mrq_financial_strength(_stock):
+def get_mrq_fin_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt 
     types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 
