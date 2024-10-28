@@ -1,8 +1,8 @@
-import math
 import argparse
-from yahooquery import Ticker
+import math
+
 import numpy as np
-from flask import request
+from yahooquery import Ticker
 
 
 def main():
@@ -12,40 +12,38 @@ def main():
 
     # Passing a shortname of a stockslist (or stock symbols)
     listarg = []
-    parser.add_argument("-l", nargs="*", 
-        help="Stocks list name: div, growth, rest, watch, watchgrow, watchcomm or stock symbol")
+    parser.add_argument("-l", nargs="*",
+                        help=("Stocks list name: div, growth, rest, watch,"
+                              "watchgrow, watchcomm or stock symbol"))
     args = parser.parse_args()
     listarg = args.l
 
-##     if request.form.getlist('stock'):
-#        stocks_list = form_stock_list(request.form.getlist('stock'))
-#    else:
     stocks_list = form_stock_list(listarg[0])
 
-    # print header lines
-    print ("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     | Gross Margin  |  Op CashFlow  | Free CashFlow |\t    \t     \t  |       Valuation\t")
-    print ("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY \t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq\t Remark \t\tEV/Sale\t P/OCF")
+    print("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     |"
+          " Gross Margin  |  Op CashFlow  | Free CashFlow |"
+          "\t    \t     \t  |       Valuation\t")
+    print("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY "
+          "\t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq"
+          "\t Remark \t\tEV/Sale\t P/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
         if stockname != '':
-#            stock = Ticker(stockname, asynchronous=True)
             stock = Ticker(stockname, asynchronous=False)
 
             fin_data = stock.financial_data[stockname]
 
             # get info from the financial data
-            ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock,fin_data)
+            ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data)
             q_rev_growth = get_q_rev_growth(fin_data)
-         
+
             # get current valuations for EV-to-Rev and Price/OCF
-            if (stockname != 'bion.sw'): 
+            if (stockname != 'bion.sw'):
                 key_stats = stock.key_stats[stockname]
             else:
                 key_stats = 0
 
-            #tot_rev_backup = get_ttm_rev(stock)    # not needed yet; use direct EV-to-Rev
-            #ev_to_rev = get_ev_to_rev(stock, key_stats, tot_rev_backup)
             ev_to_rev = get_ev_to_rev(stock, key_stats)
 
             summary_detail = stock.summary_detail[stockname]
@@ -69,24 +67,18 @@ def main():
             # join remarks
             remarks = remark_rev + ' ' + remark_inv
 
-            print (
-                    "{}\t ".format(stockname), 
-                    "{:4.0f}%\t{:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
-                    #"{:4.0f}%\t {:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
-                        equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
-                    "{:3.0f}% \t {:3.0f}% \t".format(
-                        q_rev_growth * 100, av_rev_growth * 100 - 100),
-                    "{:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t".format(
-                        mrq_gp_margin * 100, av_gp_margin * 100, 
-                        mrq_ocf_margin * 100, av_ocf_margin * 100, mrq_fcf_margin * 100, av_fcf_margin * 100),
-                    asOfDate.strftime('%m/%y'), "\t{}\t\t".format(remarks),
-                    "{:5.2f}\t{:6.2f}".format(ev_to_rev, p_to_ocf))
-
-        #    norm = 1000000
-        #    print (stockname, tot_rev/norm, ebitda/norm, cash/norm, 
-        #            "{:,.2f}%".format(av_inv_to_rev*100), "{:,.2f}%".format(inv_to_rev_mrq*100), 
-        #            liability/norm, equity/norm, totalDebt/norm, asOfDate.strftime('%m/%y'), sep=' \t ')
-
+            print(
+                "{}\t ".format(stockname),
+                "{:4.0f}%\t{:5.1f} \t {:3.0f}% \t {:3.0f}% \t\t".format(
+                    equity_ratio * 100, net_debt_to_ebitda, inv_to_rev_mrq * 100, av_inv_to_rev * 100),
+                "{:3.0f}% \t {:3.0f}% \t".format(
+                    q_rev_growth * 100, av_rev_growth * 100 - 100),
+                "{:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t".format(
+                    mrq_gp_margin * 100, av_gp_margin * 100,
+                    mrq_ocf_margin * 100, av_ocf_margin * 100, mrq_fcf_margin * 100, av_fcf_margin * 100),
+                asOfDate.strftime('%m/%y'), "\t{}\t\t".format(remarks),
+                "{:5.2f}\t{:6.2f}".format(ev_to_rev, p_to_ocf)
+                )
         else:
             print(' ')
 
