@@ -6,6 +6,7 @@ from yahooquery import Ticker
 
 
 def main():
+    display_table_header()
 
     # Initialize parser
     parser = argparse.ArgumentParser()
@@ -19,13 +20,6 @@ def main():
     listarg = args.l
 
     stocks_list = form_stock_list(listarg[0])
-
-    print("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     |"
-          " Gross Margin  |  Op CashFlow  | Free CashFlow |"
-          "\t    \t     \t  |       Valuation\t")
-    print("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY "
-          "\t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq"
-          "\t Remark \t\tEV/Sale\t P/OCF")
 
     # Get stats for the stocks in the list
     for stockname in stocks_list:
@@ -122,6 +116,15 @@ def form_stock_list(_listarg):
         _stocks_list = [_listarg]
 
     return _stocks_list
+
+
+def display_table_header():
+    print("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     |"
+          " Gross Margin  |  Op CashFlow  | Free CashFlow |"
+          "\t    \t     \t  |       Valuation\t")
+    print("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY "
+          "\t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq"
+          "\t Remark \t\tEV/Sale\t P/OCF")
 
 
 # ----------------------------------------------
