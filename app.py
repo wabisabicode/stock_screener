@@ -7,7 +7,7 @@ import datetime
 from yahooquery_cli import form_stock_list
 from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_rev_inv_stats 
 from yahooquery_cli import get_q_rev_growth, get_yearly_revenue
-from yahooquery_cli import get_mrq_gp_margin, get_yearly_gp_margin
+from yahooquery_cli import get_mrq_gp_margin, get_ann_gp_margin
 from yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
 app = Flask(__name__)
@@ -49,7 +49,7 @@ def results():
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
 
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
-            av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
+            av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock)
 
             remarks = remark_rev + ' ' + remark_inv
 

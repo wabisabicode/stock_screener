@@ -45,7 +45,7 @@ def main():
 
             # get margins from income statement
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
-            av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
+            av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock)
 
             # get info from income, balance and cashflow
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
@@ -376,7 +376,7 @@ def get_mrq_gp_margin(_stock):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
-def get_yearly_gp_margin(_stock):
+def get_ann_gp_margin(_stock):
 
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
 
