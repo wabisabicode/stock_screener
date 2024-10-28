@@ -47,9 +47,9 @@ def main():
             mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
             av_gp_margin, av_ocf_margin, av_fcf_margin = get_yearly_gp_margin(stock)
 
-            # get info from income, balance and cashflow 
+            # get info from income, balance and cashflow
             av_rev_growth, remark_rev = get_yearly_revenue(stock)
-            av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
+            av_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock)
             equity_ratio, net_debt, asOfDate = get_mrq_financial_strength(stock)
 
             # check if ebitda is zero
@@ -565,7 +565,7 @@ def get_yearly_revenue(_stock):
     return _av_rev_growth, _remark_rev
 
 
-def calc_revenue_inventory_stats(_stock):
+def calc_rev_inv_stats(_stock):
     # revenue has to be summed up
     types_tosum = ['TotalRevenue', 'Inventory']
     tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)

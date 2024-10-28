@@ -5,7 +5,7 @@ import numpy as np
 import math
 import datetime
 from yahooquery_cli import form_stock_list
-from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_revenue_inventory_stats 
+from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_financial_strength, calc_rev_inv_stats 
 from yahooquery_cli import get_q_rev_growth, get_yearly_revenue
 from yahooquery_cli import get_mrq_gp_margin, get_yearly_gp_margin
 from yahooquery_cli import get_ev_to_rev, get_p_to_ocf
@@ -39,7 +39,7 @@ def results():
             stock = Ticker(stockname)
             fin_data = stock.financial_data[stockname]
 
-            avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_revenue_inventory_stats(stock)
+            avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock)
 
             ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data)
 
