@@ -44,7 +44,7 @@ def main():
             p_to_ocf = get_p_to_ocf(summary_detail, ocf)
 
             # get margins from income statement
-            mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
+            mrq_gp_mgn, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
             av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock)
 
             # get info from income, balance and cashflow
@@ -68,7 +68,7 @@ def main():
                 "{:3.0f}% \t {:3.0f}% \t".format(
                     q_rev_growth * 100, av_rev_growth * 100 - 100),
                 "{:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t {:4.0f}% \t".format(
-                    mrq_gp_margin * 100, av_gp_margin * 100,
+                    mrq_gp_mgn * 100, av_gp_margin * 100,
                     mrq_ocf_margin * 100, av_ocf_margin * 100, mrq_fcf_margin * 100, av_fcf_margin * 100),
                 asOfDate.strftime('%m/%y'), "\t{}\t\t".format(remarks),
                 "{:5.2f}\t{:6.2f}".format(ev_to_rev, p_to_ocf)
