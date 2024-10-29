@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Data</h1>
+    <table id="stock-table">
+        <tr>
+            <th>Stock</th>
+            <th>Equity Ratio (%)</th>
+            <th>Net Debt/EBITDA</th>
+            <th>Inventory/Revenue MRQ (%)</th>
+            <th>Avg. Inventory/Revenue (%)</th>
+            <th>qRev Growth YoY (%)</th>
+            <th>Avg Rev Growth Y (%)</th>
+            <th>MRQ Gross Margin (%)</th>
+            <th>Avg. Gross Margin Y (%)</th>
+            <th>MRQ OCF (%)</th>
+            <th>Avg OCF Y (%)</th>
+            <th>MRQ FCF (%)</th>
+            <th>Avg FCF Y (%)</th>
+            <th>As of Date</th>
+            <th>Remarks</th>
+            <th>EV/Sale</th>
+            <th>P/OCF</th>
+        </tr>
+    </table>
+    
+    <!-- Make sure to link to the Socket.IO library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://127.0.0.1:8000');
+        
+        socket.on('update_data', function(stock_data) {
+            console.log('Received stock data:', stock_data);
+            var stockTable = document.getElementById('stock-table');
+            var newRow = stockTable.insertRow(-1);
+            
+            var cells = [
+                stock_data.symbol, 
+                stock_data.equity_ratio.toFixed(0) + '%',
+                stock_data.net_debt_ebitda.toFixed(1),
+                stock_data.inv_to_rev_mrq.toFixed(0) + '%',
+                stock_data.avg_inv_to_rev.toFixed(0) + '%',
+                stock_data.q_rev_growth_ui.toFixed(0) + '%',
+                stock_data.av_rev_growth_ui.toFixed(0) + '%',
+                stock_data.mrq_gp_margin_ui.toFixed(0) + '%',
+                stock_data.av_gp_margin_ui.toFixed(0) + '%',
+                stock_data.mrq_ocf_margin_ui.toFixed(0) + '%',
+                stock_data.av_ocf_margin_ui.toFixed(0) + '%',
+                stock_data.mrq_fcf_margin_ui.toFixed(0) + '%',
+                stock_data.av_fcf_margin_ui.toFixed(0) + '%',
+                stock_data.as_of_date,
+                stock_data.remarks_ui,
+                stock_data.ev_to_rev_ui.toFixed(2),
+                stock_data.p_to_ocf_ui.toFixed(2)
+            ];
+            
+            cells.forEach(cellData => {
+                var newCell = newRow.insertCell();
+                newCell.textContent = cellData;
+            });
+        });
+        socket.on('process_complete', function() {
+            console.log('Processing complete, redirecting to results...');  // Log completion
+            window.location.href = '/results';
+        });
+    </script>
+
+</body>
+</html>
