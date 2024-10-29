@@ -182,45 +182,23 @@ def get_q_rev_growth(_fin_data):
 
 
 def get_ev_to_rev(_stock, _key_stats):
-    """ get EV to Rev. If it is absent in key_stats,
-    we get it from table valuation_measures
-    an alternative way would be to get EV and TotRev separately.
-    This way is commented out. Maybe useful for later development
-    """ 
+    """Get EV to Revenue ratio. If absent in key_stats, retrieve it from
+    the valuation_measures table as an alternative approach.
+    """
 
-    no_evrev = False
     try:
         _ev_to_rev = _key_stats['enterpriseToRevenue']
-    except KeyError:
-        _ev_to_rev = 0.
-        no_evrev = True
-    except ValueError:
-        _ev_to_rev = 0.
-        no_evrev = True
-    except TypeError:
-        _ev_to_rev = 0.
-        no_evrev = True
+        if isinstance(_ev_to_rev, dict) or not _ev_to_rev:
+            _ev_to_rev = None  # Mark for alt. retrieval if empty or dict
+    except (KeyError, ValueError, TypeError):
+        _ev_to_rev = None  # Mark for alternative retrieval if error occurs
 
-#    print(_stock.valuation_measures)
-
-    # check if no ev-to-rev exist or if it is an empty dict
-    if no_evrev or not bool(_ev_to_rev):
+    # If primary retrieval failed, attempt alternative retrieval
+    if _ev_to_rev is None:
         try:
             _ev_to_rev = _stock.valuation_measures['EnterprisesValueRevenueRatio'].iloc[-1]
-        except:
+        except (KeyError, IndexError, AttributeError):
             _ev_to_rev = float('nan')
-            
-#    _ev = _stock.valuation_measures['EnterpriseValue'].iloc[-2]
-#    _ev_to_rev2 = 0.
-#    if no_rev:
-#        try:
-#            _ev_to_rev2 = _ev / _tot_rev_backup
-#        except ZeroDivisionError:
-#            _ev_to_rev2 = float('nan')
-#    print (_ev_to_rev, _ev_to_rev2)
-
-#    print (' ')
-#    print (_ev_to_rev)
 
     return _ev_to_rev
 
