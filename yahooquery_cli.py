@@ -157,19 +157,11 @@ def get_ttm_ebitda_ocf(_stock, _fin_data):
 
 
 def get_ttm_rev(_stock):
-
-    income_stat = _stock.income_statement(frequency='q', trailing=True)
-
-    while True:
-        try:
-            _tot_rev = income_stat['TotalRevenue'].iloc[-1]
-            break
-        except KeyError:
-            _tot_rev = 0.
-            break
-        except ValueError:
-            _tot_rev = 0.
-            break
+    try:
+        income_stat = _stock.income_statement(frequency='q', trailing=True)
+        _tot_rev = income_stat['TotalRevenue'].iloc[-1]
+    except (KeyError, ValueError, IndexError):
+        _tot_rev = 0.
 
     return _tot_rev
 
