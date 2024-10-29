@@ -204,23 +204,14 @@ def get_ev_to_rev(_stock, _key_stats):
 
 
 def get_p_to_ocf(_summary_detail, _ocf):
+    try:
+        _m_cap = _summary_detail['marketCap']
+    except (KeyError, ValueError):
+        _m_cap = 0.
 
-    while True:
-        try:
-            _m_cap = _summary_detail['marketCap']
-            break
-        except KeyError:
-            _m_cap = 0.
-            break
-        except ValueError:
-            _m_cap = 0.
-            break
-
-    try: 
+    try:
         _p_to_ocf = _m_cap / _ocf
-    except ZeroDivisionError:
-        _p_to_ocf = float('nan')
-    except TypeError:
+    except (ZeroDivisionError, TypeError):
         _p_to_ocf = float('nan')
 
     return _p_to_ocf
