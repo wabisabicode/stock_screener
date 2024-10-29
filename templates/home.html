@@ -8,17 +8,57 @@
 </head>
 <body>
 	<div class="container">
-		<h1>Enter the names of stocks to get financial data:</h1>
-
-		<form method="POST" action="/results">
-			<div class="mb-3">
-				<label for="stock" class="form-label">Stock name:</label>
-				<input type="text" class="form-control" name="stock">
-				<br>
-				<button type="submit" class="btn btn-primary">Submit</button>
+		<h1>Stock Analysis</h1>
+		<div class="row">
+			<div class="col col-3">
+				<form method="POST" action="/results">
+					<div class="mb-4">
+						<div class="form-group">
+							<label for="stockKey" class="mt-1">Select Stock Key:</label>
+							<select id="stockKey" class="form-control" name="stock_key" onchange="toggleCustomInput()">
+								<option value="">Choose...</option>
+								<option value="div">Dividend</option>
+								<option value="growth">Growth</option>
+								<option value="rest">Rest</option>
+								<option value="watch">Watch</option>
+								<option value="watchgrow">WatchGrowth</option>
+								<option value="watchcomm">WatchComm</option>
+								<option value="custom">Other (enter ticker)</option>
+							</select>
+						</div>
+						<div class="form-group" id="customStockInput" style="display: none;">
+							<label for="customTicker">Enter Stock Ticker:</label>
+							<input type="text" id="customTicker" class="form-control" name="custom_ticker" placeholder="e.g., AAPL, TSLA">
+						</div>
+						<button type="submit" class="btn btn-primary mt-4">Submit</button>
+						</div>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
 	</div>
+	<script>
+		function toggleCustomInput() {
+				const stockKey = document.getElementById('stockKey').value;
+				const customStockInput = document.getElementById('customStockInput');
+				if (stockKey === 'custom') {
+						customStockInput.style.display = 'block'; // Show the custom input field
+				} else {
+						customStockInput.style.display = 'none'; // Hide the custom input field
+				}
+		}
+
+		// Optional: Handle form submission
+		document.getElementById('stockForm').onsubmit = function(event) {
+				event.preventDefault();
+				const stockKey = document.getElementById('stockKey').value;
+				const customTicker = document.getElementById('customTicker').value;
+				const tickerToSubmit = stockKey === 'custom' ? customTicker : stockKey;
+
+				// Here you can handle the tickerToSubmit as needed (e.g., sending it to the server)
+				console.log('Submitting:', tickerToSubmit);
+		};
+	</script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

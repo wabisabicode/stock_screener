@@ -23,10 +23,19 @@ def home():
 def results():
 
     # get the input from the UI form
-    stock_from_UI = ''.join(request.form.getlist('stock'))
+    stock_key = request.form.get('stock_key')  # Get the selected stock key from the dropdown
+    custom_ticker = request.form.get('custom_ticker')  # Get the custom ticker if provided
+
+    print(stock_key)
+    # Determine which stock ticker to use
+    if stock_key == 'custom' and custom_ticker:
+        stock_from_UI = custom_ticker  # Use the custom ticker
+    else:
+        stock_from_UI = stock_key  # Use the selected stock key
 
     stocks_list = form_stock_list(stock_from_UI)
 
+    print(stocks_list)
     # check if stocks_list is a string (only a selected stock is desired)
     if type(stocks_list) is str:
         stocks_list = stocks_list.split() # splits the stockname by ' ' instead of letters
