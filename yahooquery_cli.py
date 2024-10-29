@@ -4,7 +4,7 @@ import math
 import numpy as np
 from yahooquery import Ticker
 
-from utils import get_last_value
+from utils import get_last_value, get_non_null_table
 
 
 def main():
@@ -244,9 +244,9 @@ def get_mrq_gp_margin(_stock):
     _mrq_rev = get_last_value(quartal_info, 'TotalRevenue')
 
     # Calculate margins
-    _mrq_gp_margin = _mrq_gp / _mrq_rev if _mrq_rev > 0. else float('nan')
-    _mrq_ocf_margin = _mrq_ocf / _mrq_rev if _mrq_rev > 0. else float('nan')
-    _mrq_fcf_margin = _mrq_fcf / _mrq_rev if _mrq_rev > 0. else float('nan')
+    _mrq_gp_margin = _mrq_gp / _mrq_rev if _mrq_gp > 0 and _mrq_rev > 0 else float('nan')
+    _mrq_ocf_margin = _mrq_ocf / _mrq_rev if _mrq_rev > 0 else float('nan')
+    _mrq_fcf_margin = _mrq_fcf / _mrq_rev if _mrq_rev > 0 else float('nan')
 
     return _mrq_gp_margin, _mrq_ocf_margin, _mrq_fcf_margin
 
@@ -255,67 +255,25 @@ def get_mrq_gp_margin(_stock):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 def get_ann_gp_margin(_stock):
+    """
+    Get annual gross profit margin, operating cash flow margin,
+    and free cash flow margin.
+    """
 
+    # Retrieve yearly income statement and cash flow data
     yearly_info = _stock.income_statement(frequency='a', trailing=False)
-
-    # get Gross Profit table
-    no_gp = False
-    while True:
-        try:
-            _gp_table = yearly_info['GrossProfit'].dropna()
-            break
-        except KeyError:
-            no_gp = True
-            break
-        except ValueError:
-            no_gp = True
-            break
-
-    # get Operating Cashflow
     yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
 
-    no_ocf = False
-    while True:
-        try:
-            _ocf_table = yearly_cf['OperatingCashFlow'].dropna()
-            break
-        except KeyError:
-            no_ocf = True
-            break
-        except ValueError:
-            no_ocf = True
-            break
-
-    # get Free Cashflow
-    no_fcf = False
-    while True:
-        try:
-            _fcf_table = yearly_cf['FreeCashFlow'].dropna()
-            break
-        except KeyError:
-            no_fcf = True
-            break
-        except ValueError:
-            no_fcf = True
-            break
-
-
-    # get Total Revenue table
-    while True:
-        try:
-            _totrev_table = yearly_info['TotalRevenue'].dropna()
-            break
-        except KeyError:
-            _totrev_table = 0
-            break
-        except ValueError:
-            _totrev_table = 0
-            break
+    # Extract financial tables
+    _gp_table = get_non_null_table(yearly_info, 'GrossProfit', None)
+    _ocf_table = get_non_null_table(yearly_cf, 'OperatingCashFlow', None)
+    _fcf_table = get_non_null_table(yearly_cf, 'FreeCashFlow', None)
+    _totrev_table = get_non_null_table(yearly_info, 'TotalRevenue')
 
     _totrev_table_len = _totrev_table.size
 
     # calculate rev growth rates via annual revenues
-    if (no_gp == False):
+    if _gp_table is not None:
         gp_margin = []
 
         for i in range(_totrev_table_len - 1, -1, -1):
@@ -324,37 +282,35 @@ def get_ann_gp_margin(_stock):
         _gp_margin_av = np.average(gp_margin)
     else:
         _no_totexp = False
-        while True:
-            try:
-                _totexp_table = yearly_info['TotalExpenses']
-                break
-            except KeyError:
-                _totexp_table = _totrev_table   # if no gp margin and no total expenses, make gp margin be 0
-                _no_totexp = True
-                break
+        try:
+            _totexp_table = yearly_info['TotalExpenses']
+        except KeyError:
+            _totexp_table = _totrev_table  # fallback if no gp margin and no total expenses
+            _no_totexp = True
 
         gp_margin = []
         for i in range(_totrev_table_len - 1, -1, -1):
-            gp_margin.append((_totrev_table.iloc[i]-_totexp_table.iloc[i])/_totrev_table.iloc[i])
+            gp_margin.append((_totrev_table.iloc[i]-_totexp_table.iloc[i]) / _totrev_table.iloc[i])
         _gp_margin_av = np.average(gp_margin)
-        if _no_totexp: _gp_margin_av = float('nan')
+        if _no_totexp:
+            _gp_margin_av = float('nan')
 
     # calculate operating cashflow margin for latest years
-    if (no_ocf == False):
+    if _ocf_table is not None:
         ocf_margin = []
 
         for i in range(_totrev_table_len - 1, -1, -1):
-            try: 
-                ocf_margin.append(_ocf_table.iloc[i]/_totrev_table.iloc[i])
+            try:
+                ocf_margin.append(_ocf_table.iloc[i] / _totrev_table.iloc[i])
             except IndexError:
                 pass
-    
+
         _ocf_margin_av = np.average(ocf_margin)
     else:
         _ocf_margin_av = float('nan')
 
     # calculate free cashflow margin for latest years
-    if (no_fcf == False):
+    if _fcf_table is not None:
         fcf_margin = []
 
         for i in range(_totrev_table_len - 1, -1, -1):
@@ -362,7 +318,7 @@ def get_ann_gp_margin(_stock):
                 fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
             except IndexError:
                 pass
-    
+
         _fcf_margin_av = np.average(fcf_margin)
     else:
         _fcf_margin_av = float('nan')
