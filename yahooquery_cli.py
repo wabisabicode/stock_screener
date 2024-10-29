@@ -103,13 +103,16 @@ def form_stock_list(_listarg):
         "watch": [
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
             'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', '', '',
-            'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '', '2502.t', 'ko',
-            'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '', 'bayn.de', 'bion.sw',
-            'bmy', 'gild', 'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '', 'brk-b',
-            'ms', 'muv2.de', '', '', 'dell', '4901.t', 'hpq', 'ibm', 'meta',
-            'msft', 'txn', '', '', 't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd',
-            '', '', 'bipc', 'nee', 'red.mc', 'ay', '', '', 'avb', 'dlr', 'irm',
-            'dea', 'hr', 'krc', 'stag', 'skt', 'vici', 'wpc'
+            'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '',
+            '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
+            'bayn.de', 'bion.sw', 'bmy', 'gild',
+            'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
+            'brk-b', 'ms', 'muv2.de', '', '',
+            'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '',
+            't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
+            'bipc', 'nee', 'red.mc', 'ay', '', '', '',
+            'avb', 'dlr', 'irm', 'dea', 'hr',
+            'krc', 'stag', 'skt', 'vici', 'wpc'
         ],
 
         "watchgrow": [
