@@ -83,7 +83,7 @@ def main():
 
 
 def form_stock_list(_listarg):
-    # Fill in a list of stocks based on the input option 
+    # Fill in a list of stocks based on the input option
     _stocks_list = []
 
     if _listarg == "div":
@@ -137,48 +137,27 @@ def display_table_header():
 # ----------------------------------------------
 def get_ttm_ebitda_ocf(_stock, _fin_data):
 
-    while True:
-        try:
-            _ebitda = _fin_data['ebitda']
-            break
-        except KeyError:
-            _ebitda = 0.
-            break
-        except ValueError:
-            _ebitda = 0.
-            break
+    try:
+        _ebitda = _fin_data['ebitda']
+    except (KeyError, ValueError):
+        _ebitda = 0.
 
-    while True:
+    try:
+        _ocf = _fin_data['operatingCashflow']
+    except KeyError:
+        quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
+        quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
         try:
-            _ocf = _fin_data['operatingCashflow']
-            break
-        except KeyError:
-            quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
-            quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
-            try:
-                _ocf  = quartal_cf['OperatingCashFlow'].iloc[-1]
-            except:
-                _ocf = 0.
-            if np.isnan(_ocf):
-                try:
-                    _ocf  = quartal_cf['OperatingCashFlow'].iloc[-2]
-                except:
-                    _ocf = 0.
-            break
-        except ValueError:
+            _ocf = quartal_cf['OperatingCashFlow'].dropna().iloc[-1]
+        except:
             _ocf = 0.
-            break
+    except ValueError:
+        _ocf = 0.
 
-    while True:
-        try:
-            _tot_rev = _fin_data['totalRevenue']
-            break
-        except KeyError:
-            _tot_rev = 0.
-            break
-        except ValueError:
-            _tot_rev = 0.
-            break
+    try:
+        _tot_rev = _fin_data['totalRevenue']
+    except (KeyError, ValueError):
+        _tot_rev = 0.
 
     return _ebitda, _ocf, _tot_rev
 
