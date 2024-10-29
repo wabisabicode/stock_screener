@@ -4,6 +4,8 @@ import math
 import numpy as np
 from yahooquery import Ticker
 
+from utils import get_last_value
+
 
 def main():
     display_table_header()
@@ -221,86 +223,30 @@ def get_p_to_ocf(_summary_detail, _ocf):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 def get_mrq_gp_margin(_stock):
+    """
+    Get the most recent quarter's gross profit margin,
+    operating cash flow margin, and free cash flow margin.
+    """
 
+    # Retrieve quarterly income statement and cash flow data
     quartal_info = _stock.income_statement(frequency='q', trailing=False)
     quartal_cf = _stock.cash_flow(frequency='q', trailing=False)
 
-    # if quartal_info is str (Income Statement data unavailable for _stock)
-    # use trailing info instead of the mrq
+    # Fallback to trailing data if the current quarter's data is unavailable
     if isinstance(quartal_info, str):
         quartal_info = _stock.income_statement(frequency='q', trailing=True)
         quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
 
-    # get Gross Profit
-    while True:
-        try:
-            _mrq_gp = quartal_info['GrossProfit'].dropna().iloc[-1]
-            break
-        except KeyError:
-            _mrq_gp = 0.
-            break
-        except ValueError:
-            _mrq_gp = 0.
-            break
+    # Extract financial metrics
+    _mrq_gp = get_last_value(quartal_info, 'GrossProfit')
+    _mrq_ocf = get_last_value(quartal_cf, 'OperatingCashFlow')
+    _mrq_fcf = get_last_value(quartal_cf, 'FreeCashFlow')
+    _mrq_rev = get_last_value(quartal_info, 'TotalRevenue')
 
-#    print (quartal_cf)
-    # get Operating CashFlow
-    while True:
-        try:
-            ocf_cleaned = quartal_cf['OperatingCashFlow'].dropna()
-            _mrq_ocf = ocf_cleaned.iloc[-1]
-            break
-        except KeyError:
-            _mrq_ocf = 0.
-            break
-        except ValueError:
-            _mrq_ocf = 0.
-            break
-
-    # get Operating CashFlow
-    while True:
-        try:
-            _mrq_fcf = quartal_cf['FreeCashFlow'].dropna().iloc[-1] 
-            break
-        except KeyError:
-            _mrq_fcf = 0.
-            break
-        except ValueError:
-            _mrq_fcf = 0.
-            break
-
-    # get Total Revenue
-    while True:
-        try:
-            _mrq_rev = quartal_info['TotalRevenue'].dropna().iloc[-1]
-            # global quartal_rev
-            # quartal_rev = _mrq_rev
-            # print(_mrq_rev)
-            break
-        except KeyError:
-            _mrq_rev = 0.
-            break
-        except ValueError:
-            _mrq_rev = 0.
-            break
-    
-    # calculate mrq gross profit margin
-    if (_mrq_gp > 0.):
-        _mrq_gp_margin = _mrq_gp / _mrq_rev
-    else:
-        _mrq_gp_margin = float('nan')
-
-    # calculate mrq operating cf margin
-#    if (_mrq_ocf > 0.):
-    _mrq_ocf_margin = _mrq_ocf / _mrq_rev
-#    else:
-#        _mrq_ocf_margin = float('nan')
-
-    # calculate mrq operating cf margin
-#    if (_mrq_fcf > 0.):
-    _mrq_fcf_margin = _mrq_fcf / _mrq_rev
-#    else:
-#        _mrq_fcf_margin = float('nan')
+    # Calculate margins
+    _mrq_gp_margin = _mrq_gp / _mrq_rev if _mrq_rev > 0. else float('nan')
+    _mrq_ocf_margin = _mrq_ocf / _mrq_rev if _mrq_rev > 0. else float('nan')
+    _mrq_fcf_margin = _mrq_fcf / _mrq_rev if _mrq_rev > 0. else float('nan')
 
     return _mrq_gp_margin, _mrq_ocf_margin, _mrq_fcf_margin
 
