@@ -136,28 +136,22 @@ def display_table_header():
 # get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
 def get_ttm_ebitda_ocf(_stock, _fin_data):
+    # Get EBITDA with default value of 0 if not available
+    _ebitda = _fin_data.get('ebitda', 0.)
 
-    try:
-        _ebitda = _fin_data['ebitda']
-    except (KeyError, ValueError):
-        _ebitda = 0.
-
-    try:
-        _ocf = _fin_data['operatingCashflow']
-    except KeyError:
-        quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
-        quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']  # leave TTM-only values
+    # Get OCF with fallback to TTM quarterly cash flow if missing
+    _ocf = _fin_data.get('operatingCashflow')
+    if _ocf is None:
         try:
+            quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
+            # keep only TTM values:
+            quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']
             _ocf = quartal_cf['OperatingCashFlow'].dropna().iloc[-1]
-        except:
+        except (KeyError, ValueError, IndexError):
             _ocf = 0.
-    except ValueError:
-        _ocf = 0.
 
-    try:
-        _tot_rev = _fin_data['totalRevenue']
-    except (KeyError, ValueError):
-        _tot_rev = 0.
+    # Get Total Revenue with default value of 0 if not available
+    _tot_rev = _fin_data.get('totalRevenue', 0.)
 
     return _ebitda, _ocf, _tot_rev
 
