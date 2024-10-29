@@ -167,23 +167,16 @@ def get_ttm_rev(_stock):
 
 
 def get_q_rev_growth(_fin_data):
-    """ get yoy revenue growth for the most recent quarter 
-    """
+    """Get year-over-year revenue growth for the most recent quarter."""
 
-    while True:
-        try:
-            _q_rev_growth = _fin_data['revenueGrowth']
-            break
-        except KeyError:
-            _q_rev_growth = 0.
-            break
-        except ValueError:
-            _q_rev_growth = 0.
-            break
+    try:
+        _q_rev_growth = _fin_data['revenueGrowth']
+    except (KeyError, ValueError):
+        _q_rev_growth = 0.
 
-    # check if _q_rev_growth is an (empty) dict
-    if type(_q_rev_growth) is dict:
-            _q_rev_growth = 0.
+    # Check if _q_rev_growth is an (empty) dict and set to 0 if so
+    if isinstance(_q_rev_growth, dict):
+        _q_rev_growth = 0.
 
     return _q_rev_growth
 
