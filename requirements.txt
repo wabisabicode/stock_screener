@@ -2,3 +2,4 @@ yahooquery
 flask
 flask_socketio
 flask-executor
+#eventlet
