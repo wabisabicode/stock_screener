@@ -335,16 +335,17 @@ def get_ann_gp_margin(_stock):
 def get_mrq_fin_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt 
-    types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest', 
-            'TotalEquityGrossMinorityInterest', 'TotalDebt', 'OperatingCashFlow', 'FreeCashFlow']
+    types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest',
+             'TotalEquityGrossMinorityInterest', 'TotalDebt',
+             'OperatingCashFlow', 'FreeCashFlow']
 
-    quartal_info = _stock.get_financial_data(types, frequency='q', trailing=False)
-    
+    quartal_info = _stock.get_financial_data(
+        types, frequency='q', trailing=False)
+
     cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
-    liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1] 
+    liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1]
     equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
-
-    totalDebt = calc_total_debt(quartal_info)
+    totalDebt = get_last_value(quartal_info, 'TotalDebt', float('nan'))
 
 #    ocf = quartal_info['OperatingCashFlow']
 #    fcf = quartal_info['FreeCashFlow']
@@ -354,19 +355,6 @@ def get_mrq_fin_strength(_stock):
     _net_debt = totalDebt - cash
 
     return _equity_ratio, _net_debt, _asOfDate
-
-
-def calc_total_debt(_quartal_info):
-
-    while True:
-        try:
-            _totalDebt = _quartal_info['TotalDebt'].iloc[-1]
-            break
-        except KeyError:
-            _totalDebt = float('nan')
-            break
-
-    return _totalDebt
 
 
 def get_yearly_revenue(_stock):
