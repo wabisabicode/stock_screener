@@ -277,11 +277,8 @@ def get_ann_gp_margin(_stock):
 
     # calculate rev growth rates via annual revenues
     if _gp_table is not None:
-        gp_margin = []
-
-        for i in range(_totrev_table_len - 1, -1, -1):
-            gp_margin.append(_gp_table.iloc[i]/_totrev_table.iloc[i])
-
+        gp_margin = [_gp_table.iloc[i] / _totrev_table.iloc[i]
+                     for i in range(_totrev_table_len)]
         _gp_margin_av = np.average(gp_margin)
     else:
         _no_totexp = False
@@ -291,38 +288,31 @@ def get_ann_gp_margin(_stock):
             _totexp_table = _totrev_table  # fallback if no gp margin and no total expenses
             _no_totexp = True
 
-        gp_margin = []
-        for i in range(_totrev_table_len - 1, -1, -1):
-            gp_margin.append((_totrev_table.iloc[i]-_totexp_table.iloc[i]) / _totrev_table.iloc[i])
+        gp_margin = [_totrev_table.iloc[i] - _totexp_table.iloc[i] / _totrev_table.iloc[i]
+                     for i in range(_totrev_table_len)]
         _gp_margin_av = np.average(gp_margin)
         if _no_totexp:
             _gp_margin_av = float('nan')
 
     # calculate operating cashflow margin for latest years
     if _ocf_table is not None:
-        ocf_margin = []
-
-        for i in range(_totrev_table_len - 1, -1, -1):
-            try:
-                ocf_margin.append(_ocf_table.iloc[i] / _totrev_table.iloc[i])
-            except IndexError:
-                pass
-
-        _ocf_margin_av = np.average(ocf_margin)
+        try:
+            ocf_margin = [_ocf_table.iloc[i] / _totrev_table.iloc[i]
+                          for i in range(_totrev_table_len)]
+            _ocf_margin_av = np.average(ocf_margin)
+        except IndexError:
+            pass
     else:
         _ocf_margin_av = float('nan')
 
     # calculate free cashflow margin for latest years
     if _fcf_table is not None:
-        fcf_margin = []
-
-        for i in range(_totrev_table_len - 1, -1, -1):
-            try:
-                fcf_margin.append(_fcf_table.iloc[i]/_totrev_table.iloc[i])
-            except IndexError:
-                pass
-
-        _fcf_margin_av = np.average(fcf_margin)
+        try:
+            fcf_margin = [_fcf_table.iloc[i] / _totrev_table.iloc[i]
+                          for i in range(_totrev_table_len)]
+            _fcf_margin_av = np.average(fcf_margin)
+        except IndexError:
+            pass
     else:
         _fcf_margin_av = float('nan')
 
@@ -342,16 +332,16 @@ def get_mrq_fin_strength(_stock):
     quartal_info = _stock.get_financial_data(
         types, frequency='q', trailing=False)
 
-    cash = quartal_info['CashAndCashEquivalents'].iloc[-1]
-    liability = quartal_info['TotalLiabilitiesNetMinorityInterest'].iloc[-1]
-    equity = quartal_info['TotalEquityGrossMinorityInterest'].iloc[-1]
+    cash = get_last_value(quartal_info, 'CashAndCashEquivalents')
+    liab = get_last_value(quartal_info, 'TotalLiabilitiesNetMinorityInterest')
+    equity = get_last_value(quartal_info, 'TotalEquityGrossMinorityInterest')
     totalDebt = get_last_value(quartal_info, 'TotalDebt', float('nan'))
 
 #    ocf = quartal_info['OperatingCashFlow']
 #    fcf = quartal_info['FreeCashFlow']
 
-    _asOfDate = quartal_info['asOfDate'].iloc[-1]
-    _equity_ratio = equity / (equity + liability)
+    _asOfDate = get_last_value(quartal_info, 'asOfDate')
+    _equity_ratio = equity / (equity + liab)
     _net_debt = totalDebt - cash
 
     return _equity_ratio, _net_debt, _asOfDate
@@ -424,7 +414,7 @@ def calc_rev_inv_stats(_stock):
 
     if no_rev_data is False:
         try:
-            inv = tosum_info['Inventory'].copy() # unpack inventory for 4 last quarters
+            inv = tosum_info['Inventory'].copy()  # unpack inv for 4 mrq's
             inv_mrq = inv.iloc[-1]
             if math.isnan(inv_mrq):
                 inv_mrq = inv.iloc[-1] = inv.iloc[-2]
