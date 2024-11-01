@@ -1,9 +1,9 @@
 # Function to safely extract the last non-null value from a series
-def get_last_value(data, key):
+def get_last_value(data, key, default=0):
     try:
         return data[key].dropna().iloc[-1]
     except (KeyError, ValueError, IndexError):
-        return 0.
+        return default
 
 
 # Function to safely extract a non-null table
