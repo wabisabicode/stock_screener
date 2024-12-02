@@ -89,7 +89,7 @@ def form_stock_list(_listarg):
     stock_options = {
         "div": [
             'abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'bti', 'blk', 'bepc',
-            'csco', 'cvs', 'enb', 'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf',
+            'cvs', 'enb', 'ibe.mc', 'intc', 'kmi', '8001.t', 'lvmhf',
             'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'swk', 'ul', 'vna.de'
         ],
 
@@ -108,7 +108,8 @@ def form_stock_list(_listarg):
             'bayn.de', 'bion.sw', 'bmy', 'gild',
             'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
             'brk-b', 'ms', 'muv2.de', '', '',
-            'dell', '4901.t', 'hpq', 'ibm', 'meta', 'msft', 'txn', '', '',
+            'csco', 'dell', '4901.t', 'hpq',
+            'ibm', 'meta', 'msft', 'txn', '', '',
             't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
             'bipc', 'nee', 'red.mc', 'ay', '', '', '',
             'avb', 'dlr', 'irm', 'dea', 'hr',
