@@ -88,9 +88,9 @@ def form_stock_list(_listarg):
     # Mapping list options to specific stock lists
     stock_options = {
         "div": [
-            'abbv', 'are', 'alv.de', 'mo', 'amt', 'amgn', 'bti', 'blk', 'bepc',
-            'cvs', 'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf',
-            'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'swk', 'ul', 'vna.de'
+            'abbv', 'are', 'alv.de', 'mo', 'amt', 'bti', 'blk', 'bepc',
+            'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf',
+            'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'swk', 'vna.de'
         ],
 
         "growth": [
@@ -104,8 +104,8 @@ def form_stock_list(_listarg):
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
             'mmm', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', '', '',
             'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '',
-            '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', '', '',
-            'bayn.de', 'bion.sw', 'bmy', 'gild',
+            '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', 'ul', '', '',
+            'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
             'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
             'brk-b', 'ms', 'muv2.de', '', '',
             'csco', 'dell', '4901.t', 'hpq',
