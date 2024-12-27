@@ -117,7 +117,7 @@ def form_stock_list(_listarg):
         ],
 
         "watchgrow": [
-            'baba', 'aapl', 'bkng', 'bidu', 'cdr.wa', 'crwd', 'estc', 'hcp',
+            'aapl', 'bkng', 'crwd', 'estc', 'gtlb',
             'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
             'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst',
             'var1.de', 'zal.de', '6060.hk', 'zm'
