@@ -111,7 +111,7 @@ def form_stock_list(_listarg):
             'csco', 'dell', '4901.t', 'hpq',
             'ibm', 'intc', 'meta', 'msft', 'txn', '', '',
             't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
-            'bipc', 'nee', 'red.mc', 'ay', '', '', '',
+            'bipc', 'nee', 'red.mc', 'ay', '', '',
             'avb', 'dlr', 'irm', 'dea', 'hr',
             'krc', 'stag', 'skt', 'vici', 'wpc'
         ],
