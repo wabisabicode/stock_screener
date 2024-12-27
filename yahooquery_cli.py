@@ -102,8 +102,8 @@ def form_stock_list(_listarg):
 
         "watch": [
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
-            'mmm', '6367.t', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'lmt', 'raa.de', '', '',
-            'mcd', 'ads.de', 'prx.as', 'sbux', 'vfc', '', '',
+            'mmm', '6367.t', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'raa.de', '', '',
+            'mcd', 'ads.de', 'sbux', 'vfc', '', '',
             '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
             'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
