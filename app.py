@@ -95,7 +95,7 @@ def results():
         else:
             data.append({})
 
-        print(data) # debugging
+        #print(data) # debugging
         socketio.emit('update_data', data)
     return render_template('results.html', data=data)
 
