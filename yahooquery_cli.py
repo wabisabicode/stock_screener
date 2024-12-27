@@ -119,8 +119,8 @@ def form_stock_list(_listarg):
         "watchgrow": [
             'aapl', 'bkng', 'crwd', 'estc', 'gtlb',
             'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
-            'tmv.de', 'tdoc', 'tcehy', 'tsla', 'twlo', 'uber', 'upst',
-            'var1.de', 'zal.de', '6060.hk', 'zm'
+            'tmv.de', 'tdoc', 'tsla', 'twlo', 'uber', 
+            'zal.de', '6060.hk', 'zm'
         ],
 
         "watchcomm": ['eog']
