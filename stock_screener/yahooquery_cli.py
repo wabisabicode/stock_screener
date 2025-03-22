@@ -4,7 +4,7 @@ import math
 import numpy as np
 from yahooquery import Ticker
 
-from utils import get_last_value, get_non_null_table
+from .utils import get_last_value, get_non_null_table
 
 
 def main():

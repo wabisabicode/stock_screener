@@ -4,11 +4,11 @@ from yahooquery import Ticker
 import numpy as np
 import math
 import datetime
-from yahooquery_cli import form_stock_list
-from yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_fin_strength, calc_rev_inv_stats 
-from yahooquery_cli import get_q_rev_growth, get_yearly_revenue
-from yahooquery_cli import get_mrq_gp_margin, get_ann_gp_margin
-from yahooquery_cli import get_ev_to_rev, get_p_to_ocf
+from .yahooquery_cli import form_stock_list
+from .yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_fin_strength, calc_rev_inv_stats 
+from .yahooquery_cli import get_q_rev_growth, get_yearly_revenue
+from .yahooquery_cli import get_mrq_gp_margin, get_ann_gp_margin
+from .yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
 app = Flask(__name__)
 socketio = SocketIO(app)
