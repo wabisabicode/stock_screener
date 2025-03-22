@@ -13,9 +13,11 @@ socketio = SocketIO(app)
 
 data = []
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 @app.route('/results', methods=['POST'])
 def results():
