@@ -1,13 +1,13 @@
-from flask import Flask, request, render_template
+from flask import render_template, request
 from flask_socketio import SocketIO
 from yahooquery import Ticker
-from .yahooquery_cli import form_stock_list
-from .yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_fin_strength, calc_rev_inv_stats 
-from .yahooquery_cli import get_q_rev_growth, get_yearly_revenue
-from .yahooquery_cli import get_mrq_gp_margin, get_ann_gp_margin
-from .yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
 from . import app
+from .yahooquery_cli import (calc_rev_inv_stats, form_stock_list,
+                             get_ann_gp_margin, get_ev_to_rev,
+                             get_mrq_fin_strength, get_mrq_gp_margin,
+                             get_p_to_ocf, get_q_rev_growth,
+                             get_ttm_ebitda_ocf, get_yearly_revenue)
 
 socketio = SocketIO(app)
 
