@@ -87,7 +87,7 @@
       <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js" integrity="sha384-wcXqvoBsDlnHQ3+BaHclhPmRnQ1FbTbJgsGj1vUZcECqgRbkMp4JUHPcHYL+6Hva" crossorigin="anonymous"></script> -->
       <script src="/static/socket.io.js"></script>
       <script>
-          var socket = io.connect('http://127.0.0.1:5008');
+          var socket = io.connect('http://127.0.0.1:5000');
           // var socket = io.connect('http://' + document.domain + ':' + location.port);
 
           socket.on('update_data', function(new_data) {
