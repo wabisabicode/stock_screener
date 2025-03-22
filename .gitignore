@@ -1,3 +1,7 @@
 venv/*
 statical/*
 static/*
+
+.env
+
+.DS_Store
