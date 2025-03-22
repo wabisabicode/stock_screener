@@ -122,7 +122,7 @@ def form_stock_list(_listarg):
             'aapl', 'bkng', 'crwd', 'estc', 'gtlb',
             'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
             'tmv.de', 'tdoc', 'tsla', 'twlo', 'uber',
-            'zal.de', '6060.hk', 'zm'
+            'zal.de', 'zm'
         ],
 
         "watchcomm": ['eog']
