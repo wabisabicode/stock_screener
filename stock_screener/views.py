@@ -93,7 +93,7 @@ def results():
                 'p_to_ocf_ui': p_to_ocf
             }
             data.append(stock_stats)
-            print(stock_stats) # debugging
+            # print(stock_stats) # debugging
         else:
             data.append({})
 
