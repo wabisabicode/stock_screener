@@ -2,4 +2,7 @@ yahooquery
 flask
 flask_socketio
 flask-executor
+python-dotenv
+Flask-SQLAlchemy
+Flask-Migrate
 #eventlet
