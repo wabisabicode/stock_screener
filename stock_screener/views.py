@@ -1,16 +1,14 @@
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 from yahooquery import Ticker
-import numpy as np
-import math
-import datetime
 from .yahooquery_cli import form_stock_list
 from .yahooquery_cli import get_ttm_ebitda_ocf, get_mrq_fin_strength, calc_rev_inv_stats 
 from .yahooquery_cli import get_q_rev_growth, get_yearly_revenue
 from .yahooquery_cli import get_mrq_gp_margin, get_ann_gp_margin
 from .yahooquery_cli import get_ev_to_rev, get_p_to_ocf
 
-app = Flask(__name__)
+from . import app
+
 socketio = SocketIO(app)
 
 data = []
@@ -38,7 +36,7 @@ def results():
     print(stocks_list)
     # check if stocks_list is a string (only a selected stock is desired)
     if type(stocks_list) is str:
-        stocks_list = stocks_list.split() # splits the stockname by ' ' instead of letters
+        stocks_list = stocks_list.split()  # splits the stockname by ' ' instead of letters
 
     global data
 
@@ -95,9 +93,6 @@ def results():
         else:
             data.append({})
 
-        #print(data) # debugging
+        # print(data) # debugging
         socketio.emit('update_data', data)
     return render_template('results.html', data=data)
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True, port=8000)
