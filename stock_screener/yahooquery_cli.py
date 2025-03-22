@@ -90,7 +90,7 @@ def form_stock_list(_listarg):
         "div": [
             'abbv', 'are', 'alv.de', 'mo', 'amt', 'bti', 'blk', 'bepc',
             'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf',
-            'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'swk', 'vna.de'
+            'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'vna.de'
         ],
 
         "growth": [
@@ -102,7 +102,7 @@ def form_stock_list(_listarg):
 
         "watch": [
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
-            'mmm', '6367.t', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'raa.de', '', '',
+            'mmm', '6367.t', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'raa.de', 'swk', '', '',
             'ads.de', 'mcd', 'nke', 'sbux', 'vfc', '', '',
             '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
