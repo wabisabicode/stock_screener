@@ -108,7 +108,7 @@ def form_stock_list(_listarg):
             '2502.t', 'ko', 'k', 'nesn.sw', 'pep',
             'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
-            'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
+            'jnj', 'nvs', 'nvo', 'rog.sw', 'soon.sw', '', '',
             'brk-b', 'ms', 'muv2.de', '', '',
             'csco', 'dell', '4901.t', 'hpq',
             'ibm', 'intc', 'meta', 'msft', 'txn', '', '',
