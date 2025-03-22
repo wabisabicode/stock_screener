@@ -102,9 +102,11 @@ def form_stock_list(_listarg):
 
         "watch": [
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
-            'mmm', '6367.t', 'dhl.de', 'fra.de', 'ge', 'hot.de', 'raa.de', 'swk', '', '',
+            'mmm', '6367.t', 'dhl.de', 'fra.de',
+            'ge', 'hot.de', 'raa.de', 'swk', '', '',
             'ads.de', 'mcd', 'nke', 'sbux', 'vfc', '', '',
-            '2502.t', 'ko', 'k', 'nesn.sw', 'pep', 'pm', 'swa.de', 'ul', '', '',
+            '2502.t', 'ko', 'k', 'nesn.sw', 'pep',
+            'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
             'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
             'brk-b', 'ms', 'muv2.de', '', '',
@@ -119,7 +121,7 @@ def form_stock_list(_listarg):
         "watchgrow": [
             'aapl', 'bkng', 'crwd', 'estc', 'gtlb',
             'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
-            'tmv.de', 'tdoc', 'tsla', 'twlo', 'uber', 
+            'tmv.de', 'tdoc', 'tsla', 'twlo', 'uber',
             'zal.de', '6060.hk', 'zm'
         ],
 
@@ -286,7 +288,7 @@ def get_ann_gp_margin(_stock):
         try:
             _totexp_table = yearly_info['TotalExpenses']
         except KeyError:
-            _totexp_table = _totrev_table  # fallback if no gp margin and no total expenses
+            _totexp_table = _totrev_table  # no gp margin and no total expenses
             _no_totexp = True
 
         gp_margin = [_totrev_table.iloc[i] - _totexp_table.iloc[i] / _totrev_table.iloc[i]
@@ -325,7 +327,7 @@ def get_ann_gp_margin(_stock):
 # ----------------------------------------------
 def get_mrq_fin_strength(_stock):
 
-    # get most recent quarter cash, liabilities, equity, debt 
+    # get most recent quarter cash, liabilities, equity, debt
     types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest',
              'TotalEquityGrossMinorityInterest', 'TotalDebt',
              'OperatingCashFlow', 'FreeCashFlow']
@@ -349,12 +351,13 @@ def get_mrq_fin_strength(_stock):
 
 
 def get_yearly_revenue(_stock):
-    """ get annual revenues, calculate growth rates 
+    """ get annual revenues, calculate growth rates
     and pass average rev growth of passed years"""
 
     # get annual revenues
     types = ['TotalRevenue']
-    yearly_info = _stock.get_financial_data(types, frequency='a', trailing=False)
+    yearly_info = _stock.get_financial_data(
+        types, frequency='a', trailing=False)
 
     if type(yearly_info) is not str:
         num_years = yearly_info.shape[0]
@@ -384,7 +387,8 @@ def get_yearly_revenue(_stock):
 def calc_rev_inv_stats(_stock):
     # revenue has to be summed up
     types_tosum = ['TotalRevenue', 'Inventory']
-    tosum_info = _stock.get_financial_data(types_tosum, frequency='q', trailing=False)
+    tosum_info = _stock.get_financial_data(
+        types_tosum, frequency='q', trailing=False)
 
     # check how many quarterly data is there
     if type(tosum_info) is not str:
