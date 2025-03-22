@@ -72,7 +72,7 @@ def results():
             summary_detail = stock.summary_detail[stockname]
             p_to_ocf = get_p_to_ocf(summary_detail, ocf)
 
-            data.append({
+            stock_stats = {
                 'symbol': stockname,
                 'equity_ratio': equity_ratio * 100,
                 'ndebt_to_ebitda': equity_ratio * 100,
@@ -91,10 +91,11 @@ def results():
                 'remarks_ui': remarks,
                 'ev_to_rev_ui': ev_to_rev,
                 'p_to_ocf_ui': p_to_ocf
-            })
+            }
+            data.append(stock_stats)
+            print(stock_stats) # debugging
         else:
             data.append({})
 
-        # print(data) # debugging
         socketio.emit('update_data', data)
     return render_template('results.html', data=data)
