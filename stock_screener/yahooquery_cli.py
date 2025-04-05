@@ -95,7 +95,7 @@ def form_stock_list(_listarg):
 
         "growth": [
             'adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'xyz', 'net',
-            'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo'
+            'coin', 'dis', 'gtlb', 'hyq.de', 'ma', 'twlo', 'veev', 'vmeo'
         ],
 
         "rest": ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl'],
@@ -119,9 +119,9 @@ def form_stock_list(_listarg):
         ],
 
         "watchgrow": [
-            'aapl', 'bkng', 'crwd', 'estc', 'gtlb',
+            'aapl', 'bkng', 'crwd', 'estc',
             'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
-            'tmv.de', 'tdoc', 'tsla', 'twlo', 'uber',
+            'tmv.de', 'tdoc', 'tsla', 'uber',
             'zal.de', 'zm'
         ],
 
