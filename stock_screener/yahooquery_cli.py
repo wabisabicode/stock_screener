@@ -94,7 +94,7 @@ def form_stock_list(_listarg):
         ],
 
         "growth": [
-            'adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'sq', 'net',
+            'adbe', 'abnb', 'googl', 'amzn', 'asml', 'bntx', 'xyz', 'net',
             'coin', 'dis', 'hyq.de', 'ma', 'veev', 'vmeo'
         ],
 
@@ -145,21 +145,24 @@ def display_table_header():
 # ----------------------------------------------
 def get_ttm_ebitda_ocf(_stock, _fin_data):
     # Get EBITDA with default value of 0 if not available
-    _ebitda = _fin_data.get('ebitda', 0.)
+    try:
+        _ebitda = _fin_data.get('ebitda', 0.)
+        _ocf = _fin_data.get('operatingCashflow')
+        _tot_rev = _fin_data.get('totalRevenue', 0.)
+    except AttributeError:
+        _ebitda = 0.
+        _ocf = None
+        _tot_rev = 0.
 
     # Get OCF with fallback to TTM quarterly cash flow if missing
-    _ocf = _fin_data.get('operatingCashflow')
     if _ocf is None:
         try:
             quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
             # keep only TTM values:
             quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']
             _ocf = quartal_cf['OperatingCashFlow'].dropna().iloc[-1]
-        except (KeyError, ValueError, IndexError):
+        except (KeyError, ValueError, IndexError, TypeError):
             _ocf = 0.
-
-    # Get Total Revenue with default value of 0 if not available
-    _tot_rev = _fin_data.get('totalRevenue', 0.)
 
     return _ebitda, _ocf, _tot_rev
 
