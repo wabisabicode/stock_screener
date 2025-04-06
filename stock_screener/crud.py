@@ -50,7 +50,7 @@ def update_stock_data(stockname):
 
     time_got_valuations = elapsed_time(time_got_av_margins, 'Got valuations in')
     print('------')
-    time_total = elapsed_time(time_start_anal, 'Got valuations in')
+    time_total = elapsed_time(time_start_anal, 'Got stock done in')
     print('')
 
     stock_data = {
