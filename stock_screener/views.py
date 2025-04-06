@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask import render_template, request
 from flask_socketio import SocketIO
 
@@ -25,8 +23,6 @@ def home():
 def results():
     data = []
 
-    time_start = datetime.now()
-
     # get the input from the UI form
     stock_key = request.form.get('stock_key')  # Get the selected stock key from the dropdown
     custom_ticker = request.form.get('custom_ticker')  # Get the custom ticker if provided
@@ -40,8 +36,6 @@ def results():
     stocks_list = form_stock_list(stock_from_UI)
 
     print(stocks_list)
-
-    time_list_formed = elapsed_time(time_start, 'List formed in')
 
     for stockname in stocks_list:
         if stockname != '':
