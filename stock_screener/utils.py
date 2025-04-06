@@ -79,7 +79,7 @@ def get_q_rev_growth(_fin_data):
     return _q_rev_growth
 
 
-def get_ev_to_rev(_stock, _key_stats):
+def get_ev_to_rev(_key_stats, valuation_measures):
     """Get EV to Revenue ratio. If absent in key_stats, retrieve it from
     the valuation_measures table as an alternative approach.
     """
@@ -93,19 +93,13 @@ def get_ev_to_rev(_stock, _key_stats):
 
     # If primary retrieval failed, attempt alternative retrieval
     if _ev_to_rev is None:
-        try:
-            _ev_to_rev = _stock.valuation_measures['EnterprisesValueRevenueRatio'].iloc[-1]
-        except (KeyError, IndexError, AttributeError):
-            _ev_to_rev = float('nan')
+        _ev_to_rev = get_last_value(valuation_measures, 'EnterprisesValueRevenueRatio', float('nan'))
 
     return _ev_to_rev
 
 
-def get_p_to_ocf(_summary_detail, _ocf):
-    try:
-        _m_cap = _summary_detail['marketCap']
-    except (KeyError, ValueError):
-        _m_cap = 0.
+def get_p_to_ocf(valuation_measures, _ocf):
+    _m_cap = get_last_value(valuation_measures, 'MarketCap')
 
     try:
         _p_to_ocf = _m_cap / _ocf
