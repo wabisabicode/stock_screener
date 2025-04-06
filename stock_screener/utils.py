@@ -1,4 +1,7 @@
+import math
 from datetime import datetime
+
+import numpy as np
 
 
 # Function to safely extract the last non-null value from a series
