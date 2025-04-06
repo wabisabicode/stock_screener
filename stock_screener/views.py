@@ -4,7 +4,6 @@ from flask_socketio import SocketIO
 from . import app
 from .crud import update_stock_data
 from .yahooquery_cli import form_stock_list
-from .utils import elapsed_time
 
 socketio = SocketIO(app)
 
@@ -24,8 +23,8 @@ def results():
     data = []
 
     # get the input from the UI form
-    stock_key = request.form.get('stock_key')  # Get the selected stock key from the dropdown
-    custom_ticker = request.form.get('custom_ticker')  # Get the custom ticker if provided
+    stock_key = request.form.get('stock_key')
+    custom_ticker = request.form.get('custom_ticker')
 
     # Determine which stock ticker to use
     if stock_key == 'custom' and custom_ticker:
@@ -41,7 +40,7 @@ def results():
         if stockname != '':
             updated_data = update_stock_data(stockname)
             data.append(updated_data)
-            # print(stock_stats) # debugging
+            # print(updated_data) # debugging
         else:
             data.append({})
 
