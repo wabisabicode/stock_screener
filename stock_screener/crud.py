@@ -1,9 +1,8 @@
 from yahooquery import Ticker
 
-from .yahooquery_cli import (calc_rev_inv_stats,
-                             get_ann_gp_margin, get_ev_to_rev,
-                             get_mrq_fin_strength, get_mrq_gp_margin,
-                             get_p_to_ocf, get_q_rev_growth,
+from .yahooquery_cli import (calc_rev_inv_stats, get_ann_gp_margin,
+                             get_ev_to_rev, get_mrq_fin_strength,
+                             get_mrq_gp_margin, get_p_to_ocf, get_q_rev_growth,
                              get_ttm_ebitda_ocf, get_yearly_revenue)
 
 
