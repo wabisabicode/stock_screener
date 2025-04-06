@@ -43,10 +43,10 @@ def update_stock_data(stockname):
     else:
         key_stats = 0
 
-    ev_to_rev = get_ev_to_rev(stock, key_stats)
+    valuation_measures = stock.valuation_measures
+    ev_to_rev = get_ev_to_rev(key_stats, valuation_measures)
 
-    summary_detail = stock.summary_detail[stockname]
-    p_to_ocf = get_p_to_ocf(summary_detail, ocf)
+    p_to_ocf = get_p_to_ocf(valuation_measures, ocf)
 
     time_got_valuations = elapsed_time(time_got_av_margins, 'Got valuations in')
     print('------')
