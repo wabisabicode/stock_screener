@@ -1,5 +1,6 @@
 import math
 from datetime import datetime
+from .constants import TIME_PROFILE
 
 import numpy as np
 
@@ -23,14 +24,29 @@ def get_non_null_table(data, key, default=0):
 # Time profiling
 def elapsed_time(time_start, message):
     time_now = datetime.now()
-    print(f'{message}: {time_now - time_start}')
+    print(f'{message}:\t{time_now - time_start}')
     return time_now
+
+
+def timer(func):
+    def timer_wrapper(*args, **kwargs):
+        if TIME_PROFILE:
+            time_start = datetime.now()
+            result = func(*args, **kwargs)
+            time_end = elapsed_time(time_start, f'{func.__name__} took')
+            if func.__name__ == 'update_stock_data':
+                print('')
+            return result
+        else:
+            return func(*args, **kwargs)
+    return timer_wrapper
 
 
 # ----------------------------------------------
 # get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
-def get_ttm_ebitda_ocf(_stock, _fin_data):
+@timer
+def get_ttm_ebitda_ocf(_stock, _fin_data, quartal_cf):
     # Get EBITDA with default value of 0 if not available
     try:
         _ebitda = _fin_data.get('ebitda', 0.)
@@ -43,13 +59,9 @@ def get_ttm_ebitda_ocf(_stock, _fin_data):
 
     # Get OCF with fallback to TTM quarterly cash flow if missing
     if _ocf is None:
-        try:
-            quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
-            # keep only TTM values:
-            quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']
-            _ocf = quartal_cf['OperatingCashFlow'].dropna().iloc[-1]
-        except (KeyError, ValueError, IndexError, TypeError):
-            _ocf = 0.
+        # keep only TTM values:
+        quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']
+        _ocf = get_last_value(quartal_cf, 'OperatingCashFlow')
 
     return _ebitda, _ocf, _tot_rev
 
@@ -64,6 +76,7 @@ def get_ttm_rev(_stock):
     return _tot_rev
 
 
+@timer
 def get_q_rev_growth(_fin_data):
     """Get year-over-year revenue growth for the most recent quarter."""
 
@@ -79,6 +92,7 @@ def get_q_rev_growth(_fin_data):
     return _q_rev_growth
 
 
+@timer
 def get_ev_to_rev(_key_stats, valuation_measures):
     """Get EV to Revenue ratio. If absent in key_stats, retrieve it from
     the valuation_measures table as an alternative approach.
@@ -98,6 +112,7 @@ def get_ev_to_rev(_key_stats, valuation_measures):
     return _ev_to_rev
 
 
+@timer
 def get_p_to_ocf(valuation_measures, _ocf):
     _m_cap = get_last_value(valuation_measures, 'MarketCap')
 
@@ -112,6 +127,7 @@ def get_p_to_ocf(valuation_measures, _ocf):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
+@timer
 def get_mrq_gp_margin(_stock):
     """
     Get the most recent quarter's gross profit margin,
@@ -144,6 +160,7 @@ def get_mrq_gp_margin(_stock):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
+@timer
 def get_ann_gp_margin(_stock):
     """
     Get annual gross profit margin, operating cash flow margin,
@@ -209,6 +226,7 @@ def get_ann_gp_margin(_stock):
 # ----------------------------------------------
 # get ttm ebitda from asset profile
 # ----------------------------------------------
+@timer
 def get_mrq_fin_strength(_stock):
 
     # get most recent quarter cash, liabilities, equity, debt
@@ -234,6 +252,7 @@ def get_mrq_fin_strength(_stock):
     return _equity_ratio, _net_debt, _asOfDate
 
 
+@timer
 def get_yearly_revenue(_stock):
     """ get annual revenues, calculate growth rates
     and pass average rev growth of passed years"""
@@ -268,11 +287,8 @@ def get_yearly_revenue(_stock):
     return _av_rev_growth, _remark_rev
 
 
-def calc_rev_inv_stats(_stock):
-    # revenue has to be summed up
-    types_tosum = ['TotalRevenue', 'Inventory']
-    tosum_info = _stock.get_financial_data(
-        types_tosum, frequency='q', trailing=False)
+@timer
+def calc_rev_inv_stats(_stock, tosum_info):
 
     # check how many quarterly data is there
     if type(tosum_info) is not str:
