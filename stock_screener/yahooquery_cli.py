@@ -80,7 +80,7 @@ def form_stock_list(_listarg):
             't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
             'bipc', 'nee', 'red.mc', '', '',
             'avb', 'dlr', 'irm', 'dea', 'hr',
-            'krc', 'stag', 'skt', 'vici', 'wpc'
+            'krc', 'o', 'stag', 'skt', 'vici', 'wpc'
         ],
 
         "watchgrow": [
