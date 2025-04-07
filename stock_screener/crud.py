@@ -18,22 +18,42 @@ def update_stock_data(stockname):
     time_got_fin_data = elapsed_time(time_got_ticker, 'Got fin_data in')
 
     # revenue has to be summed up
-    fields_tosum = ['TotalRevenue', 'Inventory']
+    fields = ['TotalRevenue', 'Inventory']
     tosum_info = stock.get_financial_data(
-        fields_tosum, frequency='q', trailing=False)
+        fields, frequency='q', trailing=False)
     avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, tosum_info)
 
     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
     ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data, quartal_cf)
+    # uses 'ebitda', 'operatingCashflow', 'totalRevenue'
 
-    equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock)
+    fields = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest',
+              'TotalEquityGrossMinorityInterest', 'TotalDebt',
+              'OperatingCashFlow', 'FreeCashFlow']
+    quartal_info = stock.get_financial_data(
+        fields, frequency='q', trailing=False)
+    equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, quartal_info)
 
-    q_rev_growth = get_q_rev_growth(fin_data)
-    av_rev_growth, remark_rev = get_yearly_revenue(stock)
+    q_rev_growth = get_q_rev_growth(fin_data)  # uses 'revenueGrowth'
 
-    mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock)
+    fields = ['TotalRevenue']
+    yearly_info = stock.get_financial_data(
+        fields, frequency='a', trailing=False)
+    av_rev_growth, remark_rev = get_yearly_revenue(stock, yearly_info)
 
-    av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock)
+    # Retrieve quarterly income statement and cash flow data
+    quartal_info = stock.income_statement(frequency='q', trailing=False)
+    quartal_cf = stock.cash_flow(frequency='q', trailing=False)
+    # Fallback to trailing data if the current quarter's data is unavailable
+    if isinstance(quartal_info, str):
+        quartal_info = stock.income_statement(frequency='q', trailing=True)
+        quartal_cf = stock.cash_flow(frequency='q', trailing=True)
+    mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock, quartal_info, quartal_cf)
+
+    # Retrieve yearly income statement and cash flow data
+    yearly_info = stock.income_statement(frequency='a', trailing=False)
+    yearly_cf = stock.cash_flow(frequency='a', trailing=False)
+    av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock, yearly_info, yearly_cf)
 
     remarks = remark_rev + ' ' + remark_inv
 

@@ -66,14 +66,14 @@ def get_ttm_ebitda_ocf(_stock, _fin_data, quartal_cf):
     return _ebitda, _ocf, _tot_rev
 
 
-def get_ttm_rev(_stock):
-    try:
-        income_stat = _stock.income_statement(frequency='q', trailing=True)
-        _tot_rev = income_stat['TotalRevenue'].iloc[-1]
-    except (KeyError, ValueError, IndexError):
-        _tot_rev = 0.
+# def get_ttm_rev(_stock):
+#     try:
+#         income_stat = _stock.income_statement(frequency='q', trailing=True)
+#         _tot_rev = income_stat['TotalRevenue'].iloc[-1]
+#     except (KeyError, ValueError, IndexError):
+#         _tot_rev = 0.
 
-    return _tot_rev
+#     return _tot_rev
 
 
 @timer
@@ -128,21 +128,11 @@ def get_p_to_ocf(valuation_measures, _ocf):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 @timer
-def get_mrq_gp_margin(_stock):
+def get_mrq_gp_margin(_stock, quartal_info, quartal_cf):
     """
     Get the most recent quarter's gross profit margin,
     operating cash flow margin, and free cash flow margin.
     """
-
-    # Retrieve quarterly income statement and cash flow data
-    quartal_info = _stock.income_statement(frequency='q', trailing=False)
-    quartal_cf = _stock.cash_flow(frequency='q', trailing=False)
-
-    # Fallback to trailing data if the current quarter's data is unavailable
-    if isinstance(quartal_info, str):
-        quartal_info = _stock.income_statement(frequency='q', trailing=True)
-        quartal_cf = _stock.cash_flow(frequency='q', trailing=True)
-
     # Extract financial metrics
     _mrq_gp = get_last_value(quartal_info, 'GrossProfit')
     _mrq_ocf = get_last_value(quartal_cf, 'OperatingCashFlow')
@@ -161,16 +151,11 @@ def get_mrq_gp_margin(_stock):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 @timer
-def get_ann_gp_margin(_stock):
+def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
     """
     Get annual gross profit margin, operating cash flow margin,
     and free cash flow margin.
     """
-
-    # Retrieve yearly income statement and cash flow data
-    yearly_info = _stock.income_statement(frequency='a', trailing=False)
-    yearly_cf = _stock.cash_flow(frequency='a', trailing=False)
-
     # Extract financial tables
     _gp_table = get_non_null_table(yearly_info, 'GrossProfit', None)
     _ocf_table = get_non_null_table(yearly_cf, 'OperatingCashFlow', None)
@@ -227,15 +212,7 @@ def get_ann_gp_margin(_stock):
 # get ttm ebitda from asset profile
 # ----------------------------------------------
 @timer
-def get_mrq_fin_strength(_stock):
-
-    # get most recent quarter cash, liabilities, equity, debt
-    types = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest',
-             'TotalEquityGrossMinorityInterest', 'TotalDebt',
-             'OperatingCashFlow', 'FreeCashFlow']
-
-    quartal_info = _stock.get_financial_data(
-        types, frequency='q', trailing=False)
+def get_mrq_fin_strength(_stock, quartal_info):
 
     cash = get_last_value(quartal_info, 'CashAndCashEquivalents')
     liab = get_last_value(quartal_info, 'TotalLiabilitiesNetMinorityInterest')
@@ -253,15 +230,9 @@ def get_mrq_fin_strength(_stock):
 
 
 @timer
-def get_yearly_revenue(_stock):
+def get_yearly_revenue(_stock, yearly_info):
     """ get annual revenues, calculate growth rates
     and pass average rev growth of passed years"""
-
-    # get annual revenues
-    types = ['TotalRevenue']
-    yearly_info = _stock.get_financial_data(
-        types, frequency='a', trailing=False)
-
     if type(yearly_info) is not str:
         num_years = yearly_info.shape[0]
     else:
