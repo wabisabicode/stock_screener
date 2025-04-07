@@ -25,7 +25,18 @@ def update_stock_data(stockname):
 
     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
     ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data, quartal_cf)
-    # uses 'ebitda', 'operatingCashflow', 'totalRevenue'
+    # uses 'ebitda', 'operatingCashflow', 'totalRevenue' - can be done with get_financial_data()
+    # q_rev_growth = get_q_rev_growth(fin_data)  # uses 'revenueGrowth'
+
+    types = ['EBITDA', 'OperatingCashFlow', 'TotalRevenue']
+    data = stock.get_financial_data(types, frequency='q', trailing=False)
+    print(data)
+
+    q_rev_growth = data['TotalRevenue'].iloc[-1] / data['TotalRevenue'].iloc[0]
+    print(fin_data['revenueGrowth'], q_rev_growth)
+    print(ebitda, data['EBITDA'].iloc[-4:].sum())
+    print(ocf, data['OperatingCashFlow'].iloc[-4:].sum())
+    print(tot_rev, data['TotalRevenue'].iloc[-4:].sum())
 
     fields = ['CashAndCashEquivalents', 'TotalLiabilitiesNetMinorityInterest',
               'TotalEquityGrossMinorityInterest', 'TotalDebt',
@@ -34,7 +45,6 @@ def update_stock_data(stockname):
         fields, frequency='q', trailing=False)
     equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, quartal_info)
 
-    q_rev_growth = get_q_rev_growth(fin_data)  # uses 'revenueGrowth'
 
     fields = ['TotalRevenue']
     yearly_info = stock.get_financial_data(
