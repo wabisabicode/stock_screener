@@ -50,11 +50,8 @@ def get_ttm_ebitda_ocf(_stock, _fin_data, quartal_cf):
     # Get EBITDA with default value of 0 if not available
     try:
         _ebitda = _fin_data.get('ebitda', 0.)
-        print(f'_ebitda: {_ebitda}')
         _ocf = _fin_data.get('operatingCashflow')
-        print(f'_ocf: {_ocf}')
         _tot_rev = _fin_data.get('totalRevenue', 0.)
-        print(f'_tot_rev: {_tot_rev}')
     except AttributeError:
         _ebitda = 0.
         _ocf = None
@@ -86,7 +83,7 @@ def get_q_rev_growth(_fin_data):
     try:
         _q_rev_growth = _fin_data['revenueGrowth']
     except (KeyError, ValueError):
-        _q_rev_growth = 0.
+        _q_rev_growth = float('nan')
 
     # Check if _q_rev_growth is an (empty) dict and set to 0 if so
     if isinstance(_q_rev_growth, dict):
