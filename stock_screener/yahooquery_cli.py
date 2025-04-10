@@ -70,12 +70,12 @@ def form_stock_list(_listarg):
             'mmm', '6367.t', 'dhl.de', 'fra.de',
             'ge', 'hot.de', 'raa.de', 'swk', '', '',
             'ads.de', 'mcd', 'nke', 'sbux', 'vfc', '', '',
-            '2502.t', 'ko', 'k', 'nesn.sw', 'pep',
+            '2502.t', 'ko', 'deo', 'nlm.f', 'k', 'nesn.sw', 'pep',
             'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
             'jnj', 'nvs', 'nvo', 'rog.sw', 'soon.sw', '', '',
-            'brk-b', 'ms', 'muv2.de', '', '',
-            'csco', 'dell', '4901.t', 'hpq',
+            'brk-b', 'fih-u.to', 'itm.mi', 'ms', 'muv2.de', '', '',
+            'bc8.f', 'csco', 'dell', '4901.t', 'hpq',
             'ibm', 'intc', 'meta', 'msft', 'txn', '', '',
             't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
             'bipc', 'nee', 'red.mc', '', '',
@@ -85,7 +85,7 @@ def form_stock_list(_listarg):
 
         "watchgrow": [
             'aapl', 'bkng', 'crwd', 'estc',
-            'hfg.de', 'isrg', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
+            'hfg.de', 'isrg', 'lyft', 'mndy', 'nem.de', 'nvda', 'pltr', 'pypl', 'pton', 'qlys',
             'tmv.de', 'tdoc', 'tsla', 'uber',
             'zal.de', 'zm'
         ],
