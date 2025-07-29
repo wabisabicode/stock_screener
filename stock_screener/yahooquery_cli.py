@@ -53,9 +53,9 @@ def form_stock_list(_listarg):
     # Mapping list options to specific stock lists
     stock_options = {
         "div": [
-            'abbv', 'are', 'alv.de', 'mo', 'amt', 'bti', 'blk', 'bepc',
+            'abbv', 'are', 'alv.de', 'mo', 'bti', 'blk', 'bepc',
             'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf',
-            'mpw', '4091.t', 'nnn', 'ohi', 'pfe', 'spg', 'vna.de'
+            'mpw', '4091.t', 'nnn', 'nvo', 'ohi', 'pfe', 'spg', 'vna.de'
         ],
 
         "growth": [
@@ -73,13 +73,13 @@ def form_stock_list(_listarg):
             '2502.t', 'ko', 'deo', 'nlm.f', 'k', 'nesn.sw', 'pep',
             'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
-            'jnj', 'nvs', 'nvo', 'rog.sw', 'soon.sw', '', '',
+            'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
             'brk-b', 'fih-u.to', 'itm.mi', 'ms', 'muv2.de', '', '',
             'bc8.f', 'csco', 'dell', '4901.t', 'hpq',
             'ibm', 'intc', 'meta', 'msft', 'txn', '', '',
             't', 'dte.de', 'iac', 'g24.de', 'vz', 'wbd', '', '',
             'bipc', 'nee', 'red.mc', '', '',
-            'avb', 'dlr', 'irm', 'dea', 'hr',
+            'amt', 'avb', 'dlr', 'irm', 'dea', 'hr',
             'krc', 'o', 'stag', 'skt', 'vici', 'wpc'
         ],
 
