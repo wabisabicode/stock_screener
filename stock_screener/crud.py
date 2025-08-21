@@ -4,7 +4,7 @@ from yahooquery import Ticker
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
                     get_ev_to_rev, get_mrq_fin_strength, get_mrq_margins,
-                    get_p_to_ocf, get_q_rev_growth, get_ttm_ebitda_ocf,
+                    get_q_rev_growth, get_ttm_ebitda,
                     get_yearly_revenue, timer)
 
 
@@ -39,17 +39,18 @@ def update_stock_data(stockname):
     # q_rev_growth = get_q_rev_growth(fin_data)  # uses 'revenueGrowth'
 
     # now:
-    # fields used 'EBITDA', 'OperatingCashFlow', 'TotalRevenue'
-    if 'EBITDA' not in q_data or 'OperatingCashFlow' not in q_data or 'TotalRevenue' not in q_data:
-        fin_data = stock.financial_data[stockname]
-        quartal_cf = stock.cash_flow(frequency='q', trailing=True)
-        ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data, quartal_cf)
-        q_rev_growth = get_q_rev_growth(fin_data)
+    # fields used 'EBITDA', 'TotalRevenue'
+
+    fin_highlights = stock.financial_data[stockname]
+    if 'EBITDA' not in q_data:
+        ebitda = get_ttm_ebitda(stock, fin_highlights)
     else:
         ebitda = q_data['EBITDA'].iloc[-4:].sum()
+
+    if 'TotalRevenue' not in q_data:
+        q_rev_growth = get_q_rev_growth(fin_highlights)
+    else:
         q_rev_growth = q_data['TotalRevenue'].iloc[-1] / q_data['TotalRevenue'].iloc[0] - 1
-        ocf = q_data['OperatingCashFlow'].iloc[-4:].sum()
-        tot_rev = q_data['TotalRevenue'].iloc[-4:].sum()
 
     #####
 
@@ -73,12 +74,12 @@ def update_stock_data(stockname):
     # if isinstance(quartal_info, str):
     #     quartal_info = stock.income_statement(frequency='q', trailing=True)
     #     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
-    mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
+    mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
 
     # Retrieve yearly income statement and cash flow data
     yearly_info = stock.income_statement(frequency='a', trailing=False)
     yearly_cf = stock.cash_flow(frequency='a', trailing=False)
-    av_gp_margin, av_ocf_margin, av_fcf_margin = get_ann_gp_margin(stock, yearly_info, yearly_cf)
+    av_gp_margin, av_fcf_margin = get_ann_gp_margin(stock, yearly_info, yearly_cf)
 
     remarks = remark_rev + ' ' + remark_inv
 
@@ -91,7 +92,7 @@ def update_stock_data(stockname):
     valuation_measures = stock.valuation_measures
     ev_to_rev = get_ev_to_rev(key_stats, valuation_measures)
 
-    p_to_ocf = get_p_to_ocf(valuation_measures, ocf)
+    # p_to_ocf = get_p_to_ocf(valuation_measures, ocf)
 
     stock_data = {
         'symbol': stockname,
@@ -103,14 +104,14 @@ def update_stock_data(stockname):
         'av_rev_growth': av_rev_growth * 100 - 100,
         'mrq_gp_margin': mrq_gp_margin * 100,
         'av_gp_margin': av_gp_margin * 100,
-        'mrq_ocf_margin': mrq_ocf_margin * 100,
-        'av_ocf_margin': av_ocf_margin * 100,
+        # 'mrq_ocf_margin': mrq_ocf_margin * 100,
+        # 'av_ocf_margin': av_ocf_margin * 100,
         'mrq_fcf_margin': mrq_fcf_margin * 100,
         'av_fcf_margin': av_fcf_margin * 100,
         'as_of_date': asOfDate.strftime('%m/%y'),
         'remarks': remarks,
         'ev_to_rev': ev_to_rev,
-        'p_to_ocf': p_to_ocf
+        # 'p_to_ocf': p_to_ocf
     }
 
     return stock_data

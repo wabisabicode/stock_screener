@@ -46,24 +46,14 @@ def timer(func):
 # get ttm ebitda and ocf from asset profile
 # ----------------------------------------------
 @timer
-def get_ttm_ebitda_ocf(_stock, _fin_data, quartal_cf):
+def get_ttm_ebitda(_stock, _fin_data):
     # Get EBITDA with default value of 0 if not available
     try:
         _ebitda = _fin_data.get('ebitda', 0.)
-        _ocf = _fin_data.get('operatingCashflow')
-        _tot_rev = _fin_data.get('totalRevenue', 0.)
     except AttributeError:
         _ebitda = 0.
-        _ocf = None
-        _tot_rev = 0.
 
-    # Get OCF with fallback to TTM quarterly cash flow if missing
-    if _ocf is None:
-        # keep only TTM values:
-        quartal_cf = quartal_cf[quartal_cf['periodType'] == 'TTM']
-        _ocf = get_last_value(quartal_cf, 'OperatingCashFlow')
-
-    return _ebitda, _ocf, _tot_rev
+    return _ebitda
 
 
 # def get_ttm_rev(_stock):
@@ -112,16 +102,16 @@ def get_ev_to_rev(_key_stats, valuation_measures):
     return _ev_to_rev
 
 
-@timer
-def get_p_to_ocf(valuation_measures, _ocf):
-    _m_cap = get_last_value(valuation_measures, 'MarketCap')
+# @timer
+# def get_p_to_ocf(valuation_measures, _ocf):
+#     _m_cap = get_last_value(valuation_measures, 'MarketCap')
 
-    try:
-        _p_to_ocf = _m_cap / _ocf
-    except (ZeroDivisionError, TypeError):
-        _p_to_ocf = float('nan')
+#     try:
+#         _p_to_ocf = _m_cap / _ocf
+#     except (ZeroDivisionError, TypeError):
+#         _p_to_ocf = float('nan')
 
-    return _p_to_ocf
+#     return _p_to_ocf
 
 
 # ----------------------------------------------
@@ -135,16 +125,14 @@ def get_mrq_margins(_stock, quartal_info, quartal_cf):
     """
     # Extract financial metrics
     _mrq_gp = get_last_value(quartal_info, 'GrossProfit')
-    _mrq_ocf = get_last_value(quartal_cf, 'OperatingCashFlow')
     _mrq_fcf = get_last_value(quartal_cf, 'FreeCashFlow')
     _mrq_rev = get_last_value(quartal_info, 'TotalRevenue')
 
     # Calculate margins
     _mrq_gp_margin = _mrq_gp / _mrq_rev if _mrq_gp > 0 and _mrq_rev > 0 else float('nan')
-    _mrq_ocf_margin = _mrq_ocf / _mrq_rev if _mrq_rev > 0 else float('nan')
     _mrq_fcf_margin = _mrq_fcf / _mrq_rev if _mrq_rev > 0 else float('nan')
 
-    return _mrq_gp_margin, _mrq_ocf_margin, _mrq_fcf_margin
+    return _mrq_gp_margin, _mrq_fcf_margin
 
 
 # ----------------------------------------------
@@ -183,17 +171,6 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
         if _no_totexp:
             _gp_margin_av = float('nan')
 
-    # calculate operating cashflow margin for latest years
-    if _ocf_table is not None:
-        try:
-            ocf_margin = [_ocf_table.iloc[i] / _totrev_table.iloc[i]
-                          for i in range(_totrev_table_len)]
-            _ocf_margin_av = np.average(ocf_margin)
-        except IndexError:
-            pass
-    else:
-        _ocf_margin_av = float('nan')
-
     # calculate free cashflow margin for latest years
     if _fcf_table is not None:
         try:
@@ -205,7 +182,7 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
     else:
         _fcf_margin_av = float('nan')
 
-    return _gp_margin_av, _ocf_margin_av, _fcf_margin_av
+    return _gp_margin_av, _fcf_margin_av
 
 
 # ----------------------------------------------
