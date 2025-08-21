@@ -29,8 +29,8 @@ def update_stock_data(stockname):
                   ]
 
     # fields used 'TotalRevenue', 'Inventory'
-    data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
-    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, data)
+    q_data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
+    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, q_data)
 
     # was:
     # quartal_cf = stock.cash_flow(frequency='q', trailing=True)
@@ -40,16 +40,16 @@ def update_stock_data(stockname):
 
     # now:
     # fields used 'EBITDA', 'OperatingCashFlow', 'TotalRevenue'
-    if 'EBITDA' not in data or 'OperatingCashFlow' not in data or 'TotalRevenue' not in data:
+    if 'EBITDA' not in q_data or 'OperatingCashFlow' not in q_data or 'TotalRevenue' not in q_data:
         fin_data = stock.financial_data[stockname]
         quartal_cf = stock.cash_flow(frequency='q', trailing=True)
         ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data, quartal_cf)
         q_rev_growth = get_q_rev_growth(fin_data)
     else:
-        ebitda = data['EBITDA'].iloc[-4:].sum()
-        q_rev_growth = data['TotalRevenue'].iloc[-1] / data['TotalRevenue'].iloc[0] - 1
-        ocf = data['OperatingCashFlow'].iloc[-4:].sum()
-        tot_rev = data['TotalRevenue'].iloc[-4:].sum()
+        ebitda = q_data['EBITDA'].iloc[-4:].sum()
+        q_rev_growth = q_data['TotalRevenue'].iloc[-1] / q_data['TotalRevenue'].iloc[0] - 1
+        ocf = q_data['OperatingCashFlow'].iloc[-4:].sum()
+        tot_rev = q_data['TotalRevenue'].iloc[-4:].sum()
 
     #####
 
@@ -57,7 +57,7 @@ def update_stock_data(stockname):
     #           'TotalLiabilitiesNetMinorityInterest',
     #           'TotalEquityGrossMinorityInterest', 'TotalDebt',
     #           'OperatingCashFlow', 'FreeCashFlow'
-    equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, data)
+    equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
 
     fields = ['TotalRevenue']
     yearly_info = stock.get_financial_data(
@@ -66,9 +66,9 @@ def update_stock_data(stockname):
 
     # Retrieve quarterly income statement and cash flow data
     # quartal_info = stock.income_statement(frequency='q', trailing=False)
-    quartal_info = data
+    quartal_info = q_data
     # quartal_cf = stock.cash_flow(frequency='q', trailing=False)
-    quartal_cf = data
+    quartal_cf = q_data
     # Fallback to trailing data if the current quarter's data is unavailable
     # if isinstance(quartal_info, str):
     #     quartal_info = stock.income_statement(frequency='q', trailing=True)
