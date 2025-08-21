@@ -3,7 +3,7 @@ from datetime import datetime
 from yahooquery import Ticker
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
-                    get_ev_to_rev, get_mrq_fin_strength, get_mrq_gp_margin,
+                    get_ev_to_rev, get_mrq_fin_strength, get_mrq_margins,
                     get_p_to_ocf, get_q_rev_growth, get_ttm_ebitda_ocf,
                     get_yearly_revenue, timer)
 
@@ -73,7 +73,7 @@ def update_stock_data(stockname):
     # if isinstance(quartal_info, str):
     #     quartal_info = stock.income_statement(frequency='q', trailing=True)
     #     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
-    mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_gp_margin(stock, quartal_info, quartal_cf)
+    mrq_gp_margin, mrq_ocf_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
 
     # Retrieve yearly income statement and cash flow data
     yearly_info = stock.income_statement(frequency='a', trailing=False)

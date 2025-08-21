@@ -128,7 +128,7 @@ def get_p_to_ocf(valuation_measures, _ocf):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 @timer
-def get_mrq_gp_margin(_stock, quartal_info, quartal_cf):
+def get_mrq_margins(_stock, quartal_info, quartal_cf):
     """
     Get the most recent quarter's gross profit margin,
     operating cash flow margin, and free cash flow margin.
