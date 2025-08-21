@@ -23,23 +23,14 @@ def update_stock_data(stockname):
                   'TotalLiabilitiesNetMinorityInterest',
                   'TotalEquityGrossMinorityInterest',
                   'TotalDebt',
-                  'OperatingCashFlow',
                   'FreeCashFlow',
                   'GrossProfit',
                   ]
 
-    # fields used 'TotalRevenue', 'Inventory'
+    # Use 'TotalRevenue', 'Inventory' to calculate
+    # inventory to revenue for mrq and its average over quarters.
     q_data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
     avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, q_data)
-
-    # was:
-    # quartal_cf = stock.cash_flow(frequency='q', trailing=True)
-    # ebitda, ocf, tot_rev = get_ttm_ebitda_ocf(stock, fin_data, quartal_cf)
-    # uses 'ebitda', 'operatingCashflow', 'totalRevenue' - can be done with get_financial_data()
-    # q_rev_growth = get_q_rev_growth(fin_data)  # uses 'revenueGrowth'
-
-    # now:
-    # fields used 'EBITDA', 'TotalRevenue'
 
     fin_highlights = stock.financial_data[stockname]
     if 'EBITDA' not in q_data:
@@ -57,13 +48,13 @@ def update_stock_data(stockname):
     # fields used 'CashAndCashEquivalents',
     #           'TotalLiabilitiesNetMinorityInterest',
     #           'TotalEquityGrossMinorityInterest', 'TotalDebt',
-    #           'OperatingCashFlow', 'FreeCashFlow'
+    #           'FreeCashFlow'???
     equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
 
     fields = ['TotalRevenue']
-    yearly_info = stock.get_financial_data(
+    a_info = stock.get_financial_data(
         fields, frequency='a', trailing=False)
-    av_rev_growth, remark_rev = get_yearly_revenue(stock, yearly_info)
+    av_rev_growth, remark_rev = get_yearly_revenue(stock, a_info)
 
     # Retrieve quarterly income statement and cash flow data
     # quartal_info = stock.income_statement(frequency='q', trailing=False)
@@ -77,9 +68,9 @@ def update_stock_data(stockname):
     mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
 
     # Retrieve yearly income statement and cash flow data
-    yearly_info = stock.income_statement(frequency='a', trailing=False)
-    yearly_cf = stock.cash_flow(frequency='a', trailing=False)
-    av_gp_margin, av_fcf_margin = get_ann_gp_margin(stock, yearly_info, yearly_cf)
+    a_info = stock.income_statement(frequency='a', trailing=False)
+    a_cf = stock.cash_flow(frequency='a', trailing=False)
+    av_gp_margin, av_fcf_margin = get_ann_gp_margin(stock, a_info, a_cf)
 
     remarks = remark_rev + ' ' + remark_inv
 
