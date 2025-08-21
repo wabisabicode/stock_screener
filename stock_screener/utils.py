@@ -43,17 +43,16 @@ def timer(func):
 
 
 # ----------------------------------------------
-# get ttm ebitda and ocf from asset profile
+# get ttm ebitda from asset profile
 # ----------------------------------------------
 @timer
 def get_ttm_ebitda(_stock, _fin_data):
-    # Get EBITDA with default value of 0 if not available
     try:
-        _ebitda = _fin_data.get('ebitda', 0.)
+        ebitda = _fin_data.get('ebitda', 0.)
     except AttributeError:
-        _ebitda = 0.
+        ebitda = 0.
 
-    return _ebitda
+    return ebitda
 
 
 # def get_ttm_rev(_stock):
@@ -102,18 +101,6 @@ def get_ev_to_rev(_key_stats, valuation_measures):
     return _ev_to_rev
 
 
-# @timer
-# def get_p_to_ocf(valuation_measures, _ocf):
-#     _m_cap = get_last_value(valuation_measures, 'MarketCap')
-
-#     try:
-#         _p_to_ocf = _m_cap / _ocf
-#     except (ZeroDivisionError, TypeError):
-#         _p_to_ocf = float('nan')
-
-#     return _p_to_ocf
-
-
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
@@ -146,7 +133,6 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
     """
     # Extract financial tables
     _gp_table = get_non_null_table(yearly_info, 'GrossProfit', None)
-    _ocf_table = get_non_null_table(yearly_cf, 'OperatingCashFlow', None)
     _fcf_table = get_non_null_table(yearly_cf, 'FreeCashFlow', None)
     _totrev_table = get_non_null_table(yearly_info, 'TotalRevenue')
 
@@ -196,7 +182,6 @@ def get_mrq_fin_strength(_stock, quartal_info):
     equity = get_last_value(quartal_info, 'TotalEquityGrossMinorityInterest')
     totalDebt = get_last_value(quartal_info, 'TotalDebt', float('nan'))
 
-#    ocf = quartal_info['OperatingCashFlow']
 #    fcf = quartal_info['FreeCashFlow']
 
     _asOfDate = get_last_value(quartal_info, 'asOfDate')
