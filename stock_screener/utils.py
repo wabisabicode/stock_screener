@@ -225,9 +225,6 @@ def get_valuation(stockname, a_fcf_ev):
     a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
     ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
 
-    print(a_data)
-    print(ttm_data)
-
     ev = get_last_value(ttm_data, 'EnterpriseValue', float('nan'))
     rev = get_last_value(ttm_data, 'TotalRevenue', float('nan'))
     fcf = get_last_value(ttm_data, 'FreeCashFlow', float('nan'))
