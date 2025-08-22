@@ -225,14 +225,14 @@ def calc_rev_inv_stats(_stock, q_data, ttm_revenue):
     q_inv = get_non_null_table(q_data, 'Inventory')
 
     try:
-        num_inv_quarters = q_inv.shape[0]
+        inv_quarter_count = q_inv.shape[0]
     except AttributeError:
-        num_inv_quarters = 0
+        inv_quarter_count = 0
 
-    remark = 'inv' + str(num_inv_quarters) + 'Q'
+    remark = 'inv' + str(inv_quarter_count) + 'Q'
 
     # calculate mrq and average inventory to ttm revenue
-    if num_inv_quarters > 0:
+    if inv_quarter_count > 0:
         mrq_inv = q_inv.iloc[-1]
         mrq_inv_to_rev = mrq_inv / ttm_revenue
         av_inv_to_rev = np.average(q_inv) / ttm_revenue
