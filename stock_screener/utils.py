@@ -192,15 +192,15 @@ def get_mrq_fin_strength(_stock, quartal_info):
 
 
 @timer
-def get_yearly_revenue(_stock, yearly_info):
+def get_yearly_revenue(_stock, a_info):
     """ get annual revenues, calculate growth rates
     and pass average rev growth of passed years"""
-    if type(yearly_info) is not str:
-        num_years = yearly_info.shape[0]
+    if type(a_info) is not str:
+        num_years = a_info.shape[0]
     else:
         num_years = 0
 
-    revs = yearly_info['TotalRevenue'].iloc[:]
+    revs = a_info['TotalRevenue'].iloc[:]
     # print(yearly_info['TotalRevenue'])
     # calculate rev growth rates via annual revenues
     r_growth = []
@@ -221,51 +221,22 @@ def get_yearly_revenue(_stock, yearly_info):
 
 
 @timer
-def calc_rev_inv_stats(_stock, tosum_info):
+def calc_rev_inv_stats(_stock, q_data, ttm_revenue):
+    q_inv = get_non_null_table(q_data, 'Inventory')
 
-    # check how many quarterly data is there
-    if type(tosum_info) is not str:
-        num_quarters = tosum_info.shape[0]
+    try:
+        num_inv_quarters = q_inv.shape[0]
+    except AttributeError:
+        num_inv_quarters = 0
+
+    remark = 'inv' + str(num_inv_quarters) + 'Q'
+
+    # calculate mrq and average inventory to ttm revenue
+    if num_inv_quarters > 0:
+        inv_mrq = q_inv.iloc[-1]
+        mrq_inv_to_rev = inv_mrq / ttm_revenue
+        av_inv_to_rev = np.average(q_inv) / ttm_revenue
     else:
-        num_quarters = 0
+        av_inv_to_rev = mrq_inv_to_rev = float('nan')
 
-    _remark = 'inv' + str(num_quarters) + 'Q'
-
-    # calculate ttm revenue and mrq revenue
-    rev_mrq = 0
-    no_rev_data = False
-
-    if isinstance(tosum_info, str):
-        no_rev_data = True
-    else:
-        try:
-            rev = tosum_info['TotalRevenue']
-            rev_mrq = rev.iloc[-1]
-        except KeyError:
-            no_rev_data = True
-        except AttributeError:
-            no_rev_data = True
-
-    # calculate inventory as % of mrq revenue and ttm average thereof
-    _av_inv_to_rev = 0.
-    _inv_to_rev_mrq = 0.
-
-    if no_rev_data is False:
-        try:
-            inv = tosum_info['Inventory'].copy()  # unpack inv for 4 mrq's
-            inv_mrq = inv.iloc[-1]
-            if math.isnan(inv_mrq):
-                inv_mrq = inv.iloc[-1] = inv.iloc[-2]
-
-            _inv_to_rev = []
-            for i in range(len(inv)-1, -1, -1):
-                _inv_to_rev.append(inv.iloc[i] / rev.iloc[i])
-            _av_inv_to_rev = np.average(_inv_to_rev)
-
-            _inv_to_rev_mrq = inv_mrq / rev_mrq
-        except KeyError:
-            ...
-    else:
-        _av_inv_to_rev = _inv_to_rev_mrq = float('nan')
-
-    return _av_inv_to_rev, _inv_to_rev_mrq, _remark
+    return av_inv_to_rev, mrq_inv_to_rev, remark

@@ -30,15 +30,18 @@ def update_stock_data(stockname):
     # Use 'TotalRevenue', 'Inventory' to calculate
     # inventory to revenue for mrq and its average over quarters.
     q_data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
-    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, q_data)
-
     fin_highlights = stock.financial_data[stockname]
-    if 'EBITDA' not in q_data:
+
+    ttm_revenue = fin_highlights['totalRevenue']
+    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, q_data, ttm_revenue)
+
+    if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
         ebitda = get_ttm_ebitda(stock, fin_highlights)
     else:
         ebitda = q_data['EBITDA'].iloc[-4:].sum()
+        # ebitda here can be nan. what to do?
 
-    if 'TotalRevenue' not in q_data:
+    if 'TotalRevenue' not in q_data or q_data['TotalRevenue'].iloc[-4:].isna().any():
         q_rev_growth = get_q_rev_growth(fin_highlights)
     else:
         q_rev_growth = q_data['TotalRevenue'].iloc[-1] / q_data['TotalRevenue'].iloc[0] - 1
@@ -52,8 +55,7 @@ def update_stock_data(stockname):
     equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
 
     fields = ['TotalRevenue']
-    a_info = stock.get_financial_data(
-        fields, frequency='a', trailing=False)
+    a_info = stock.get_financial_data(fields, frequency='a', trailing=False)
     av_rev_growth, remark_rev = get_yearly_revenue(stock, a_info)
 
     # Retrieve quarterly income statement and cash flow data
