@@ -233,8 +233,8 @@ def calc_rev_inv_stats(_stock, q_data, ttm_revenue):
 
     # calculate mrq and average inventory to ttm revenue
     if num_inv_quarters > 0:
-        inv_mrq = q_inv.iloc[-1]
-        mrq_inv_to_rev = inv_mrq / ttm_revenue
+        mrq_inv = q_inv.iloc[-1]
+        mrq_inv_to_rev = mrq_inv / ttm_revenue
         av_inv_to_rev = np.average(q_inv) / ttm_revenue
     else:
         av_inv_to_rev = mrq_inv_to_rev = float('nan')
