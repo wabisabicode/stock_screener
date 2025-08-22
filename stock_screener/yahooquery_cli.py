@@ -54,8 +54,8 @@ def form_stock_list(_listarg):
     stock_options = {
         "div": [
             'abbv', 'are', 'alv.de', 'mo', 'bti', 'blk', 'bepc',
-            'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf',
-            'mpw', '4091.t', 'nnn', 'nvo', 'ohi', 'pfe', 'spg', 'vna.de'
+            'enb', 'ibe.mc', 'kmi', '8001.t', 'lvmhf', 'mpw', '4091.t',
+            'nnn', 'nvo', 'ohi', 'pfe', 'spg', 'six3.f', 'vna.de'
         ],
 
         "growth": [
