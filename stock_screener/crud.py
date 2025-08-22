@@ -4,8 +4,8 @@ from yahooquery import Ticker
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
                     get_div_data, get_ev_to_rev, get_mrq_fin_strength,
-                    get_mrq_margins, get_q_rev_growth, get_ttm_ebitda,
-                    get_yearly_revenue, timer)
+                    get_mrq_margins, get_valuation, get_q_rev_growth,
+                    get_ttm_ebitda, get_yearly_revenue, timer)
 
 
 @timer
@@ -33,6 +33,8 @@ def update_stock_data(stockname):
     fin_highlights = stock.financial_data[stockname]
 
     ttm_revenue = fin_highlights['totalRevenue']
+    ttm_fcf = fin_highlights['freeCashflow']
+    print(ttm_fcf)
     avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(q_data, ttm_revenue)
 
     if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
@@ -55,8 +57,8 @@ def update_stock_data(stockname):
     equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
 
     fields = ['TotalRevenue']
-    a_info = stock.get_financial_data(fields, frequency='a', trailing=False)
-    av_rev_growth, remark_rev = get_yearly_revenue(stock, a_info)
+    a_inc_stat = stock.get_financial_data(fields, frequency='a', trailing=False)
+    av_rev_growth, remark_rev = get_yearly_revenue(stock, a_inc_stat)
 
     # Retrieve quarterly income statement and cash flow data
     # quartal_info = stock.income_statement(frequency='q', trailing=False)
@@ -70,23 +72,17 @@ def update_stock_data(stockname):
     mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
 
     # Retrieve yearly income statement and cash flow data
-    a_info = stock.income_statement(frequency='a', trailing=False)
+    a_inc_stat = stock.income_statement(frequency='a', trailing=False)
     a_cf = stock.cash_flow(frequency='a', trailing=False)
-    av_gp_margin, av_fcf_margin = get_ann_gp_margin(stock, a_info, a_cf)
+    av_gp_margin, av_fcf_margin = get_ann_gp_margin(stock, a_inc_stat, a_cf)
 
     remarks = remark_rev + ' ' + remark_inv
 
-    # get current valuations for EV-to-Rev and Price/OCF
-    if stockname != 'bion.sw':
-        key_stats = stock.key_stats[stockname]
-    else:
-        key_stats = 0
+    # Get valuation on EV/Rev, EV/FCF and their 4Y averages
+    a_data = stock.get_financial_data(['EnterpriseValue', 'FreeCashFlow', 'TotalRevenue'], frequency='a', trailing=True)
+    ev_to_ttm_fcf, av_ev_to_fcf, ev_to_rev, av_ev_to_rev = get_valuation(stock, a_data)
 
-    valuation_measures = stock.valuation_measures
-    ev_to_rev = get_ev_to_rev(key_stats, valuation_measures)
-
-    # p_to_ocf = get_p_to_ocf(valuation_measures, ocf)
-
+    # Get valuation on Div Yield and its 5Y average
     summary_detail = stock.summary_detail
     div_fwd, div_yield, av_div_5y = get_div_data(stockname, summary_detail)
 
@@ -100,16 +96,16 @@ def update_stock_data(stockname):
         'av_rev_growth': av_rev_growth * 100 - 100,
         'mrq_gp_margin': mrq_gp_margin * 100,
         'av_gp_margin': av_gp_margin * 100,
-        # 'mrq_ocf_margin': mrq_ocf_margin * 100,
-        # 'av_ocf_margin': av_ocf_margin * 100,
         'mrq_fcf_margin': mrq_fcf_margin * 100,
         'av_fcf_margin': av_fcf_margin * 100,
         'as_of_date': asOfDate.strftime('%m/%y'),
         'remarks': remarks,
         'ev_to_rev': ev_to_rev,
+        'av_ev_to_rev': av_ev_to_rev,
+        'ev_to_ttm_fcf': ev_to_ttm_fcf,
+        'av_ev_to_fcf': av_ev_to_fcf,
         'div_yield': div_yield,
         'av_div_5y': av_div_5y,
-        # 'p_to_ocf': p_to_ocf
     }
 
     return stock_data

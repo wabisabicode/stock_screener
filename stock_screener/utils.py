@@ -1,11 +1,9 @@
-import math
 from datetime import datetime
 
+import numpy as np
 import pandas as pd
 
 from .constants import TIME_PROFILE
-
-import numpy as np
 
 
 # Function to safely extract the last non-null value from a series
@@ -58,16 +56,6 @@ def get_ttm_ebitda(_stock, _fin_data):
     return ebitda
 
 
-# def get_ttm_rev(_stock):
-#     try:
-#         income_stat = _stock.income_statement(frequency='q', trailing=True)
-#         _tot_rev = income_stat['TotalRevenue'].iloc[-1]
-#     except (KeyError, ValueError, IndexError):
-#         _tot_rev = 0.
-
-#     return _tot_rev
-
-
 @timer
 def get_q_rev_growth(_fin_data):
     """Get year-over-year revenue growth for the most recent quarter."""
@@ -82,26 +70,6 @@ def get_q_rev_growth(_fin_data):
         _q_rev_growth = 0.
 
     return _q_rev_growth
-
-
-@timer
-def get_ev_to_rev(_key_stats, valuation_measures):
-    """Get EV to Revenue ratio. If absent in key_stats, retrieve it from
-    the valuation_measures table as an alternative approach.
-    """
-
-    try:
-        _ev_to_rev = _key_stats['enterpriseToRevenue']
-        if isinstance(_ev_to_rev, dict) or not _ev_to_rev:
-            _ev_to_rev = None  # Mark for alt. retrieval if empty or dict
-    except (KeyError, ValueError, TypeError):
-        _ev_to_rev = None  # Mark for alternative retrieval if error occurs
-
-    # If primary retrieval failed, attempt alternative retrieval
-    if _ev_to_rev is None:
-        _ev_to_rev = get_last_value(valuation_measures, 'EnterprisesValueRevenueRatio', float('nan'))
-
-    return _ev_to_rev
 
 
 # ----------------------------------------------
@@ -129,15 +97,15 @@ def get_mrq_margins(_stock, quartal_info, quartal_cf):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 @timer
-def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
+def get_ann_gp_margin(_stock, a_inc_stat, a_cf):
     """
     Get annual gross profit margin, operating cash flow margin,
     and free cash flow margin.
     """
     # Extract financial tables
-    _gp_table = get_non_null_table(yearly_info, 'GrossProfit')
-    _fcf_table = get_non_null_table(yearly_cf, 'FreeCashFlow')
-    _totrev_table = get_non_null_table(yearly_info, 'TotalRevenue')
+    _gp_table = get_non_null_table(a_inc_stat, 'GrossProfit')
+    _fcf_table = get_non_null_table(a_cf, 'FreeCashFlow')
+    _totrev_table = get_non_null_table(a_inc_stat, 'TotalRevenue')
 
     _totrev_table_len = _totrev_table.size
 
@@ -149,7 +117,7 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
     else:
         _no_totexp = False
         try:
-            _totexp_table = yearly_info['TotalExpenses']
+            _totexp_table = a_inc_stat['TotalExpenses']
         except KeyError:
             _totexp_table = _totrev_table  # no gp margin and no total expenses
             _no_totexp = True
@@ -184,8 +152,6 @@ def get_mrq_fin_strength(_stock, quartal_info):
     liab = get_last_value(quartal_info, 'TotalLiabilitiesNetMinorityInterest')
     equity = get_last_value(quartal_info, 'TotalEquityGrossMinorityInterest')
     totalDebt = get_last_value(quartal_info, 'TotalDebt', float('nan'))
-
-#    fcf = quartal_info['FreeCashFlow']
 
     _asOfDate = get_last_value(quartal_info, 'asOfDate')
     _equity_ratio = equity / (equity + liab)
@@ -249,7 +215,23 @@ def get_div_data(stockname, summary_detail):
     div_yield = summary_detail.get('dividendYield')
     av_div_5y = summary_detail.get('fiveYearAvgDividendYield')
 
-    print(div_fwd, div_yield, av_div_5y)
     div_yield = div_yield * 100 if div_yield is not None else None
 
     return div_fwd, div_yield, av_div_5y
+
+
+@timer
+def get_valuation(stockname, a_fcf_ev):
+    a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
+    ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
+
+    ev_to_rev = (get_last_value(ttm_data, 'EnterpriseValue') /
+                 get_last_value(ttm_data, 'TotalRevenue'))
+
+    ev_to_ttm_fcf = (get_last_value(ttm_data, 'EnterpriseValue') /
+                     get_last_value(ttm_data, 'FreeCashFlow'))
+
+    av_ev_to_rev = (a_data['EnterpriseValue'] / a_data['TotalRevenue']).dropna().mean()
+    av_ev_to_fcf = (a_data['EnterpriseValue'] / a_data['FreeCashFlow']).dropna().mean()
+
+    return ev_to_ttm_fcf, av_ev_to_fcf, ev_to_rev, av_ev_to_rev

@@ -28,7 +28,9 @@
             <th>Remark</th>
             <th></th>
             <th>EV/Sale</th>
-            <th>P/FCF</th>
+            <th>4Y EV/Sale</th>
+            <th>EV/FCF</th>
+            <th>4Y EV/FCF</th>
             <th>Div Yield</th>
             <th>5Y Div Yield</th>
           </tr>
@@ -53,7 +55,9 @@
                 <td>{{ item.remarks }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '%5.2f' % item.ev_to_rev|float }}</td>
-                <td>{{ '%5.2f' % 0.0|float }}</td>
+                <td>{{ '%5.2f' % item.av_ev_to_rev|float }}</td>
+                <td>{{ '%5.2f' % item.ev_to_ttm_fcf|float }}</td>
+                <td>{{ '%5.2f' % item.av_ev_to_fcf|float }}</td>
                 <td>{% if item.div_yield is not none %}
                       {{ '%5.2f%%' % item.div_yield }}
                     {% else %}
@@ -68,6 +72,8 @@
             {% else %}
               <tr>
                 <td>&nbsp;</td>
+                <td>{{ '\t' }}</td>
+                <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>
