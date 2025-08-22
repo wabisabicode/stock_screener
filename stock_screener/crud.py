@@ -13,7 +13,7 @@ def update_stock_data(stockname):
     time_start_anal = datetime.now()
 
     stock = Ticker(stockname, asynchronous=False)
-    time_got_ticker = elapsed_time(time_start_anal, 'Got ticker in')
+    time_got_ticker = elapsed_time(time_start_anal, f'Got {stockname} ticker in')
 
     all_fields = ['TotalRevenue',
                   'Inventory',
