@@ -1,5 +1,8 @@
 import math
 from datetime import datetime
+
+import pandas as pd
+
 from .constants import TIME_PROFILE
 
 import numpy as np
@@ -14,11 +17,11 @@ def get_last_value(data, key, default=0):
 
 
 # Function to safely extract a non-null table
-def get_non_null_table(data, key, default=0):
+def get_non_null_table(data, key):
     try:
         return data[key].dropna()
     except (KeyError, ValueError):
-        return default
+        return pd.Series(dtype=float)
 
 
 # Time profiling
@@ -132,14 +135,14 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
     and free cash flow margin.
     """
     # Extract financial tables
-    _gp_table = get_non_null_table(yearly_info, 'GrossProfit', None)
-    _fcf_table = get_non_null_table(yearly_cf, 'FreeCashFlow', None)
+    _gp_table = get_non_null_table(yearly_info, 'GrossProfit')
+    _fcf_table = get_non_null_table(yearly_cf, 'FreeCashFlow')
     _totrev_table = get_non_null_table(yearly_info, 'TotalRevenue')
 
     _totrev_table_len = _totrev_table.size
 
     # calculate rev growth rates via annual revenues
-    if _gp_table is not None:
+    if not _gp_table.empty:
         gp_margin = [_gp_table.iloc[i] / _totrev_table.iloc[i]
                      for i in range(_totrev_table_len)]
         _gp_margin_av = np.average(gp_margin)
@@ -158,7 +161,7 @@ def get_ann_gp_margin(_stock, yearly_info, yearly_cf):
             _gp_margin_av = float('nan')
 
     # calculate free cashflow margin for latest years
-    if _fcf_table is not None:
+    if not _fcf_table.empty:
         try:
             fcf_margin = [_fcf_table.iloc[i] / _totrev_table.iloc[i]
                           for i in range(_totrev_table_len)]
@@ -221,18 +224,14 @@ def get_yearly_revenue(_stock, a_info):
 
 
 @timer
-def calc_rev_inv_stats(_stock, q_data, ttm_revenue):
+def calc_rev_inv_stats(q_data, ttm_revenue):
     q_inv = get_non_null_table(q_data, 'Inventory')
 
-    try:
-        inv_quarter_count = q_inv.shape[0]
-    except AttributeError:
-        inv_quarter_count = 0
-
+    inv_quarter_count = len(q_inv)
     remark = 'inv' + str(inv_quarter_count) + 'Q'
 
     # calculate mrq and average inventory to ttm revenue
-    if inv_quarter_count > 0:
+    if inv_quarter_count > 0 and ttm_revenue and not np.isnan(ttm_revenue):
         mrq_inv = q_inv.iloc[-1]
         mrq_inv_to_rev = mrq_inv / ttm_revenue
         av_inv_to_rev = np.average(q_inv) / ttm_revenue

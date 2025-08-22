@@ -33,7 +33,7 @@ def update_stock_data(stockname):
     fin_highlights = stock.financial_data[stockname]
 
     ttm_revenue = fin_highlights['totalRevenue']
-    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(stock, q_data, ttm_revenue)
+    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(q_data, ttm_revenue)
 
     if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
         ebitda = get_ttm_ebitda(stock, fin_highlights)
