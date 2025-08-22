@@ -225,13 +225,21 @@ def get_valuation(stockname, a_fcf_ev):
     a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
     ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
 
-    ev_to_rev = (get_last_value(ttm_data, 'EnterpriseValue') /
-                 get_last_value(ttm_data, 'TotalRevenue'))
+    print(a_data)
+    print(ttm_data)
 
-    ev_to_ttm_fcf = (get_last_value(ttm_data, 'EnterpriseValue') /
-                     get_last_value(ttm_data, 'FreeCashFlow'))
+    ev = get_last_value(ttm_data, 'EnterpriseValue', float('nan'))
+    rev = get_last_value(ttm_data, 'TotalRevenue', float('nan'))
+    fcf = get_last_value(ttm_data, 'FreeCashFlow', float('nan'))
 
-    av_ev_to_rev = (a_data['EnterpriseValue'] / a_data['TotalRevenue']).dropna().mean()
-    av_ev_to_fcf = (a_data['EnterpriseValue'] / a_data['FreeCashFlow']).dropna().mean()
+    ev_to_rev = ev / rev
+    ev_to_ttm_fcf = ev / fcf
+
+    evs = a_data.get('EnterpriseValue', pd.Series(dtype=float))
+    revs = a_data.get('TotalRevenue', pd.Series(dtype=float))
+    fcfs = a_data.get('FreeCashFlow', pd.Series(dtype=float))
+
+    av_ev_to_rev = (evs / revs).dropna().mean()
+    av_ev_to_fcf = (evs / fcfs).dropna().mean()
 
     return ev_to_ttm_fcf, av_ev_to_fcf, ev_to_rev, av_ev_to_rev

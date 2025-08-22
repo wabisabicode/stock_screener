@@ -3,7 +3,7 @@ from datetime import datetime
 from yahooquery import Ticker
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
-                    get_div_data, get_ev_to_rev, get_mrq_fin_strength,
+                    get_div_data, get_mrq_fin_strength,
                     get_mrq_margins, get_valuation, get_q_rev_growth,
                     get_ttm_ebitda, get_yearly_revenue, timer)
 
@@ -33,8 +33,6 @@ def update_stock_data(stockname):
     fin_highlights = stock.financial_data[stockname]
 
     ttm_revenue = fin_highlights['totalRevenue']
-    ttm_fcf = fin_highlights['freeCashflow']
-    print(ttm_fcf)
     avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(q_data, ttm_revenue)
 
     if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
