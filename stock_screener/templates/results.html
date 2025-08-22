@@ -29,6 +29,8 @@
             <th></th>
             <th>EV/Sale</th>
             <th>P/FCF</th>
+            <th>Div Yield</th>
+            <th>5Y Div Yield</th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -51,6 +53,17 @@
                 <td>{{ item.remarks }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '%5.2f' % item.ev_to_rev|float }}</td>
+                <td>{{ '%5.2f' % 0.0|float }}</td>
+                <td>{% if item.div_yield is not none %}
+                      {{ '%5.2f%%' % item.div_yield }}
+                    {% else %}
+                      &mdash;
+                    {% endif %}</td>
+                <td>{% if item.av_div_5y is not none %}
+                      {{ '%5.2f%%' % item.av_div_5y }}
+                    {% else %}
+                      &mdash;
+                    {% endif %}</td>
               </tr>
             {% else %}
               <tr>

@@ -3,9 +3,9 @@ from datetime import datetime
 from yahooquery import Ticker
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
-                    get_ev_to_rev, get_mrq_fin_strength, get_mrq_margins,
-                    get_q_rev_growth, get_ttm_ebitda, get_yearly_revenue,
-                    timer)
+                    get_div_data, get_ev_to_rev, get_mrq_fin_strength,
+                    get_mrq_margins, get_q_rev_growth, get_ttm_ebitda,
+                    get_yearly_revenue, timer)
 
 
 @timer
@@ -87,6 +87,9 @@ def update_stock_data(stockname):
 
     # p_to_ocf = get_p_to_ocf(valuation_measures, ocf)
 
+    summary_detail = stock.summary_detail
+    div_fwd, div_yield, av_div_5y = get_div_data(stockname, summary_detail)
+
     stock_data = {
         'symbol': stockname,
         'equity_ratio': equity_ratio * 100,
@@ -104,6 +107,8 @@ def update_stock_data(stockname):
         'as_of_date': asOfDate.strftime('%m/%y'),
         'remarks': remarks,
         'ev_to_rev': ev_to_rev,
+        'div_yield': div_yield,
+        'av_div_5y': av_div_5y,
         # 'p_to_ocf': p_to_ocf
     }
 

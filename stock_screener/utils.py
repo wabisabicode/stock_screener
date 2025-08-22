@@ -239,3 +239,17 @@ def calc_rev_inv_stats(q_data, ttm_revenue):
         av_inv_to_rev = mrq_inv_to_rev = float('nan')
 
     return av_inv_to_rev, mrq_inv_to_rev, remark
+
+
+@timer
+def get_div_data(stockname, summary_detail):
+    summary_detail = summary_detail.get(stockname, {})  # unpack the outer dict
+
+    div_fwd = summary_detail.get('dividendRate')
+    div_yield = summary_detail.get('dividendYield')
+    av_div_5y = summary_detail.get('fiveYearAvgDividendYield')
+
+    print(div_fwd, div_yield, av_div_5y)
+    div_yield = div_yield * 100 if div_yield is not None else None
+
+    return div_fwd, div_yield, av_div_5y
