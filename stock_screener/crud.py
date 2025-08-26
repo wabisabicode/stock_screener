@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from yahooquery import Ticker
+#from yahooquery import Ticker
+import yahooquery as yq
 
 from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
                     get_div_data, get_mrq_fin_strength,
@@ -9,11 +10,11 @@ from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
 
 
 @timer
-def update_stock_data(stockname):
+def update_stock_data(ticker):
     time_start_anal = datetime.now()
 
-    stock = Ticker(stockname, asynchronous=True)
-    time_got_ticker = elapsed_time(time_start_anal, f'Got {stockname} in')
+    stock = yq.Ticker(ticker, asynchronous=True)
+    time_got_ticker = elapsed_time(time_start_anal, f'Got {ticker} in')
 
     all_fields = ['TotalRevenue',
                   'Inventory',
@@ -30,7 +31,9 @@ def update_stock_data(stockname):
     # Use 'TotalRevenue', 'Inventory' to calculate
     # inventory to revenue for mrq and its average over quarters.
     q_data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
-    fin_highlights = stock.financial_data[stockname]
+    fin_highlights = stock.financial_data[ticker]
+
+    print(type(fin_highlights))
 
     ttm_revenue = fin_highlights.get('totalRevenue')
     avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(q_data, ttm_revenue)
@@ -83,10 +86,10 @@ def update_stock_data(stockname):
     # Get valuation on Div Yield and its 5Y average
     summary_detail = stock.summary_detail
     div_fwd, payout_ratio, div_yield, av_div_5y = get_div_data(
-        stockname, summary_detail)
+        ticker, summary_detail)
 
     stock_data = {
-        'symbol': stockname,
+        'symbol': ticker,
         'equity_ratio': equity_ratio * 100,
         'net_debt_to_ebitda': net_debt / ebitda,
         'inv_to_rev_mrq': inv_to_rev_mrq * 100,
