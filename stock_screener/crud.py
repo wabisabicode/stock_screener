@@ -13,7 +13,7 @@ from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
 def update_stock_data(ticker):
     time_start_anal = datetime.now()
 
-    stock = yq.Ticker(ticker, asynchronous=True)
+    stock = yq.Ticker(ticker, asynchronous=True, max_workers=4)
     time_got_ticker = elapsed_time(time_start_anal, f'Got {ticker} in')
 
     all_fields = ['TotalRevenue',
