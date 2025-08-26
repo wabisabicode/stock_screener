@@ -63,7 +63,7 @@ def form_stock_list(_listarg):
             'coin', 'dis', 'gtlb', 'hyq.de', 'ma', 'twlo', 'veev', 'vmeo'
         ],
 
-        "rest": ['eqnr', '', 'rio', '', '', 'arcc', 'ocsl'],
+        "rest": ['eqnr', '', 'rio.l', '', '', 'arcc', 'ocsl'],
 
         "watch": [
             'tte', 'shel', '', '', 'apd', 'hei.de', 'lin', 'bas.de', '', '',
