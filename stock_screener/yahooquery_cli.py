@@ -70,7 +70,7 @@ def form_stock_list(_listarg):
             'mmm', '6367.t', 'dhl.de', 'fra.de',
             'ge', 'hot.de', 'raa.de', 'swk', '', '',
             'ads.de', 'mcd', 'nke', 'sbux', 'vfc', '', '',
-            '2502.t', 'ko', 'deo', 'nlm.f', 'hsy', 'k', 'mdlz', 'nesn.sw',
+            '2502.t', 'ko', 'dge.l', 'nlm.f', 'hsy', 'k', 'mdlz', 'nesn.sw',
             'pep', 'pm', 'swa.de', 'ul', '', '',
             'amgn', 'bayn.de', 'bion.sw', 'bmy', 'cvs', 'gild',
             'jnj', 'nvs', 'rog.sw', 'soon.sw', '', '',
