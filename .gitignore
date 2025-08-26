@@ -5,3 +5,4 @@ static/*
 .env
 
 .DS_Store
+*.pyc
