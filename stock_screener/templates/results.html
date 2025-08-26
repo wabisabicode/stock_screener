@@ -67,13 +67,13 @@
                       &mdash;
                     {% endif %}</td>
                 <td>{% if item.av_div_5y is not none %}
-                      {{ '%5.2f' % item.av_div_5y }}
+                      {{ '%5.2f%%' % item.av_div_5y }}
                     {% else %}
                       &mdash;
                     {% endif %}</td>
                 <td>{{ '\t' }}</td>
                 <td>{% if item.div_fwd is not none %}
-                      {{ '%5.2f%%' % item.div_fwd }}
+                      {{ '%5.2f' % item.div_fwd }}
                     {% else %}
                       &mdash;
                     {% endif %}</td>
