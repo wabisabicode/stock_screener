@@ -33,6 +33,9 @@
             <th>4Y EV/FCF</th>
             <th>Div Yield</th>
             <th>5Y Div Yield</th>
+            <th></th>
+            <th>Div Fwd</th>
+            <th>Payout Ratio</th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -68,10 +71,16 @@
                     {% else %}
                       &mdash;
                     {% endif %}</td>
+                <td>{{ '\t' }}</td>
+                <td>{{ '%5.2f' % item.div_fwd|float }}</td>
+                <td>{{ '%5.2f' % item.payout_ratio|float }}</td>
               </tr>
             {% else %}
               <tr>
                 <td>&nbsp;</td>
+                <td>{{ '\t' }}</td>
+                <td>{{ '\t' }}</td>
+                <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>
                 <td>{{ '\t' }}</td>

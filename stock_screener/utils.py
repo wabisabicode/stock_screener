@@ -212,12 +212,13 @@ def get_div_data(stockname, summary_detail):
     summary_detail = summary_detail.get(stockname, {})  # unpack the outer dict
 
     div_fwd = summary_detail.get('dividendRate')
+    payout_ratio = summary_detail.get('payoutRatio')
     div_yield = summary_detail.get('dividendYield')
     av_div_5y = summary_detail.get('fiveYearAvgDividendYield')
 
     div_yield = div_yield * 100 if div_yield is not None else None
 
-    return div_fwd, div_yield, av_div_5y
+    return div_fwd, payout_ratio, div_yield, av_div_5y
 
 
 @timer

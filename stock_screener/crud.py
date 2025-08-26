@@ -12,8 +12,8 @@ from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
 def update_stock_data(stockname):
     time_start_anal = datetime.now()
 
-    stock = Ticker(stockname, asynchronous=False)
-    time_got_ticker = elapsed_time(time_start_anal, f'Got {stockname} ticker in')
+    stock = Ticker(stockname, asynchronous=True)
+    time_got_ticker = elapsed_time(time_start_anal, f'Got {stockname} in')
 
     all_fields = ['TotalRevenue',
                   'Inventory',
@@ -82,7 +82,8 @@ def update_stock_data(stockname):
 
     # Get valuation on Div Yield and its 5Y average
     summary_detail = stock.summary_detail
-    div_fwd, div_yield, av_div_5y = get_div_data(stockname, summary_detail)
+    div_fwd, payout_ratio, div_yield, av_div_5y = get_div_data(
+        stockname, summary_detail)
 
     stock_data = {
         'symbol': stockname,
@@ -104,6 +105,8 @@ def update_stock_data(stockname):
         'av_ev_to_fcf': av_ev_to_fcf,
         'div_yield': div_yield,
         'av_div_5y': av_div_5y,
+        'div_fwd': div_fwd,
+        'payout_ratio': payout_ratio,
     }
 
     return stock_data
