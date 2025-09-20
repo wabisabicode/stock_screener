@@ -3,10 +3,11 @@ from datetime import datetime
 #from yahooquery import Ticker
 import yahooquery as yq
 
-from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
-                    get_div_data, get_mrq_fin_strength,
-                    get_mrq_margins, get_valuation, get_q_rev_growth,
-                    get_ttm_ebitda, get_yearly_revenue, timer)
+from constants import TIME_PROFILE
+from utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
+                   get_div_data, get_mrq_fin_strength,
+                   get_mrq_margins, get_valuation, get_q_rev_growth,
+                   get_ttm_ebitda, get_yearly_revenue, timer)
 
 
 @timer
@@ -14,7 +15,8 @@ def update_stock_data(ticker):
     time_start_anal = datetime.now()
 
     stock = yq.Ticker(ticker, asynchronous=True, max_workers=4)
-    time_got_ticker = elapsed_time(time_start_anal, f'Got {ticker} in')
+    if TIME_PROFILE:
+        time_got_ticker = elapsed_time(time_start_anal, f'Got {ticker} in')
 
     all_fields = ['TotalRevenue',
                   'Inventory',

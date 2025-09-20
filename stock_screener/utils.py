@@ -3,7 +3,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from .constants import TIME_PROFILE
+from constants import TIME_PROFILE
 
 
 # Function to safely extract the last non-null value from a series

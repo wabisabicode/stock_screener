@@ -1,6 +1,6 @@
 import argparse
 
-from .crud import update_stock_data
+from crud import update_stock_data
 
 
 def main():
@@ -28,21 +28,27 @@ def main():
                 "{}\t ".format(stockname),
                 "{:4.0f}%\t{:5.1f} \t".format(
                     stock_data['equity_ratio'], stock_data['net_debt_to_ebitda']),
-                " {:3.0f}% \t {:3.0f}% \t\t".format(
+                " {:3.0f}% \t {:3.0f}% \t".format(
                     stock_data['inv_to_rev_mrq'], stock_data['av_inv_to_rev']),
                 "{:3.0f}% \t {:3.0f}% \t".format(
                     stock_data['q_rev_growth'], stock_data['av_rev_growth']),
                 "{:4.0f}% \t {:4.0f}% \t".format(
                     stock_data['mrq_gp_margin'], stock_data['av_gp_margin']),
                 "{:4.0f}% \t {:4.0f}% \t".format(
-                    stock_data['mrq_ocf_margin'], stock_data['av_ocf_margin']),
-                "{:4.0f}% \t {:4.0f}% \t".format(
                     stock_data['mrq_fcf_margin'], stock_data['av_fcf_margin']),
                 stock_data['as_of_date'],
-                "\t{}\t\t".format(stock_data['remarks']),
-                "{:5.2f}\t{:6.2f}".format(
+                "\t{}\t".format(stock_data['remarks']),
+                "{:5.2f} \t {:6.2f} \t {:5.2f} \t  {:5.2f} \t ".format(
                     stock_data['ev_to_rev'],
-                    stock_data['p_to_ocf']
+                    stock_data['av_ev_to_rev'],
+                    stock_data['ev_to_ttm_fcf'],
+                    stock_data['av_ev_to_fcf']
+                ),
+                "{:3.1f} \t {:3.1f} \t{:5.2f} \t {:5.1f}".format(
+                    stock_data['div_yield'],
+                    stock_data['av_div_5y'],
+                    stock_data['div_fwd'],
+                    stock_data['payout_ratio'],
                 )
             )
         else:
@@ -97,12 +103,13 @@ def form_stock_list(_listarg):
 
 
 def display_table_header():
-    print("     \t  | debt health |   inv-to-Rev\t |\tRev Growth     |"
-          " Gross Margin  |  Op CashFlow  | Free CashFlow |"
-          "\t    \t     \t  |       Valuation\t")
-    print("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t\tqRGrYoY\t aRGrY "
-          "\t mrqGM \t avGMy \t mrqOCF\t avOCFy\t mrqFCF\t avFCFy\t mrq"
-          "\t Remark \t\tEV/Sale\t P/OCF")
+    print("     \t  | debt health |   inv-to-Rev\t| Rev Growth    |"
+          " Gross Margin  | Free CashFlow |"
+          "\t    \t    |  Valuation\t \t \t \t      | Dividend")
+    print("stock\t    eqR\tnebitda\t i/Rmrq\t aIn/R\t qRGrYoY  aRGrY "
+          "  mrqGM   avGMy   mrqFCF   avFCF   mrq"
+          "\t Remark \tEV/Sale\t 4Y EV/Sale\t EV/FCF\t 4Y EV/FCF"
+          "\t DivY \t 5YDivY\tDivFwd \t Payout")
 
 
 if __name__ == "__main__":
