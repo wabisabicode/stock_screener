@@ -44,5 +44,5 @@ def results():
         else:
             data.append({})
 
-        socketio.emit('update_data', data)
+        # socketio.emit('update_data', data)
     return render_template('results.html', data=data)
