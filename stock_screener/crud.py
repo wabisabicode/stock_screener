@@ -3,11 +3,11 @@ from datetime import datetime
 #from yahooquery import Ticker
 import yahooquery as yq
 
-from constants import TIME_PROFILE
-from utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
-                   get_div_data, get_mrq_fin_strength,
-                   get_mrq_margins, get_valuation, get_q_rev_growth,
-                   get_ttm_ebitda, get_yearly_revenue, timer)
+from .constants import TIME_PROFILE
+from .utils import (calc_rev_inv_stats, elapsed_time, get_ann_gp_margin,
+                    get_div_data, get_mrq_fin_strength,
+                    get_mrq_margins, get_valuation, get_q_rev_growth,
+                    get_ttm_ebitda, get_yearly_revenue, timer)
 
 
 @timer

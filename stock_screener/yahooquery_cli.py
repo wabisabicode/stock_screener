@@ -1,6 +1,6 @@
 import argparse
 
-from crud import update_stock_data
+from .crud import update_stock_data
 
 
 def main():
