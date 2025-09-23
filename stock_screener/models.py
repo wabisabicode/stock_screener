@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy import Enum
 
-from . import db
+from stock_screener import db
 
 
 class ReportType(enum.Enum):
@@ -60,3 +60,13 @@ class StockData(db.Model):
             session.add(new_stock)
             session.commit()
             print(f'New stock {ticker} added successfully.')
+
+
+class FinancialReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    stock_id = db.Column(db.Integer, db.ForeignKey('stock_id'),
+                         nullable=False, index=True)
+
+    report_type = db.Column(Enum(ReportType), nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
