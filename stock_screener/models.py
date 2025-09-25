@@ -76,8 +76,24 @@ class Stock(db.Model):
 class FinancialReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    stock_id = db.Column(db.Integer, db.ForeignKey('stock_id'),
+    stock_id = db.Column(db.Integer, db.ForeignKey('stock.id'),
                          nullable=False, index=True)
 
+    # --- Report Metadata ---
     report_type = db.Column(Enum(ReportType), nullable=False)
     end_date = db.Column(db.Date, nullable=False)
+
+    # --- Balance Sheet Data ---
+    total_equity = db.Column(db.BigInteger)
+    total_liability = db.Column(db.BigInteger)
+    cash_and_equivalents = db.Column(db.BigInteger)
+    total_debt = db.Column(db.BigInteger)
+    inventory = db.Column(db.BigInteger)
+
+    # --- Income Statement Data ---
+    revenue = db.Column(db.BigInteger)
+    gross_profit = db.Column(db.BigInteger)
+    ebitda = db.Column(db.BigInteger)
+
+    # --- Cash Flow Statement Data ---
+    free_cash_flow = db.Column(db.BigInteger)
