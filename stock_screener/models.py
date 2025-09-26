@@ -1,8 +1,11 @@
 import enum
 
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum
 
-from stock_screener import db
+db = SQLAlchemy()
+migrate = Migrate()
 
 
 class ReportType(enum.Enum):
