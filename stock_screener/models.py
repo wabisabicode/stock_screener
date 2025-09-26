@@ -1,4 +1,5 @@
 import enum
+
 from sqlalchemy import Enum
 
 from stock_screener import db
