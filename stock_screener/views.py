@@ -1,24 +1,22 @@
-from flask import render_template, request
-from flask_socketio import SocketIO
+from flask import Blueprint, render_template, request
 
-from . import app
 from .crud import update_stock_data
 from .yahooquery_cli import form_stock_list
 
-socketio = SocketIO(app)
+main = Blueprint('main', __name__)
 
 
-@app.route('/update')
+@main.route('/update')
 def update_universe():
     pass
 
 
-@app.route('/')
+@main.route('/')
 def home():
     return render_template('home.html')
 
 
-@app.route('/results', methods=['POST'])
+@main.route('/results', methods=['POST'])
 def results():
     data = []
 
@@ -44,5 +42,4 @@ def results():
         else:
             data.append({})
 
-        # socketio.emit('update_data', data)
     return render_template('results.html', data=data)
