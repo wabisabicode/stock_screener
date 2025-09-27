@@ -1,12 +1,10 @@
-from datetime import datetime
+import math
 
-#from yahooquery import Ticker
-
-from .services import get_stock_from_yq
 from .utils import (calc_rev_inv_stats, get_ann_gp_margin,
-                    get_div_data, get_mrq_fin_strength,
-                    get_mrq_margins, get_valuation, get_q_rev_growth,
-                    get_ttm_ebitda, get_yearly_revenue)
+                    get_avg_ann_valuation, get_curr_ttm_valuation,
+                    get_div_data, get_mrq_fin_strength, get_mrq_margins,
+                    get_q_rev_growth, get_ttm_ebitda, get_yearly_revenue)
+from .yfinance_api import get_stock_from_yq
 
 
 def update_stock_data(ticker):
@@ -75,7 +73,8 @@ def update_stock_data(ticker):
 
     # Get valuation on EV/Rev, EV/FCF and their 4Y averages
     a_data = stock.get_financial_data(['EnterpriseValue', 'FreeCashFlow', 'TotalRevenue'], frequency='a', trailing=True)
-    ev_to_ttm_fcf, av_ev_to_fcf, ev_to_rev, av_ev_to_rev = get_valuation(stock, a_data)
+    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(stock, a_data)
+    av_ev_to_fcf, av_ev_to_rev = get_avg_ann_valuation(stock, a_data)
 
     # Get valuation on Div Yield and its 5Y average
     summary_detail = stock.summary_detail
@@ -106,4 +105,12 @@ def update_stock_data(ticker):
         'payout_ratio': payout_ratio * 100,
     }
 
-    return stock_data
+    cleaned_data = {}
+    for key, value in stock_data.items():
+        # Check if the value is a float and is NaN
+        if isinstance(value, float) and math.isnan(value):
+            cleaned_data[key] = None  # Replace NaN with None (which becomes JSON null)
+        else:
+            cleaned_data[key] = value
+
+    return cleaned_data
