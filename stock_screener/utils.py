@@ -225,16 +225,23 @@ def get_div_data(stockname, summary_detail):
 
 
 @timer()
-def get_valuation(stockname, a_fcf_ev):
-    a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
+def get_curr_ttm_valuation(stockname, a_fcf_ev):
     ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
 
     ev = get_last_value(ttm_data, 'EnterpriseValue', float('nan'))
     rev = get_last_value(ttm_data, 'TotalRevenue', float('nan'))
     fcf = get_last_value(ttm_data, 'FreeCashFlow', float('nan'))
 
+    # actually, rev and fcf are not updated daily
     ev_to_rev = ev / rev
     ev_to_ttm_fcf = ev / fcf
+
+    return ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev
+
+
+@timer()
+def get_avg_ann_valuation(stockname, a_fcf_ev):
+    a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
 
     evs = a_data.get('EnterpriseValue', pd.Series(dtype=float))
     revs = a_data.get('TotalRevenue', pd.Series(dtype=float))
@@ -243,4 +250,4 @@ def get_valuation(stockname, a_fcf_ev):
     av_ev_to_rev = (evs / revs).dropna().mean()
     av_ev_to_fcf = (evs / fcfs).dropna().mean()
 
-    return ev_to_ttm_fcf, av_ev_to_fcf, ev_to_rev, av_ev_to_rev
+    return av_ev_to_fcf, av_ev_to_rev
