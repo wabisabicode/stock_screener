@@ -31,12 +31,9 @@ def results():
         else:
             tickers_to_process = stock_key
 
-        # Redirect to this SAME URL, but as a GET request
+        # Redirect to SAME URL, but as a GET "/results?tickers=AAPL,GOOGL".
         return redirect(url_for('main.results', tickers=tickers_to_process))
 
-    # This block runs after the redirect, when the browser makes a GET request
-    # to a URL like "/results?tickers=AAPL,GOOGL". Its only job is to
-    # show the blank results page so the JavaScript can take over.
     return render_template('results.html')
 
 
