@@ -1,7 +1,8 @@
 import yahooquery as yq
 
 from .constants import ASYNC, MAX_WORKERS
-from .utils import timer, get_curr_ttm_valuation
+from .helpers import timer
+from .utils import get_curr_ttm_valuation
 
 
 def get_daily_metrics(stock):
