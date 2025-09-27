@@ -1,4 +1,4 @@
-from datetime import datetime
+import time
 
 import numpy as np
 import pandas as pd
@@ -22,31 +22,34 @@ def get_non_null_table(data, key):
         return pd.Series(dtype=float)
 
 
-# Time profiling
-def elapsed_time(time_start, message):
-    time_now = datetime.now()
-    print(f'{message}:\t{time_now - time_start}')
-    return time_now
+def timer(message=None):
+    def decorator(func):
+        """A decorator that prints the time a function takes to execute."""
+        def wrapper(*args, **kwargs):
+            if TIME_PROFILE:
+                start_time = time.perf_counter()
+                result = func(*args, **kwargs)
+                run_time = time.perf_counter() - start_time
 
+                if callable(message):
+                    msg = message(*args, **kwargs)
+                    print('')
+                    print(f'Getting ticker {msg} took {run_time:.4f} seconds')
+                else:
+                    print(f'{func.__name__} took {run_time:.4f} seconds')
 
-def timer(func):
-    def timer_wrapper(*args, **kwargs):
-        if TIME_PROFILE:
-            time_start = datetime.now()
-            result = func(*args, **kwargs)
-            time_end = elapsed_time(time_start, f'{func.__name__} took')
-            if func.__name__ == 'update_stock_data':
-                print('')
-            return result
-        else:
-            return func(*args, **kwargs)
-    return timer_wrapper
+                return result
+            else:
+                return func(*args, **kwargs)
+
+        return wrapper
+    return decorator
 
 
 # ----------------------------------------------
 # get ttm ebitda from asset profile
 # ----------------------------------------------
-@timer
+@timer()
 def get_ttm_ebitda(_stock, _fin_data):
     try:
         ebitda = _fin_data.get('ebitda', 0.)
@@ -56,7 +59,7 @@ def get_ttm_ebitda(_stock, _fin_data):
     return ebitda
 
 
-@timer
+@timer()
 def get_q_rev_growth(_fin_data):
     """Get year-over-year revenue growth for the most recent quarter."""
 
@@ -75,7 +78,7 @@ def get_q_rev_growth(_fin_data):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
-@timer
+@timer()
 def get_mrq_margins(_stock, quartal_info, quartal_cf):
     """
     Get the most recent quarter's gross profit margin,
@@ -96,7 +99,7 @@ def get_mrq_margins(_stock, quartal_info, quartal_cf):
 # ----------------------------------------------
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
-@timer
+@timer()
 def get_ann_gp_margin(_stock, a_inc_stat, a_cf):
     """
     Get annual gross profit margin, operating cash flow margin,
@@ -145,7 +148,7 @@ def get_ann_gp_margin(_stock, a_inc_stat, a_cf):
 # ----------------------------------------------
 # get ttm ebitda from asset profile
 # ----------------------------------------------
-@timer
+@timer()
 def get_mrq_fin_strength(_stock, quartal_info):
 
     cash = get_last_value(quartal_info, 'CashAndCashEquivalents')
@@ -160,7 +163,7 @@ def get_mrq_fin_strength(_stock, quartal_info):
     return _equity_ratio, _net_debt, _asOfDate
 
 
-@timer
+@timer()
 def get_yearly_revenue(_stock, a_info):
     """ get annual revenues, calculate growth rates
     and pass average rev growth of passed years"""
@@ -189,7 +192,7 @@ def get_yearly_revenue(_stock, a_info):
     return _av_rev_growth, _remark_rev
 
 
-@timer
+@timer()
 def calc_rev_inv_stats(q_data, ttm_revenue):
     q_inv = get_non_null_table(q_data, 'Inventory')
 
@@ -207,7 +210,7 @@ def calc_rev_inv_stats(q_data, ttm_revenue):
     return av_inv_to_rev, mrq_inv_to_rev, remark
 
 
-@timer
+@timer()
 def get_div_data(stockname, summary_detail):
     summary_detail = summary_detail.get(stockname, {})  # unpack the outer dict
 
@@ -221,7 +224,7 @@ def get_div_data(stockname, summary_detail):
     return div_fwd, payout_ratio, div_yield, av_div_5y
 
 
-@timer
+@timer()
 def get_valuation(stockname, a_fcf_ev):
     a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
     ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
