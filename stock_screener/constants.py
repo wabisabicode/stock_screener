@@ -1,1 +1,3 @@
-TIME_PROFILE = False
+ASYNC = True
+MAX_WORKERS = 4
+TIME_PROFILE = True
