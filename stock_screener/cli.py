@@ -3,8 +3,8 @@ import time
 import click
 from flask.cli import with_appcontext
 
-from stock_screener.models import Stock, db
-from stock_screener.services import get_stock_fin_report
+from stock_screener.models import ReportType, Stock, db
+from stock_screener.yfinance_api import get_daily_metrics, get_fin_report
 
 
 @click.command('add-tickers')
@@ -27,24 +27,26 @@ def add_tickers_command(tickers_list):
 @click.command('update-stocks')
 @with_appcontext
 def update_stocks():
-    tickers = [stock.ticker for stock in Stock.query.all()]
+    stocks = [stock for stock in Stock.query.all()]
 
-    print('Starting update of the stocks')
-    updated_count = 0
+    print('Starting update of the daily metrics')
+    updated_daily_count = 0
     failed_tickers = []
 
-    for ticker in tickers:
+    for stock in stocks:
         try:
-            get_stock_fin_report(ticker)
-            print(f'Successfully updated {ticker}')
-            updated_count += 1
+            get_daily_metrics(stock)
+            # check end_date. if new report is available:
+            # get_fin_report(ticker, ReportType.QUARTERLY)
+            print(f'Successfully updated {stock}')
+            updated_daily_count += 1
         except Exception as e:
-            print(f"!!! FAILED to update {ticker}: {e}")
-            failed_tickers.append(ticker)
+            print(f"!!! FAILED to update {stock}: {e}")
+            failed_tickers.append(stock)
 
     time.sleep(1)
 
     print("\n----- Update Complete -----")
-    print(f"Successfully updated: {updated_count}/{len(tickers)}")
+    print(f'Daily metrics updated: {updated_daily_count}/{len(tickers)}')
     if failed_tickers:
         print(f"Failed tickers: {', '.join(failed_tickers)}")
