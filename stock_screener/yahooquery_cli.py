@@ -3,56 +3,56 @@ import argparse
 from .crud import update_stock_data
 
 
-def main():
-    display_table_header()
+# def main():
+#     display_table_header()
 
-    # Initialize parser
-    parser = argparse.ArgumentParser()
+#     # Initialize parser
+#     parser = argparse.ArgumentParser()
 
-    # Passing a shortname of a stockslist (or stock symbols)
-    listarg = []
-    parser.add_argument("-l", nargs="*",
-                        help=("Stocks list name: div, growth, rest, watch,"
-                              "watchgrow, watchcomm or stock symbol"))
-    args = parser.parse_args()
-    listarg = args.l
+#     # Passing a shortname of a stockslist (or stock symbols)
+#     listarg = []
+#     parser.add_argument("-l", nargs="*",
+#                         help=("Stocks list name: div, growth, rest, watch,"
+#                               "watchgrow, watchcomm or stock symbol"))
+#     args = parser.parse_args()
+#     listarg = args.l
 
-    stocks_list = form_stock_list(listarg[0])
+#     stocks_list = form_stock_list(listarg[0])
 
-    # Get stats for the stocks in the list
-    for stockname in stocks_list:
-        if stockname != '':
-            stock_data = update_stock_data(stockname)
+#     # Get stats for the stocks in the list
+#     for stockname in stocks_list:
+#         if stockname != '':
+#             stock_data = update_stock_data(stockname)
 
-            print(
-                "{}\t ".format(stockname),
-                "{:4.0f}%\t{:5.1f} \t".format(
-                    stock_data['equity_ratio'], stock_data['net_debt_to_ebitda']),
-                " {:3.0f}% \t {:3.0f}% \t".format(
-                    stock_data['inv_to_rev_mrq'], stock_data['av_inv_to_rev']),
-                "{:3.0f}% \t {:3.0f}% \t".format(
-                    stock_data['q_rev_growth'], stock_data['av_rev_growth']),
-                "{:4.0f}% \t {:4.0f}% \t".format(
-                    stock_data['mrq_gp_margin'], stock_data['av_gp_margin']),
-                "{:4.0f}% \t {:4.0f}% \t".format(
-                    stock_data['mrq_fcf_margin'], stock_data['av_fcf_margin']),
-                stock_data['as_of_date'],
-                "\t{}\t".format(stock_data['remarks']),
-                "{:5.2f} \t {:6.2f} \t {:5.2f} \t  {:5.2f} \t ".format(
-                    stock_data['ev_to_rev'],
-                    stock_data['av_ev_to_rev'],
-                    stock_data['ev_to_ttm_fcf'],
-                    stock_data['av_ev_to_fcf']
-                ),
-                "{:3.1f} \t {:3.1f} \t{:5.2f} \t {:5.1f}".format(
-                    stock_data['div_yield'],
-                    stock_data['av_div_5y'],
-                    stock_data['div_fwd'],
-                    stock_data['payout_ratio'],
-                )
-            )
-        else:
-            print(' ')
+#             print(
+#                 "{}\t ".format(stockname),
+#                 "{:4.0f}%\t{:5.1f} \t".format(
+#                     stock_data['equity_ratio'], stock_data['net_debt_to_ebitda']),
+#                 " {:3.0f}% \t {:3.0f}% \t".format(
+#                     stock_data['inv_to_rev_mrq'], stock_data['av_inv_to_rev']),
+#                 "{:3.0f}% \t {:3.0f}% \t".format(
+#                     stock_data['q_rev_growth'], stock_data['av_rev_growth']),
+#                 "{:4.0f}% \t {:4.0f}% \t".format(
+#                     stock_data['mrq_gp_margin'], stock_data['av_gp_margin']),
+#                 "{:4.0f}% \t {:4.0f}% \t".format(
+#                     stock_data['mrq_fcf_margin'], stock_data['av_fcf_margin']),
+#                 stock_data['as_of_date'],
+#                 "\t{}\t".format(stock_data['remarks']),
+#                 "{:5.2f} \t {:6.2f} \t {:5.2f} \t  {:5.2f} \t ".format(
+#                     stock_data['ev_to_rev'],
+#                     stock_data['av_ev_to_rev'],
+#                     stock_data['ev_to_ttm_fcf'],
+#                     stock_data['av_ev_to_fcf']
+#                 ),
+#                 "{:3.1f} \t {:3.1f} \t{:5.2f} \t {:5.1f}".format(
+#                     stock_data['div_yield'],
+#                     stock_data['av_div_5y'],
+#                     stock_data['div_fwd'],
+#                     stock_data['payout_ratio'],
+#                 )
+#             )
+#         else:
+#             print(' ')
 
 
 def form_stock_list(_listarg):
@@ -112,5 +112,5 @@ def display_table_header():
           "\t DivY \t 5YDivY\tDivFwd \t Payout")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

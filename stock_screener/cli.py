@@ -3,8 +3,11 @@ import time
 import click
 from flask.cli import with_appcontext
 
-from stock_screener.models import ReportType, Stock, db
-from stock_screener.yfinance_api import get_daily_metrics, get_fin_report
+from .crud import update_stock_data
+from .helpers import format_value
+from .models import ReportType, Stock, db
+from .yfinance_api import get_daily_metrics, get_fin_report
+from .yahooquery_cli import display_table_header, form_stock_list
 
 
 @click.command('add-tickers')
@@ -47,6 +50,49 @@ def update_stocks():
     time.sleep(1)
 
     print("\n----- Update Complete -----")
-    print(f'Daily metrics updated: {updated_daily_count}/{len(tickers)}')
+    print(f'Daily metrics updated: {updated_daily_count}/{len(stocks)}')
     if failed_tickers:
         print(f"Failed tickers: {', '.join(failed_tickers)}")
+
+
+@click.group('stocks')
+def stocks_cli():
+    pass
+
+
+@stocks_cli.command('update')
+@click.argument('ticker')
+@with_appcontext
+def update_command(ticker):
+    display_table_header()
+    stocks_list = form_stock_list(ticker)
+
+    for stockname in stocks_list:
+        if stockname != '':
+            stock_data = update_stock_data(stockname)
+
+            print(
+                "{}\t ".format(stockname),
+                f"{format_value(stock_data['equity_ratio'], '4.0f')}%"
+                # format_value(stock_data['net_debt_to_ebitda'], "\t{:5.1f} \t"),
+                # format_value(stock_data['inv_to_rev_mrq'], " {:3.0f}% \t"),
+                # format_value(stock_data['av_inv_to_rev'], " {:3.0f}% \t"),
+                # format_value(stock_data['q_rev_growth'], " {:3.0f}% \t"),
+                # format_value(stock_data['av_rev_growth'], " {:3.0f}% \t"),
+                # format_value(stock_data['mrq_gp_margin'], " {:4.0f}% \t"),
+                # format_value(stock_data['av_gp_margin'], " {:4.0f}% \t"),
+                # format_value(stock_data['mrq_fcf_margin'], " {:4.0f}% \t"),
+                # format_value(stock_data['av_fcf_margin'], " {:4.0f}% \t"),
+                # stock_data['as_of_date'],
+                # "\t{}\t".format(stock_data['remarks']),
+                # format_value(stock_data['ev_to_rev'], "{:5.2f} \t"),
+                # format_value(stock_data['av_ev_to_rev'], " {:6.2f} \t"),
+                # format_value(stock_data['ev_to_ttm_fcf'], " {:5.2f} \t"),
+                # format_value(stock_data['av_ev_to_fcf'], "  {:5.2f} \t "),
+                # format_value(stock_data['div_yield'], "{:3.1f} \t"),
+                # format_value(stock_data['av_div_5y'], " {:3.1f} \t"),
+                # format_value(stock_data['div_fwd'], "{:5.2f} \t"),
+                # format_value(stock_data['payout_ratio'], " {:5.1f}"),
+            )
+        else:
+            print(' ')
