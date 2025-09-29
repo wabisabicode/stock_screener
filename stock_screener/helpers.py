@@ -21,6 +21,12 @@ def get_non_null_table(data, key):
         return pd.Series(dtype=float)
 
 
+def format_value(value, format_spec, default='  -  '):
+    if value is None:
+        return default
+    return format(value, format_spec)
+
+
 def timer(message=None):
     def decorator(func):
         """A decorator that prints the time a function takes to execute."""
