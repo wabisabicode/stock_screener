@@ -14,8 +14,10 @@ def create_app():
     from stock_screener.views import main
     app.register_blueprint(main)
 
-    from stock_screener.cli import add_tickers_command, update_stocks
+    from stock_screener.cli import (add_tickers_command, stocks_cli,
+                                    update_stocks)
     app.cli.add_command(add_tickers_command)
     app.cli.add_command(update_stocks)
+    app.cli.add_command(stocks_cli)
 
     return app
