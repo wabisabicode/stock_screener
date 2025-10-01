@@ -1,7 +1,7 @@
 from flask import (Blueprint, Response, redirect, render_template, request,
                    url_for)
 
-from ..streaming import generate_stock_updates
+from stock_screener.services.sse_streaming import generate_stock_updates
 
 main_bp = Blueprint('main', __name__)
 
