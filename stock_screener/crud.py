@@ -40,10 +40,16 @@ def update_stock_data(ticker):
         ebitda = q_data['EBITDA'].iloc[-4:].sum()
         # ebitda here can be nan. what to do?
 
-    if 'TotalRevenue' not in q_data or q_data['TotalRevenue'].iloc[-4:].isna().any():
+    if (
+        'TotalRevenue' not in q_data or
+        q_data['TotalRevenue'].iloc[-4:].isna().any()
+    ):
         q_rev_growth = get_q_rev_growth(fin_highlights)
     else:
-        q_rev_growth = q_data['TotalRevenue'].iloc[-1] / q_data['TotalRevenue'].iloc[0] - 1
+        q_rev_growth = (
+            q_data['TotalRevenue'].iloc[-1] /
+            q_data['TotalRevenue'].iloc[0] - 1
+        )
 
     #####
 
