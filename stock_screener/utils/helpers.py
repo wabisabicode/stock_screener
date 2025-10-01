@@ -2,7 +2,7 @@ import time
 
 import pandas as pd
 
-from .constants import (DIV_STOCKS, GROWTH_STOCKS, REST_STOCKS, TIME_PROFILE,
+from ..constants import (DIV_STOCKS, GROWTH_STOCKS, REST_STOCKS, TIME_PROFILE,
                         WATCHCOMM_STOCKS, WATCHGROWTH_STOCKS, WATCHLIST_STOCKS)
 
 
