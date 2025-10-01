@@ -1,12 +1,8 @@
 import enum
 
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum
 
-db = SQLAlchemy()
-migrate = Migrate()
-
+from .extensions import db
 
 class ReportType(enum.Enum):
     QUARTERLY = 'QUARTERLY'

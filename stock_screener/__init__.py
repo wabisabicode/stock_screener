@@ -1,7 +1,7 @@
 from flask import Flask
 
+from .extensions import db, migrate
 from settings import Config
-from stock_screener.models import db, migrate
 
 
 def create_app():
