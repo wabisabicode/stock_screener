@@ -2,8 +2,9 @@ import time
 
 import pandas as pd
 
-from ..constants import (DIV_STOCKS, GROWTH_STOCKS, REST_STOCKS, TIME_PROFILE,
-                        WATCHCOMM_STOCKS, WATCHGROWTH_STOCKS, WATCHLIST_STOCKS)
+from stock_screener.constants import (DIV_STOCKS, GROWTH_STOCKS, REST_STOCKS,
+                                      TIME_PROFILE, WATCHCOMM_STOCKS,
+                                      WATCHGROWTH_STOCKS, WATCHLIST_STOCKS)
 
 
 # Function to safely extract the last non-null value from a series
