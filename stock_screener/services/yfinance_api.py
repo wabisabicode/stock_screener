@@ -12,7 +12,8 @@ def get_daily_metrics(stock):
         frequency='a',
         trailing=True
     )
-    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(stock, rev_ev_fcf_data)
+    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(
+        stock, rev_ev_fcf_data)
 
 
 def get_fin_report(stock, report_type):
