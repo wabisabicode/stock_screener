@@ -11,8 +11,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from stock_screener.views import main
-    app.register_blueprint(main)
+    from stock_screener.routes.main import main_bp
+    app.register_blueprint(main_bp)
 
     from stock_screener.cli import (add_tickers_command, stocks_cli,
                                     update_stocks)

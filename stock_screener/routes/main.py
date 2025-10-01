@@ -1,22 +1,22 @@
 from flask import (Blueprint, Response, redirect, render_template, request,
                    url_for)
 
-from .streaming import generate_stock_updates
+from ..streaming import generate_stock_updates
 
-main = Blueprint('main', __name__)
+main_bp = Blueprint('main', __name__)
 
 
-@main.route('/update')
+@main_bp.route('/update')
 def update_universe():
     pass
 
 
-@main.route('/')
+@main_bp.route('/')
 def home():
     return render_template('home.html')
 
 
-@main.route('/results', methods=['GET', 'POST'])
+@main_bp.route('/results', methods=['GET', 'POST'])
 def results():
     """
     This endpoint handles both the form submission (POST)
@@ -37,7 +37,10 @@ def results():
     return render_template('results.html')
 
 
-@main.route('/stream-results')
+@main_bp.route('/stream-results')
 def stream_results():
     tickers = request.args.get('tickers', '')
-    return Response(generate_stock_updates(tickers), mimetype='text/event-stream')
+    return Response(
+        generate_stock_updates(tickers),
+        mimetype='text/event-stream'
+    )
