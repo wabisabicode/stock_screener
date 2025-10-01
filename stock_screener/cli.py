@@ -4,10 +4,9 @@ import click
 from flask.cli import with_appcontext
 
 from .crud import update_stock_data
-from .helpers import format_value, get_stocklist
+from .helpers import display_table_header, format_value, get_stocklist
 from .models import ReportType, Stock, db
 from .yfinance_api import get_daily_metrics, get_fin_report
-from .yahooquery_cli import display_table_header
 
 
 @click.command('add-tickers')
