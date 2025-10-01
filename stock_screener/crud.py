@@ -1,6 +1,6 @@
 import math
 
-from .utils import (calc_rev_inv_stats, get_ann_gp_margin,
+from .fin_analysis import (calc_rev_inv_stats, get_ann_gp_margin,
                     get_avg_ann_valuation, get_curr_ttm_valuation,
                     get_div_data, get_mrq_fin_strength, get_mrq_margins,
                     get_q_rev_growth, get_ttm_ebitda, get_yearly_revenue)

@@ -2,7 +2,7 @@ import yahooquery as yq
 
 from .constants import ASYNC, MAX_WORKERS
 from .helpers import timer
-from .utils import get_curr_ttm_valuation
+from .fin_analysis import get_curr_ttm_valuation
 
 
 def get_daily_metrics(stock):
