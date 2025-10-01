@@ -44,15 +44,15 @@ def get_mrq_margins(_stock, quartal_info, quartal_cf):
     operating cash flow margin, and free cash flow margin.
     """
     # Extract financial metrics
-    _mrq_gp = get_last_value(quartal_info, 'GrossProfit')
-    _mrq_fcf = get_last_value(quartal_cf, 'FreeCashFlow')
-    _mrq_rev = get_last_value(quartal_info, 'TotalRevenue')
+    gp = get_last_value(quartal_info, 'GrossProfit')
+    fcf = get_last_value(quartal_cf, 'FreeCashFlow')
+    rev = get_last_value(quartal_info, 'TotalRevenue')
 
     # Calculate margins
-    _mrq_gp_margin = _mrq_gp / _mrq_rev if _mrq_gp > 0 and _mrq_rev > 0 else float('nan')
-    _mrq_fcf_margin = _mrq_fcf / _mrq_rev if _mrq_rev > 0 else float('nan')
+    gp_margin = gp / rev if gp > 0 and rev > 0 else float('nan')
+    fcf_margin = fcf / rev if rev > 0 else float('nan')
 
-    return _mrq_gp_margin, _mrq_fcf_margin
+    return gp_margin, fcf_margin
 
 
 # ----------------------------------------------
