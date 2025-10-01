@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from ..helpers import get_last_value, get_non_null_table, timer
+from stock_screener.utils.helpers import (get_last_value, get_non_null_table,
+                                          timer)
 
 
 # ----------------------------------------------
