@@ -1,10 +1,12 @@
 import math
 
-from .fin_analysis import (calc_rev_inv_stats, get_ann_gp_margin,
-                    get_avg_ann_valuation, get_curr_ttm_valuation,
-                    get_div_data, get_mrq_fin_strength, get_mrq_margins,
-                    get_q_rev_growth, get_ttm_ebitda, get_yearly_revenue)
-from .yfinance_api import get_stock_from_yq
+from stock_screener.services.fin_analysis import (
+    calc_rev_inv_stats, get_ann_gp_margin, get_avg_ann_valuation,
+    get_curr_ttm_valuation, get_div_data, get_mrq_fin_strength,
+    get_mrq_margins, get_q_rev_growth, get_ttm_ebitda,
+    get_yearly_revenue
+)
+from stock_screener.services.yfinance_api import get_stock_from_yq
 
 
 def update_stock_data(ticker):
