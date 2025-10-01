@@ -88,8 +88,8 @@ def update_command(ticker):
                 f'{format_value(stock_data["as_of_date"], "")}',
                 f'{format_value(stock_data["remarks"], "")} \t',
                 f'{format_value(stock_data["ev_to_rev"], "4.1f")} \t  ',
-                f'{format_value(stock_data["av_ev_to_rev"], "4.1f", "   -  ")} \t',
-                f'{format_value(stock_data["ev_to_ttm_fcf"], "5.1f", "   -  ")}\t ',
+                f'{format_value(stock_data["av_ev_to_rev"], "4.1f", "   -  ")} \t',  # noqa
+                f'{format_value(stock_data["ev_to_ttm_fcf"], "5.1f", "   -  ")}\t ',  # noqa
                 f'{format_value(stock_data["av_ev_to_fcf"], "4.1f")} \t \t',
                 f'{format_value(stock_data["div_yield"], "3.1f")} \t',
                 f'{format_value(stock_data["av_div_5y"], "3.1f")} \t',
