@@ -1,7 +1,7 @@
 import yahooquery as yq
 
-from .constants import ASYNC, MAX_WORKERS
-from .helpers import timer
+from ..constants import ASYNC, MAX_WORKERS
+from ..helpers import timer
 from .fin_analysis import get_curr_ttm_valuation
 
 

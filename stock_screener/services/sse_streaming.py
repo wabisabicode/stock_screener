@@ -1,7 +1,7 @@
 import json
 
-from .crud import update_stock_data
-from .helpers import get_stocklist
+from ..crud import update_stock_data
+from ..helpers import get_stocklist
 
 
 def format_sse(data: dict) -> str:
