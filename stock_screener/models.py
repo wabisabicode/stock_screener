@@ -4,6 +4,7 @@ from sqlalchemy import Enum
 
 from .extensions import db
 
+
 class ReportType(enum.Enum):
     QUARTERLY = 'QUARTERLY'
     ANNUAL = 'ANNUAL'
