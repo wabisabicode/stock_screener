@@ -2,7 +2,8 @@ import time
 
 import pandas as pd
 
-from .constants import TIME_PROFILE
+from .constants import (DIV_STOCKS, GROWTH_STOCKS, REST_STOCKS, TIME_PROFILE,
+                        WATCHCOMM_STOCKS, WATCHGROWTH_STOCKS, WATCHLIST_STOCKS)
 
 
 # Function to safely extract the last non-null value from a series
@@ -49,3 +50,17 @@ def timer(message=None):
 
         return wrapper
     return decorator
+
+
+def form_stock_list(listname):
+    # Mapping input options to stock lists
+    stock_options = {
+        "div": DIV_STOCKS,
+        "growth": GROWTH_STOCKS,
+        "rest": REST_STOCKS,
+        "watch": WATCHLIST_STOCKS,
+        "watchgrow": WATCHGROWTH_STOCKS,
+        "watchcomm": WATCHCOMM_STOCKS
+    }
+
+    return stock_options.get(listname, [listname])
