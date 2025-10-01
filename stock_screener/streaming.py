@@ -1,7 +1,7 @@
 import json
 
 from .crud import update_stock_data
-from .yahooquery_cli import form_stock_list
+from .helpers import form_stock_list
 
 
 def format_sse(data: dict) -> str:
