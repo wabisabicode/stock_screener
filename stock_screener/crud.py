@@ -26,11 +26,13 @@ def update_stock_data(ticker):
 
     # Use 'TotalRevenue', 'Inventory' to calculate
     # inventory to revenue for mrq and its average over quarters.
-    q_data = stock.get_financial_data(all_fields, frequency='q', trailing=False)
+    q_data = stock.get_financial_data(
+        all_fields, frequency='q', trailing=False)
     fin_highlights = stock.financial_data[ticker]
 
     ttm_revenue = fin_highlights.get('totalRevenue')
-    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(q_data, ttm_revenue)
+    avg_inv_to_rev, inv_to_rev_mrq, remark_inv = calc_rev_inv_stats(
+        q_data, ttm_revenue)
 
     if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
         ebitda = get_ttm_ebitda(stock, fin_highlights)
@@ -52,7 +54,8 @@ def update_stock_data(ticker):
     equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
 
     fields = ['TotalRevenue']
-    a_inc_stat = stock.get_financial_data(fields, frequency='a', trailing=False)
+    a_inc_stat = stock.get_financial_data(
+        fields, frequency='a', trailing=False)
     av_rev_growth, remark_rev = get_yearly_revenue(stock, a_inc_stat)
 
     # Retrieve quarterly income statement and cash flow data
@@ -64,7 +67,8 @@ def update_stock_data(ticker):
     # if isinstance(quartal_info, str):
     #     quartal_info = stock.income_statement(frequency='q', trailing=True)
     #     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
-    mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(stock, quartal_info, quartal_cf)
+    mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(
+        stock, quartal_info, quartal_cf)
 
     # Retrieve yearly income statement and cash flow data
     a_inc_stat = stock.income_statement(frequency='a', trailing=False)
@@ -74,8 +78,13 @@ def update_stock_data(ticker):
     remarks = remark_rev + ' ' + remark_inv
 
     # Get valuation on EV/Rev, EV/FCF and their 4Y averages
-    a_data = stock.get_financial_data(['EnterpriseValue', 'FreeCashFlow', 'TotalRevenue'], frequency='a', trailing=True)
-    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(stock, a_data)
+    a_data = stock.get_financial_data(
+        ['EnterpriseValue', 'FreeCashFlow', 'TotalRevenue'],
+        frequency='a',
+        trailing=True
+    )
+    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(
+        stock, a_data)
     av_ev_to_fcf, av_ev_to_rev = get_avg_ann_valuation(stock, a_data)
 
     # Get valuation on Div Yield and its 5Y average
@@ -111,7 +120,8 @@ def update_stock_data(ticker):
     for key, value in stock_data.items():
         # Check if the value is a float and is NaN
         if isinstance(value, float) and math.isnan(value):
-            cleaned_data[key] = None  # Replace NaN with None (which becomes JSON null)
+            # Replace NaN with None (which becomes JSON null)
+            cleaned_data[key] = None
         else:
             cleaned_data[key] = value
 
