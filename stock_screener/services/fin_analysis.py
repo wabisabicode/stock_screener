@@ -65,43 +65,43 @@ def get_ann_gp_margin(_stock, a_inc_stat, a_cf):
     and free cash flow margin.
     """
     # Extract financial tables
-    _gp_table = get_non_null_table(a_inc_stat, 'GrossProfit')
-    _fcf_table = get_non_null_table(a_cf, 'FreeCashFlow')
-    _totrev_table = get_non_null_table(a_inc_stat, 'TotalRevenue')
+    gps = get_non_null_table(a_inc_stat, 'GrossProfit')
+    fcfs = get_non_null_table(a_cf, 'FreeCashFlow')
+    totrevs = get_non_null_table(a_inc_stat, 'TotalRevenue')
 
-    _totrev_table_len = _totrev_table.size
+    totrevs_len = totrevs.size
 
     # calculate rev growth rates via annual revenues
-    if not _gp_table.empty:
-        gp_margin = [_gp_table.iloc[i] / _totrev_table.iloc[i]
-                     for i in range(_totrev_table_len)]
-        _gp_margin_av = np.average(gp_margin)
+    if not gps.empty:
+        gp_margin = [gps.iloc[i] / totrevs.iloc[i]
+                     for i in range(totrevs_len)]
+        gp_margin = np.average(gp_margin)
     else:
-        _no_totexp = False
+        no_totexp = False
         try:
-            _totexp_table = a_inc_stat['TotalExpenses']
+            totexps = a_inc_stat['TotalExpenses']
         except KeyError:
-            _totexp_table = _totrev_table  # no gp margin and no total expenses
-            _no_totexp = True
+            totexps = totrevs  # no gp margin and no total expenses
+            no_totexp = True
 
-        gp_margin = [_totrev_table.iloc[i] - _totexp_table.iloc[i] / _totrev_table.iloc[i]
-                     for i in range(_totrev_table_len)]
-        _gp_margin_av = np.average(gp_margin)
-        if _no_totexp:
-            _gp_margin_av = float('nan')
+        gp_margin = [totrevs.iloc[i] - totexps.iloc[i] / totrevs.iloc[i]
+                     for i in range(totrevs_len)]
+        gp_margin = np.average(gp_margin)
+        if no_totexp:
+            gp_margin = float('nan')
 
     # calculate free cashflow margin for latest years
-    if not _fcf_table.empty:
+    if not fcfs.empty:
         try:
-            fcf_margin = [_fcf_table.iloc[i] / _totrev_table.iloc[i]
-                          for i in range(_totrev_table_len)]
-            _fcf_margin_av = np.average(fcf_margin)
+            fcf_margin = [fcfs.iloc[i] / totrevs.iloc[i]
+                          for i in range(totrevs_len)]
+            fcf_margin = np.average(fcf_margin)
         except IndexError:
             pass
     else:
-        _fcf_margin_av = float('nan')
+        fcf_margin = float('nan')
 
-    return _gp_margin_av, _fcf_margin_av
+    return gp_margin, fcf_margin
 
 
 # ----------------------------------------------
