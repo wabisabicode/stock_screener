@@ -4,7 +4,7 @@ import click
 from flask.cli import with_appcontext
 
 from .crud import update_stock_data
-from .helpers import format_value, form_stock_list
+from .helpers import format_value, get_stocklist
 from .models import ReportType, Stock, db
 from .yfinance_api import get_daily_metrics, get_fin_report
 from .yahooquery_cli import display_table_header
@@ -65,7 +65,7 @@ def stocks_cli():
 @with_appcontext
 def update_command(ticker):
     display_table_header()
-    stocks_list = form_stock_list(ticker)
+    stocks_list = get_stocklist(ticker)
 
     for stockname in stocks_list:
         if stockname != '':

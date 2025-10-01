@@ -52,7 +52,7 @@ def timer(message=None):
     return decorator
 
 
-def form_stock_list(listname):
+def get_stocklist(listname):
     # Mapping input options to stock lists
     stock_options = {
         "div": DIV_STOCKS,

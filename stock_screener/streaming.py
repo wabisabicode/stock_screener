@@ -1,7 +1,7 @@
 import json
 
 from .crud import update_stock_data
-from .helpers import form_stock_list
+from .helpers import get_stocklist
 
 
 def format_sse(data: dict) -> str:
@@ -9,7 +9,7 @@ def format_sse(data: dict) -> str:
 
 
 def generate_stock_updates(tickers: str):
-    stocks_list = form_stock_list(tickers)
+    stocks_list = get_stocklist(tickers)
 
     for stockname in stocks_list:
         try:
