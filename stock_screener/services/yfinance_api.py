@@ -14,15 +14,19 @@ from .fin_analysis import (calc_rev_inv_stats, get_ann_gp_margin,
 
 
 def get_daily_metrics(stock):
-    rev_ev_fcf_data = stock.get_financial_data(
+    ticker = stock.ticker
+    stock_yq = get_stock_from_yq(ticker)
+    rev_ev_fcf_data = stock_yq.get_financial_data(
         ['EnterpriseValue', 'FreeCashFlow', 'TotalRevenue'],
         frequency='a',
         trailing=True
     )
+
     ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(
-        stock, rev_ev_fcf_data)
+        rev_ev_fcf_data)
 
     stock_dict = {
+        'ticker': ticker,
         'curr_ev_to_rev': ev_to_rev,
         # 'avg_ev_to_rev':
         'curr_ev_to_fcf': ev_to_ttm_fcf,
@@ -129,9 +133,8 @@ def update_stock_data(ticker):
         frequency='a',
         trailing=True
     )
-    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(
-        stock, a_data)
-    av_ev_to_fcf, av_ev_to_rev = get_avg_ann_valuation(stock, a_data)
+    ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(a_data)
+    av_ev_to_fcf, av_ev_to_rev = get_avg_ann_valuation(a_data)
 
     # Get valuation on Div Yield and its 5Y average
     summary_detail = stock.summary_detail
