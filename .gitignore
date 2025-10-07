@@ -7,3 +7,5 @@ static/*
 
 .DS_Store
 *.pyc
+
+.mailmap
