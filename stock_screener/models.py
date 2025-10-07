@@ -42,8 +42,8 @@ class Stock(db.Model):
     # Calculated daily:
     curr_ev_to_rev = db.Column(db.Float)  # EV to revenue
     avg_ev_to_rev = db.Column(db.Float)  # 5Y average EV to revenue
-    curr_fcf_to_rev = db.Column(db.Float)  # FCF to revenue
-    avg_fcf_to_rev = db.Column(db.Float)  # 5Y average FCF to revenue
+    curr_ev_to_fcf = db.Column(db.Float)  # EV to FCF ttm
+    avg_ev_to_fcf = db.Column(db.Float)  # 5Y average EV to FCF
 
     curr_fwd_div = db.Column(db.Float)  # current forward yield
     avg_fwd_div = db.Column(db.Float)  # 5Y average forward yield
