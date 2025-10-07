@@ -184,7 +184,7 @@ def get_div_data(stockname, summary_detail):
 
 
 @timer()
-def get_curr_ttm_valuation(stockname, a_fcf_ev):
+def get_curr_ttm_valuation(a_fcf_ev):
     ttm_data = a_fcf_ev[a_fcf_ev['periodType'] == 'TTM']
 
     ev = get_last_value(ttm_data, 'EnterpriseValue', float('nan'))
@@ -199,7 +199,7 @@ def get_curr_ttm_valuation(stockname, a_fcf_ev):
 
 
 @timer()
-def get_avg_ann_valuation(stockname, a_fcf_ev):
+def get_avg_ann_valuation(a_fcf_ev):
     a_data = a_fcf_ev[a_fcf_ev['periodType'] == '12M']
 
     evs = a_data.get('EnterpriseValue', pd.Series(dtype=float))
