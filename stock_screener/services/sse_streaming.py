@@ -1,7 +1,8 @@
 import json
 
-from stock_screener.crud import update_stock_data
 from stock_screener.utils.helpers import get_stocklist
+
+from .yfinance_api import update_stock_data
 
 
 def format_sse(data: dict) -> str:
