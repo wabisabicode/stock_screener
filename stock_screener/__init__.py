@@ -1,7 +1,8 @@
 from flask import Flask
 
-from .extensions import db, migrate
 from settings import Config
+
+from .extensions import db, migrate
 
 
 def create_app():
