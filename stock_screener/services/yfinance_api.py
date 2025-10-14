@@ -3,13 +3,15 @@ import math
 import yahooquery as yq
 
 from stock_screener.constants import ASYNC, MAX_WORKERS
-from stock_screener.crud import update_daily_metrics_db
+from stock_screener.crud import add_balance_sheet_db, update_daily_metrics_db
+from stock_screener.models import ReportType, Stock
 from stock_screener.utils.helpers import timer
 
 from .fin_analysis import (calc_rev_inv_stats, get_ann_gp_margin,
                            get_avg_ann_valuation, get_curr_ttm_valuation,
-                           get_div_data, get_mrq_fin_strength, get_mrq_margins,
-                           get_q_rev_growth, get_ttm_ebitda,
+                           get_div_data, get_ebitda, get_inv,
+                           get_mrq_fin_strength, get_mrq_margins,
+                           get_q_rev_growth, get_rev_gp_fcf, get_ttm_ebitda,
                            get_yearly_revenue)
 
 
@@ -25,21 +27,77 @@ def get_daily_metrics(stock):
     ev, rev, fcf, ev_to_ttm_fcf, ev_to_rev = get_curr_ttm_valuation(
         rev_ev_fcf_data)
 
+    av_ev_to_fcf, av_ev_to_rev = get_avg_ann_valuation(rev_ev_fcf_data)
+
+    div_fwd, payout_ratio, div_yield, av_div_5y = get_div_data(
+        ticker, stock_yq.summary_detail)
+
     stock_dict = {
         'ticker': ticker,
         'curr_ev_to_rev': ev_to_rev,
-        # 'avg_ev_to_rev':
+        'avg_ev_to_rev': av_ev_to_rev,
         'curr_ev_to_fcf': ev_to_ttm_fcf,
-        # 'avg_ev_to_fcf'
-        # 'curr_fwd_div'
-        # 'avg_fwd_div'
+        'avg_ev_to_fcf': av_ev_to_fcf,
+        'curr_fwd_div': div_yield,
+        'avg_fwd_div': av_div_5y,
     }
 
     update_daily_metrics_db(stock, stock_dict)
 
 
-def get_fin_report(stock, report_type):
-    ...
+def get_fin_report(stock: Stock, report_type: ReportType) -> dict:
+    ticker = stock.ticker
+    stock_yq = get_stock_from_yq(ticker)
+
+    report_type_yq = report_type.value[0].lower()
+
+    all_fields = [
+        'TotalRevenue',
+        'Inventory',
+        'EBITDA',
+        'OperatingCashFlow',
+        'CashAndCashEquivalents',
+        'TotalLiabilitiesNetMinorityInterest',
+        'TotalEquityGrossMinorityInterest',
+        'TotalDebt',
+        'FreeCashFlow',
+        'GrossProfit',
+    ]
+
+    q_data = stock_yq.get_financial_data(
+        all_fields, frequency=report_type_yq, trailing=False)
+
+    equity, liab, cash, totalDebt, equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(q_data)
+
+    revenue, gross_profit, free_cash_flow = get_rev_gp_fcf(q_data)
+
+    inventory_table = get_inv(q_data)
+    if inventory_table is None or inventory_table.empty:
+        inventory = 0
+    else:
+        inventory = inventory_table.iloc[-1]
+
+    fin_highlights = stock_yq.financial_data[ticker]
+    ebitda = get_ebitda(q_data, fin_highlights)
+
+    fin_report_dict = {
+        'ticker': ticker,
+        'report_type': report_type.value,
+        'end_date': asOfDate,
+        'total_equity': equity,
+        'total_liability': liab,
+        'cash_and_equivalents': cash,
+        'total_debt': totalDebt,
+        'inventory': inventory,
+
+        'revenue': revenue,
+        'gross_profit': gross_profit,
+        'ebitda': ebitda,
+
+        'free_cash_flow': free_cash_flow,
+    }
+
+    add_balance_sheet_db(fin_report_dict)
 
 
 @timer(message=lambda ticker: f'{ticker}'.upper())
@@ -101,7 +159,7 @@ def update_stock_data(ticker):
     #           'TotalLiabilitiesNetMinorityInterest',
     #           'TotalEquityGrossMinorityInterest', 'TotalDebt',
     #           'FreeCashFlow'???
-    equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(stock, q_data)
+    equity, liab, cash, totalDebt, equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(q_data)
 
     fields = ['TotalRevenue']
     a_inc_stat = stock.get_financial_data(
@@ -110,15 +168,15 @@ def update_stock_data(ticker):
 
     # Retrieve quarterly income statement and cash flow data
     # quartal_info = stock.income_statement(frequency='q', trailing=False)
-    quartal_info = q_data
+    # quartal_info = q_data
     # quartal_cf = stock.cash_flow(frequency='q', trailing=False)
-    quartal_cf = q_data
+    # quartal_cf = q_data
     # Fallback to trailing data if the current quarter's data is unavailable
     # if isinstance(quartal_info, str):
     #     quartal_info = stock.income_statement(frequency='q', trailing=True)
     #     quartal_cf = stock.cash_flow(frequency='q', trailing=True)
     mrq_gp_margin, mrq_fcf_margin = get_mrq_margins(
-        stock, quartal_info, quartal_cf)
+        stock, q_data)
 
     # Retrieve yearly income statement and cash flow data
     a_inc_stat = stock.income_statement(frequency='a', trailing=False)
