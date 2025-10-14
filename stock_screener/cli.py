@@ -4,8 +4,9 @@ import click
 from flask.cli import with_appcontext
 
 from stock_screener.extensions import db
-from stock_screener.models import Stock  # ReportType
+from stock_screener.models import ReportType, Stock
 from stock_screener.services.yfinance_api import (get_daily_metrics,
+                                                  get_fin_report,
                                                   update_stock_data)
 # get_fin_report
 from stock_screener.utils.helpers import (display_table_header, format_value,
@@ -42,12 +43,12 @@ def update_stocks():
         try:
             get_daily_metrics(stock)
             # check end_date. if new report is available:
-            # get_fin_report(ticker, ReportType.QUARTERLY)
+            get_fin_report(stock, ReportType.QUARTERLY)
             print(f'Successfully updated {stock}')
             updated_daily_count += 1
         except Exception as e:
             print(f"!!! FAILED to update {stock}: {e}")
-            failed_tickers.append(stock)
+            failed_tickers.append(stock.ticker)
 
     time.sleep(1)
 
