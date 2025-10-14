@@ -19,6 +19,20 @@ def get_ttm_ebitda(_stock, _fin_data):
 
 
 @timer()
+def get_ebitda(q_data, fin_highlights):
+    if 'EBITDA' not in q_data or q_data['EBITDA'].iloc[-4:].isna().any():
+        try:
+            ebitda = fin_highlights.get('ebitda', 0.)
+        except AttributeError:
+            ebitda = 0.
+    else:
+        ebitda = q_data['EBITDA'].iloc[-4:].sum()
+        # ebitda here can be nan. what to do?
+
+    return ebitda
+
+
+@timer()
 def get_q_rev_growth(_fin_data):
     """Get year-over-year revenue growth for the most recent quarter."""
 
@@ -38,15 +52,13 @@ def get_q_rev_growth(_fin_data):
 # get gross profit margin of the mrq (or ttm)
 # ----------------------------------------------
 @timer()
-def get_mrq_margins(_stock, quartal_info, quartal_cf):
+def get_mrq_margins(_stock, q_data):
     """
     Get the most recent quarter's gross profit margin,
     operating cash flow margin, and free cash flow margin.
     """
     # Extract financial metrics
-    gp = get_last_value(quartal_info, 'GrossProfit')
-    fcf = get_last_value(quartal_cf, 'FreeCashFlow')
-    rev = get_last_value(quartal_info, 'TotalRevenue')
+    gp, fcf, rev = get_rev_gp_fcf(q_data)
 
     # Calculate margins
     gp_margin = gp / rev if gp > 0 and rev > 0 else float('nan')
@@ -108,18 +120,19 @@ def get_ann_gp_margin(_stock, a_inc_stat, a_cf):
 # get ttm ebitda from asset profile
 # ----------------------------------------------
 @timer()
-def get_mrq_fin_strength(_stock, quartal_info):
+def get_mrq_fin_strength(quartal_info):
 
-    cash = get_last_value(quartal_info, 'CashAndCashEquivalents')
-    liab = get_last_value(quartal_info, 'TotalLiabilitiesNetMinorityInterest')
     equity = get_last_value(quartal_info, 'TotalEquityGrossMinorityInterest')
+    liab = get_last_value(quartal_info, 'TotalLiabilitiesNetMinorityInterest')
+    cash = get_last_value(quartal_info, 'CashAndCashEquivalents')
     totalDebt = get_last_value(quartal_info, 'TotalDebt', float('nan'))
 
     _asOfDate = get_last_value(quartal_info, 'asOfDate')
+
     _equity_ratio = equity / (equity + liab)
     _net_debt = totalDebt - cash
 
-    return _equity_ratio, _net_debt, _asOfDate
+    return equity, liab, cash, totalDebt, _equity_ratio, _net_debt, _asOfDate
 
 
 @timer()
@@ -152,10 +165,26 @@ def get_yearly_revenue(_stock, a_info):
 
 
 @timer()
+def get_inv(q_data):
+    inv_table = get_non_null_table(q_data, 'Inventory')
+
+    return inv_table
+
+
+@timer()
+def get_rev_gp_fcf(q_data):
+    rev = get_last_value(q_data, 'TotalRevenue')
+    gp = get_last_value(q_data, 'GrossProfit')
+    fcf = get_last_value(q_data, 'FreeCashFlow')
+    return rev, gp, fcf
+
+
+@timer()
 def calc_rev_inv_stats(q_data, ttm_revenue):
-    q_inv = get_non_null_table(q_data, 'Inventory')
+    q_inv = get_mrq_inv(q_data)
 
     inv_quarter_count = len(q_inv)
+
     remark = 'inv' + str(inv_quarter_count) + 'Q'
 
     # calculate mrq and average inventory to ttm revenue
