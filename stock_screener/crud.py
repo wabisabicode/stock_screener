@@ -19,3 +19,19 @@ def add_balance_sheet_db(data):
     except Exception as e:
         db.session.rollback()
         print(f'Failed to add report for {stock.ticker}: {e}')
+
+
+def report_exists_in_db(stock_id, asOfDate, report_type):
+    fin_report = db.session.query(
+        db.session.query(FinancialReport)
+        .filter_by(
+            stock_id=stock_id,
+            end_date=asOfDate,
+            report_type=report_type)
+        .exists()
+    ).scalar()
+
+    if fin_report:
+        return True
+
+    return False

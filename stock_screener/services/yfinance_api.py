@@ -3,7 +3,8 @@ import math
 import yahooquery as yq
 
 from stock_screener.constants import ASYNC, MAX_WORKERS
-from stock_screener.crud import add_balance_sheet_db, update_daily_metrics_db
+from stock_screener.crud import (add_balance_sheet_db, report_exists_in_db,
+                                 update_daily_metrics_db)
 from stock_screener.models import ReportType, Stock
 from stock_screener.utils.helpers import timer
 
@@ -69,35 +70,36 @@ def get_fin_report(stock: Stock, report_type: ReportType) -> dict:
 
     equity, liab, cash, totalDebt, equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(q_data)
 
-    revenue, gross_profit, free_cash_flow = get_rev_gp_fcf(q_data)
+    if not report_exists_in_db(stock.id, asOfDate, report_type.value):
+        revenue, gross_profit, free_cash_flow = get_rev_gp_fcf(q_data)
 
-    inventory_table = get_inv(q_data)
-    if inventory_table is None or inventory_table.empty:
-        inventory = 0
-    else:
-        inventory = inventory_table.iloc[-1]
+        inventory_table = get_inv(q_data)
+        if inventory_table is None or inventory_table.empty:
+            inventory = 0
+        else:
+            inventory = inventory_table.iloc[-1]
 
-    fin_highlights = stock_yq.financial_data[ticker]
-    ebitda = get_ebitda(q_data, fin_highlights)
+        fin_highlights = stock_yq.financial_data[ticker]
+        ebitda = get_ebitda(q_data, fin_highlights)
 
-    fin_report_dict = {
-        'ticker': ticker,
-        'report_type': report_type.value,
-        'end_date': asOfDate,
-        'total_equity': equity,
-        'total_liability': liab,
-        'cash_and_equivalents': cash,
-        'total_debt': totalDebt,
-        'inventory': inventory,
+        fin_report_dict = {
+            'ticker': ticker,
+            'report_type': report_type.value,
+            'end_date': asOfDate,
+            'total_equity': equity,
+            'total_liability': liab,
+            'cash_and_equivalents': cash,
+            'total_debt': totalDebt,
+            'inventory': inventory,
 
-        'revenue': revenue,
-        'gross_profit': gross_profit,
-        'ebitda': ebitda,
+            'revenue': revenue,
+            'gross_profit': gross_profit,
+            'ebitda': ebitda,
 
-        'free_cash_flow': free_cash_flow,
-    }
+            'free_cash_flow': free_cash_flow,
+        }
 
-    add_balance_sheet_db(fin_report_dict)
+        add_balance_sheet_db(fin_report_dict)
 
 
 @timer(message=lambda ticker: f'{ticker}'.upper())

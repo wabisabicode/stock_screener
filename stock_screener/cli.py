@@ -43,8 +43,8 @@ def update_stocks():
         try:
             get_daily_metrics(stock)
             # check end_date. if new report is available:
-            get_fin_report(stock, ReportType.QUARTERLY)
-            print(f'Successfully updated {stock}')
+            get_fin_report(stock, ReportType.QUARTERLY)  # move outside of try?
+            print(f'Successfully scanned {stock}')
             updated_daily_count += 1
         except Exception as e:
             print(f"!!! FAILED to update {stock}: {e}")
