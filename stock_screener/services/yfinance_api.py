@@ -102,6 +102,15 @@ def get_fin_report(stock: Stock, report_type: ReportType) -> dict:
         add_balance_sheet_db(fin_report_dict)
 
 
+def get_ann_report(stock: Stock, report_type: ReportType) -> dict:
+    ticker = stock.ticker
+    stock_yq = get_stock_from_yq(ticker)
+
+    fields = ['TotalRevenue']
+    a_inc_stat = stock.get_financial_data(
+        fields, frequency='a', trailing=False)
+
+
 @timer(message=lambda ticker: f'{ticker}'.upper())
 def get_stock_from_yq(ticker):
     stock = yq.Ticker(
