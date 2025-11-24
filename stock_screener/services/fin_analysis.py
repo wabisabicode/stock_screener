@@ -58,7 +58,7 @@ def get_mrq_margins(_stock, q_data):
     operating cash flow margin, and free cash flow margin.
     """
     # Extract financial metrics
-    gp, fcf, rev = get_rev_gp_fcf(q_data)
+    rev, gp, fcf = get_rev_gp_fcf(q_data)
 
     # Calculate margins
     gp_margin = gp / rev if gp > 0 and rev > 0 else float('nan')
@@ -181,7 +181,7 @@ def get_rev_gp_fcf(q_data):
 
 @timer()
 def calc_rev_inv_stats(q_data, ttm_revenue):
-    q_inv = get_mrq_inv(q_data)
+    q_inv = get_inv(q_data)
 
     inv_quarter_count = len(q_inv)
 
