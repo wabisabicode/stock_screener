@@ -172,6 +172,8 @@ def update_stock_data(ticker):
     #           'FreeCashFlow'???
     equity, liab, cash, totalDebt, equity_ratio, net_debt, asOfDate = get_mrq_fin_strength(q_data)
 
+    net_debt_to_ebitda = net_debt / ebitda if ebitda != 0.0 else float('nan')
+
     fields = ['TotalRevenue']
     a_inc_stat = stock.get_financial_data(
         fields, frequency='a', trailing=False)
@@ -213,7 +215,7 @@ def update_stock_data(ticker):
     stock_data = {
         'symbol': ticker,
         'equity_ratio': equity_ratio * 100,
-        'net_debt_to_ebitda': net_debt / ebitda,
+        'net_debt_to_ebitda': net_debt_to_ebitda,
         'inv_to_rev_mrq': inv_to_rev_mrq * 100,
         'av_inv_to_rev': avg_inv_to_rev * 100,
         'q_rev_growth': q_rev_growth * 100,
